@@ -42,20 +42,28 @@ export function tolerance(length: number): number {
 interface Candidate {
   readonly id: string;
   readonly name: string;
+  /** The distance to the nearest of the names the element is known by. */
   readonly distance: number;
+  /** The length of that nearest name, which the tolerance depends on. */
+  readonly length: number;
+  /** Whether one of the names starts with the text. */
+  readonly prefix: boolean;
 }
 
-/** The names of a kind with their distance to the text, nearest first. */
+/** The elements of a kind with their distance to the text, nearest first. */
 function candidates(kind: Kind, text: string, lang: string): Candidate[] {
   const typed = normalize(text);
   // an element is as near as its nearest name: the name itself or another one it is known by (Weißrussland, Holland)
   return ELEMENTS.filter((e) => e.kind === kind)
     .map((e) => {
       const name = nameOf(e.id, lang);
-      const best = [name, ...alternativesOf(e.id, lang)]
-        .map((n) => ({ n, distance: distance(typed, normalize(n)) }))
-        .sort((a, b) => a.distance - b.distance)[0] ?? { n: name, distance: Infinity };
-      return { id: e.id, name: best.n, distance: best.distance };
+      const all = [name, ...alternativesOf(e.id, lang)].map((n) => normalize(n));
+      let best = { distance: Infinity, length: 0 };
+      for (const n of all) {
+        const distanceToName = distance(typed, n);
+        if (distanceToName < best.distance) best = { distance: distanceToName, length: n.length };
+      }
+      return { id: e.id, name, ...best, prefix: all.some((n) => n.startsWith(typed)) };
     })
     .sort((a, b) => a.distance - b.distance || a.name.localeCompare(b.name));
 }
@@ -63,19 +71,15 @@ function candidates(kind: Kind, text: string, lang: string): Candidate[] {
 /** The element a typed text stands for, or undefined when no name or more than one name is near enough. */
 export function matchName(kind: Kind, text: string, lang = "de"): string | undefined {
   if (normalize(text).length === 0) return undefined;
-  const near = candidates(kind, text, lang).filter((c) => c.distance <= tolerance(normalize(c.name).length));
+  const near = candidates(kind, text, lang).filter((c) => c.distance <= tolerance(c.length));
   return near.length === 1 ? near[0]?.id : undefined;
 }
 
-/** Up to three names to suggest: those that start with the text, or are a small mistake away from it. */
+/** Up to five names to suggest: first those that start with the text, then those a small mistake away from it (by the tolerance). */
 export function suggestions(kind: Kind, text: string, lang = "de"): string[] {
-  const typed = normalize(text);
-  if (typed.length === 0) return [];
-  return candidates(kind, text, lang)
-    .filter((c) => {
-      const n = normalize(c.name);
-      return n.startsWith(typed) || c.distance <= tolerance(n.length) + 1;
-    })
-    .slice(0, 3)
-    .map((c) => c.id);
+  if (normalize(text).length === 0) return [];
+  const found = candidates(kind, text, lang).filter((c) => c.prefix || c.distance <= tolerance(c.length));
+  const prefixed = found.filter((c) => c.prefix).sort((a, b) => a.name.localeCompare(b.name, "de"));
+  const near = found.filter((c) => !c.prefix);
+  return [...prefixed, ...near].slice(0, 5).map((c) => c.id);
 }
