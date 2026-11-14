@@ -107,11 +107,11 @@ questions. -->
 - Learners: Geographie, 6. Klasse (Topologie Europas, übliches Thema). Land and Schulform only if the creator names a school or class,
   at most once; none → KMK-Bildungsstandards.
 - Model and focus: Fokus Spielgefühl auf der Karte (Ersteller: "wie ein Spiel, kartenorientiert"). Katalog gelesen; Modell-App noch offen (guess: keine).
-- Hurdles: misconceptions and mistakes of the learners; the creator's examples and experiments.
+- Hurdles: Keine Verwechslungen vorhergesagt, auch nicht nötig. Bei falscher Antwort soll die räumliche Distanz zwischen gegebener und richtiger Antwort auf der Karte sichtbar werden.
 - Content: (guess) Assistent aus offenen Quellen, Kartendaten z. B. Natural Earth (gemeinfrei), als vereinfachte Geodaten in der App gebündelt. Original-Frage: who writes it (creator, you, from sources); own material (worksheets, tests); how it is made (sources,
   research, a data format).
 - Amount: Alle Staaten Europas (rund 44) mit Hauptstädten, dazu eine überschaubare Auswahl großer Flüsse, Gebirge und Seen (Ja des Erstellers). Später mehr.
-- Languages: German only, or German and English (texts, code). Never English only: an app without German still has
+- Languages: Erst nur Deutsch, aber für Mehrsprachigkeit vorbereitet (alle Texte in Nachrichtendateien). Erst nur Europa, auf einer Europakarte. Original-Frage: German only, or German and English (texts, code). Never English only: an app without German still has
   German pages and runtime texts, so it mixes both. The creator wants English → offer German and English,
   both complete, and say why.
 - Look and feel: Wie ein Spiel, kartenorientiert. Mobil nur im Querformat (Abweichung von 360 px, kommt in `limits` des Eintrags). Mehrere Schwierigkeitsstufen entlang der Aufgabe: am einfachsten Land mit Umriss auf der Karte markiert → Frage (Hauptstadt, längster Fluss, markiertes Gebirge …), über Namen aus Auswahl wählen, bis zum freien Anklicken von Positionen auf einer Karte ohne Hilfe. Idee: ein einfaches GIS als Basis. Dunkelmodus: noch offen.
