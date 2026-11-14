@@ -32,6 +32,8 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
   element, same fields everywhere: `id`, `kind` (`land`, `stadt`, `fluss`, `gebirge`, `see`, `meer`, `raum`), `level`
   (first level in which it appears, 1 to 4), `ne` (the name in the Natural Earth layer the shape comes from; several
   names separated by `|`). The shape is in `src/data/geo/<file>.json` under the same id.
+- Monaco, San Marino and the Vatican City have no capital element: the city and the state have the same name, so a
+  capital task would ask for the same word twice.
 - Ids: lower-case ASCII, kind first: `land-frankreich`, `stadt-paris`, `fluss-seine`, `gebirge-alpen`, `see-bodensee`,
   `meer-nordsee`, `raum-westeuropa`. An id never changes once published (it keys the learner's progress).
 - Relations: records `{ "type", "from", "to" }` in `src/data/relations.json` (by hand: `hauptstadt-von`, `gehoert-zu`, and the corrections of the generated ones) and in `src/data/geo/relations-geo.json` (generated from the shapes by the script: `fliesst-durch`, `liegt-in`, `grenzt-an`; never edit). Types: `hauptstadt-von` (stadt → land),
