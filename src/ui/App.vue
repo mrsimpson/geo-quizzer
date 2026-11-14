@@ -21,7 +21,7 @@ const emit = defineEmits<{ input: [input: Input] }>();
 const t = translator(de as Record<string, string>);
 const has = (key: string): boolean => key in de;
 
-const storage = createStorage("geo-europa");
+const storage = createStorage("geo-quizzer");
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null;
 
 onMounted(() => {
