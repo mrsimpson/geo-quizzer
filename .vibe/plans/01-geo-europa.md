@@ -258,17 +258,17 @@ limits: Auf dem Handy nur im Querformat nutzbar, weil die Karte Platz braucht; d
 
 ### Tasks
 
-- [ ] `grep '^phase:'` prints `phase: code`; else set it.
-- [ ] Load skill `lernapps-cli`. Create the app in this plan's folder as it says. `create` keeps this plan. Never
+- [x] `grep '^phase:'` prints `phase: code`; else set it.
+- [x] Load skill `lernapps-cli`. Create the app in this plan's folder as it says. `create` keeps this plan. Never
       write the app by hand.
-- [ ] Fill the content guide `.agents/skills/app-content/SKILL.md` from "Notes" and "Content method"
+- [x] Fill the content guide `.agents/skills/app-content/SKILL.md` from "Notes" and "Content method"
       (`app-content-guide`). Keep its nine headings and fill each: Curriculum, Competencies, Content structure,
       Terminology, Exercise patterns, Figures, Sources, Adding a chapter or round, Rules learned from mistakes
       ("None yet." until the first). `grep -c "FILL IN" .agents/skills/app-content/SKILL.md` prints 0. Commit it
       before any content.
-- [ ] Load skill `lernapps-<archetype>` and the content guide. Questions with options and feedback: also skill
+- [x] Load skill `lernapps-<archetype>` and the content guide. Questions with options and feedback: also skill
       `lernapps-content-questions`.
-- [ ] An explainer: decide on `scope` as `references/structure.md` of skill `lernapps-explainer` says. Needed with an
+- [x] (entfällt, kein Explainer) An explainer: decide on `scope` as `references/structure.md` of skill `lernapps-explainer` says. Needed with an
       `open-task` or the creator's material: then `scope` in `src/app.yaml` and on every page
       (`explainer-scope-matches`). Write the choice under "Key decisions".
 - [ ] **Muster-Seite:** Geodaten-Skript und Länder-Daten, Karte als SVG, Stufe 1 (Länder erkennen) komplett: Frage, vier Optionen, richtig/falsch mit Abstandslinie, Fakt und Link, Punkte, Rundenende. Playthrough für Stufe 1. Commit auf `work`.
