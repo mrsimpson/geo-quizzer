@@ -7,7 +7,7 @@ import { translator } from "@lernapps/tooling/i18n";
 import { elementById } from "../core/data.ts";
 import { EXTENT, project, VIEW } from "../core/geo.ts";
 import de from "../messages/de.json";
-import { AREA_PATHS, CONTEXT_PATH, centreOf } from "./paths.ts";
+import { AREA_PATHS, CONTEXT_PATH, LINE_PATHS, centreOf } from "./paths.ts";
 
 export interface Mark {
   id: string;
@@ -38,6 +38,7 @@ watch(
   () => props.resetKey,
   () => {
     view.value = { x: VIEW.x, y: VIEW.y, width: VIEW.width, height: VIEW.height };
+    if (props.marks.some((mark) => mark.role === "asked")) showMiddleOf(props.marks.map((mark) => mark.id));
   },
 );
 
@@ -62,6 +63,8 @@ function boundsOf(ids: readonly string[]): { minX: number; minY: number; maxX: n
   for (const id of ids) {
     const geometry = elementById(id).geometry;
     if (geometry.type === "point") add(geometry.point[0], geometry.point[1]);
+    else if (geometry.type === "line")
+      for (const line of geometry.lines) for (const point of line) add(point[0], point[1]);
     else for (const polygon of geometry.polygons) for (const point of polygon[0] ?? []) add(point[0], point[1]);
   }
   return bounds;
@@ -77,10 +80,29 @@ function fitTo(ids: readonly string[]): void {
   clamp({ x: cx - width / 2, y: cy - (width * ratio) / 2, width, height: width * ratio });
 }
 
+/** Moves the map, without zooming, so that the middle of the given elements is in view (the Ural lies beyond the first view). */
+function showMiddleOf(ids: readonly string[]): void {
+  const b = boundsOf(ids);
+  const cx = (b.minX + b.maxX) / 2;
+  const cy = (b.minY + b.maxY) / 2;
+  const { x, y, width, height } = view.value;
+  const margin = 0.1;
+  if (
+    cx > x + width * margin &&
+    cx < x + width * (1 - margin) &&
+    cy > y + height * margin &&
+    cy < y + height * (1 - margin)
+  ) {
+    return;
+  }
+  clamp({ x: cx - width / 2, y: cy - height / 2, width, height });
+}
+
 watch(
   () => props.marks.map((mark) => `${mark.role}:${mark.id}`).join(),
   () => {
     if (props.marks.some((mark) => mark.role === "right")) fitTo(props.marks.map((mark) => mark.id));
+    else if (props.marks.some((mark) => mark.role === "asked")) showMiddleOf(props.marks.map((mark) => mark.id));
   },
 );
 
@@ -145,8 +167,11 @@ function onKeydown(event: KeyboardEvent): void {
 const areaMarks = computed(() =>
   props.marks.filter((mark) => elementById(mark.id).geometry.type === "area" && AREA_PATHS.has(mark.id)),
 );
+const lineMarks = computed(() => props.marks.filter((mark) => LINE_PATHS.has(mark.id)));
+const riverPaths = [...LINE_PATHS.entries()];
 const pointMarks = computed(() => props.marks.filter((mark) => elementById(mark.id).geometry.type === "point"));
-const plainAreas = computed(() => [...AREA_PATHS.entries()]);
+const countryPaths = [...AREA_PATHS.entries()].filter(([id]) => elementById(id).kind === "land");
+const lakePaths = [...AREA_PATHS.entries()].filter(([id]) => elementById(id).kind === "see");
 
 const lineEnds = computed(() => {
   if (props.line === undefined) return undefined;
@@ -172,13 +197,21 @@ const lineEnds = computed(() => {
     >
       <rect :x="EXTENT.x" :y="EXTENT.y" :width="EXTENT.width" :height="EXTENT.height" class="sea" />
       <path :d="CONTEXT_PATH" class="context" fill-rule="evenodd" />
-      <path v-for="[id, d] in plainAreas" :key="id" :d="d" class="land" fill-rule="evenodd" />
+      <path v-for="[id, d] in countryPaths" :key="id" :d="d" class="land" fill-rule="evenodd" />
+      <path v-for="[id, d] in lakePaths" :key="id" :d="d" class="lake" fill-rule="evenodd" />
+      <path v-for="[id, d] in riverPaths" :key="id" :d="d" class="river" />
       <path
         v-for="mark in areaMarks"
         :key="`${mark.role}-${mark.id}`"
         :d="AREA_PATHS.get(mark.id)"
-        :class="['mark', mark.role]"
+        :class="['mark', 'region', mark.role, elementById(mark.id).kind]"
         fill-rule="evenodd"
+      />
+      <path
+        v-for="mark in lineMarks"
+        :key="`${mark.role}-${mark.id}`"
+        :d="LINE_PATHS.get(mark.id)"
+        :class="['line-mark', mark.role]"
       />
       <g v-if="lineEnds !== undefined && line !== undefined">
         <line :x1="lineEnds.a.x" :y1="lineEnds.a.y" :x2="lineEnds.b.x" :y2="lineEnds.b.y" class="distance" />
@@ -252,6 +285,45 @@ const lineEnds = computed(() => {
   stroke: var(--geo-ink);
   stroke-width: 2.5px;
   vector-effect: non-scaling-stroke;
+}
+
+.lake {
+  fill: var(--geo-sea);
+  stroke: var(--geo-border);
+  stroke-width: 1px;
+  vector-effect: non-scaling-stroke;
+}
+
+.river {
+  fill: none;
+  stroke: var(--geo-river);
+  stroke-width: 1.5px;
+  vector-effect: non-scaling-stroke;
+}
+
+.region:not(.land) {
+  fill-opacity: 0.65;
+}
+
+.line-mark {
+  fill: none;
+  stroke-width: 5px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.line-mark.asked {
+  stroke: var(--geo-asked);
+}
+
+.line-mark.right {
+  stroke: var(--geo-right);
+}
+
+.line-mark.chosen {
+  stroke: var(--geo-chosen);
+  stroke-dasharray: 6 4;
 }
 
 .mark.asked {

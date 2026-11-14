@@ -47,9 +47,9 @@ const kindOfTarget = computed(() => target.value?.kind ?? "land");
 
 const question = computed(() => {
   const done = props.state.phase === "feedback";
-  return t(`${kindOfTarget.value === "stadt" ? "askCity" : "askCountry"}${done ? "Done" : ""}`);
+  return t(`${done ? "askDone" : "ask"}.${kindOfTarget.value}`);
 });
-const mapLabel = computed(() => t(kindOfTarget.value === "stadt" ? "mapLabelCity" : "mapLabelCountry"));
+const mapLabel = computed(() => t(`mapLabel.${kindOfTarget.value}`));
 
 const feedback = computed(
   () => props.state.phase === "feedback" && task.value !== undefined && props.state.answer !== null,
@@ -69,22 +69,42 @@ const line = computed(() => {
   return { from: answer.chosen, to: target.value.id, label: t("kmLabel", { km: answer.km }) };
 });
 
-/** What the learner may read about the right element, once answered: its relation and a fact. */
-const capital = computed(() => {
-  const id = target.value?.id;
-  return RELATIONS.find((r) => r.type === "hauptstadt-von" && r.to === id)?.from;
-});
-const country = computed(() => {
-  const id = target.value?.id;
-  return RELATIONS.find((r) => r.type === "hauptstadt-von" && r.from === id)?.to;
-});
+/** What the learner may read about the right element, once answered: how it is related to the others. */
 const relationText = computed(() => {
-  if (target.value === undefined) return "";
-  if (target.value.kind === "land" && capital.value !== undefined)
-    return t("hasCapital", { country: name(target.value.id), city: name(capital.value) });
-  if (target.value.kind === "stadt" && country.value !== undefined)
-    return t("capitalOf", { city: name(target.value.id), country: name(country.value) });
-  return "";
+  const element = target.value;
+  if (element === undefined) return "";
+  const from = (type: string): string[] =>
+    RELATIONS.filter((r) => r.type === type && r.from === element.id).map((r) => r.to);
+  const to = (type: string): string[] =>
+    RELATIONS.filter((r) => r.type === type && r.to === element.id).map((r) => r.from);
+  const list = (ids: string[]): string => ids.map(name).join(", ");
+  const texts: string[] = [];
+  if (element.kind === "land") {
+    const city = to("hauptstadt-von")[0];
+    if (city !== undefined) texts.push(t("rel.hasCapital", { country: name(element.id), city: name(city) }));
+    const region = from("gehoert-zu")[0];
+    if (region !== undefined) texts.push(t("rel.partOf", { country: name(element.id), region: name(region) }));
+  } else if (element.kind === "stadt") {
+    const country = from("hauptstadt-von")[0];
+    if (country !== undefined) texts.push(t("rel.capitalOf", { city: name(element.id), country: name(country) }));
+  } else if (element.kind === "fluss") {
+    const countries = from("fliesst-durch");
+    if (countries.length > 0)
+      texts.push(t("rel.flowsThrough", { river: name(element.id), countries: list(countries) }));
+  } else if (element.kind === "gebirge" || element.kind === "see") {
+    const countries = from("liegt-in");
+    if (countries.length > 0)
+      texts.push(
+        t(countries.length === 1 ? "rel.liesInOne" : "rel.liesInMany", {
+          place: name(element.id),
+          countries: list(countries),
+        }),
+      );
+  } else if (element.kind === "raum") {
+    const countries = to("gehoert-zu").slice(0, 5);
+    texts.push(t("rel.members", { region: name(element.id), countries: list(countries) }));
+  }
+  return texts.join(" ");
 });
 const fact = computed(() =>
   target.value !== undefined && has(`el.${target.value.id}.fact`) ? t(`el.${target.value.id}.fact`) : "",
@@ -264,6 +284,7 @@ watch(
   --geo-asked: #f28c28;
   --geo-right: #3fae6a;
   --geo-chosen: #4f86c6;
+  --geo-river: #5f9fc7;
   --geo-button: #ffffff;
   --geo-focus: #1a56db;
   --geo-surface: #ffffff;
@@ -281,6 +302,7 @@ watch(
     --geo-asked: #f59a3e;
     --geo-right: #4cc17c;
     --geo-chosen: #78a8e8;
+    --geo-river: #4a8ab5;
     --geo-button: #25313d;
     --geo-focus: #8ab4ff;
     --geo-surface: #1d2733;
@@ -297,6 +319,7 @@ watch(
   --geo-asked: #f59a3e;
   --geo-right: #4cc17c;
   --geo-chosen: #78a8e8;
+  --geo-river: #4a8ab5;
   --geo-button: #25313d;
   --geo-focus: #8ab4ff;
   --geo-surface: #1d2733;

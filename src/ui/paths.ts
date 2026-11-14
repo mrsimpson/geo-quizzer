@@ -19,6 +19,26 @@ function pathOf(polygons: readonly Polygon[]): string {
     .join("");
 }
 
+function linePathOf(lines: readonly (readonly Position[])[]): string {
+  return lines
+    .map((line) =>
+      line
+        .map((position, i) => {
+          const p = project(position[0], position[1]);
+          return `${i === 0 ? "M" : "L"}${fixed(p.x)} ${fixed(p.y)}`;
+        })
+        .join(""),
+    )
+    .join("");
+}
+
+/** The paths of all lines (rivers), by element id. */
+export const LINE_PATHS: ReadonlyMap<string, string> = new Map(
+  ELEMENTS.flatMap((element): [string, string][] =>
+    element.geometry.type === "line" ? [[element.id, linePathOf(element.geometry.lines)]] : [],
+  ),
+);
+
 /** The path of the grey land around the countries of the list. */
 export const CONTEXT_PATH: string = pathOf(CONTEXT);
 

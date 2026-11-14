@@ -273,7 +273,7 @@ limits: Auf dem Handy nur im Querformat nutzbar, weil die Karte Platz braucht; d
       `open-task` or the creator's material: then `scope` in `src/app.yaml` and on every page
       (`explainer-scope-matches`). Write the choice under "Key decisions".
 - [x] **Muster-Seite:** Geodaten-Skript und Länder-Daten, Karte als SVG, Stufe 1 (Länder erkennen) komplett: Frage, vier Optionen, richtig/falsch mit Abstandslinie, Fakt und Link, Punkte, Rundenende. Playthrough für Stufe 1. Commit auf `work`.
-- [ ] **Checkpoint:** the pattern page (`early-preview`): check it against the design rules, let a sub-agent check
+- [x] **Checkpoint:** the pattern page (`early-preview`): check it against the design rules, let a sub-agent check
       it as a learner, show it to the creator, wait for the answer. A change → change the pattern first.
 - [ ] Weitere Elemente: Flüsse (Linien), Gebirge, Seen, Meere, Teilräume (Flächen) als Daten, Zeichnung und Stufe 1; Hauptstädte (Punkte) sind schon in der Muster-Seite; Stufenfeld je Element. Commit.
 - [ ] Beziehungsdaten und Stufe 2 (Hauptstadt von, fließt durch, liegt in, grenzt an). Commit.

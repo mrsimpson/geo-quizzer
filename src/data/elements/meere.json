@@ -1,0 +1,44 @@
+[
+  {
+    "id": "meer-nordsee",
+    "kind": "meer",
+    "level": 1,
+    "ne": "North Sea"
+  },
+  {
+    "id": "meer-ostsee",
+    "kind": "meer",
+    "level": 1,
+    "ne": "Baltic Sea"
+  },
+  {
+    "id": "meer-mittelmeer",
+    "kind": "meer",
+    "level": 1,
+    "ne": "Mediterranean Sea"
+  },
+  {
+    "id": "meer-schwarzes-meer",
+    "kind": "meer",
+    "level": 1,
+    "ne": "Black Sea"
+  },
+  {
+    "id": "meer-adria",
+    "kind": "meer",
+    "level": 1,
+    "ne": "Adriatic Sea"
+  },
+  {
+    "id": "meer-atlantischer-ozean",
+    "kind": "meer",
+    "level": 1,
+    "ne": "North Atlantic Ocean"
+  },
+  {
+    "id": "meer-europaeisches-nordmeer",
+    "kind": "meer",
+    "level": 1,
+    "ne": "Norwegian Sea"
+  }
+]

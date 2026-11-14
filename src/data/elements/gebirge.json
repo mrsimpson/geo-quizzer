@@ -1,0 +1,44 @@
+[
+  {
+    "id": "gebirge-alpen",
+    "kind": "gebirge",
+    "level": 1,
+    "ne": "ALPS"
+  },
+  {
+    "id": "gebirge-pyrenaeen",
+    "kind": "gebirge",
+    "level": 1,
+    "ne": "PYRENEES"
+  },
+  {
+    "id": "gebirge-karpaten",
+    "kind": "gebirge",
+    "level": 1,
+    "ne": "CARPATHIAN MOUNTAINS"
+  },
+  {
+    "id": "gebirge-apenninen",
+    "kind": "gebirge",
+    "level": 1,
+    "ne": "APPENNINI"
+  },
+  {
+    "id": "gebirge-skandinavisches-gebirge",
+    "kind": "gebirge",
+    "level": 1,
+    "ne": "KJØLEN MOUNTAINS"
+  },
+  {
+    "id": "gebirge-ural",
+    "kind": "gebirge",
+    "level": 1,
+    "ne": "URAL MOUNTAINS"
+  },
+  {
+    "id": "gebirge-balkan",
+    "kind": "gebirge",
+    "level": 1,
+    "ne": "Balkan Mts."
+  }
+]

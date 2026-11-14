@@ -179,7 +179,7 @@ const PARTS: Record<string, string> = {
   "Isle of Man": "United Kingdom",
 };
 
-async function countries(): Promise<void> {
+async function countries(): Promise<Record<string, { type: "area"; polygons: Polygon[] }>> {
   const elements = readElements("laender.json");
   const features = await readLayer("ne_50m_admin_0_countries");
   const byName = new Map<string, Feature>();
@@ -211,6 +211,7 @@ async function countries(): Promise<void> {
     context.push(...simplifyPolygons(clipToFrame(polygonsOf(feature.geometry)), EPSILON * 2, MIN_AREA * 4));
   }
   write("kontext.json", { type: "area", polygons: context });
+  return areas;
 }
 
 async function capitals(): Promise<void> {
@@ -228,5 +229,202 @@ async function capitals(): Promise<void> {
   write("hauptstaedte.json", points);
 }
 
-await countries();
+type Area = { type: "area"; polygons: Polygon[] };
+type Line = { type: "line"; lines: Ring[] };
+
+function linesOf(geometry: { type: string; coordinates: unknown }): Ring[] {
+  if (geometry.type === "LineString") return [geometry.coordinates as Ring];
+  if (geometry.type === "MultiLineString") return geometry.coordinates as Ring[];
+  return [];
+}
+
+/** The parts of a line inside the frame: points outside cut it. */
+function clipLines(lines: Ring[]): Ring[] {
+  const inside = (p: Position): boolean =>
+    p[0] >= FRAME.west && p[0] <= FRAME.east && p[1] >= FRAME.south && p[1] <= FRAME.north;
+  const result: Ring[] = [];
+  for (const line of lines) {
+    let current: Position[] = [];
+    for (const point of line) {
+      if (inside(point)) current.push(point);
+      else {
+        if (current.length > 1) result.push(current);
+        current = [];
+      }
+    }
+    if (current.length > 1) result.push(current);
+  }
+  return result;
+}
+
+/** Features of a layer whose property `property` is one of the names (separated by | in the element's field ne). */
+function pick(features: Feature[], property: string, names: string): Feature[] {
+  const wanted = names.split("|");
+  return features.filter((f) => wanted.includes(String(f.properties[property])));
+}
+
+/** Rivers: lines. */
+async function rivers(): Promise<Record<string, Line>> {
+  const features = await readLayer("ne_50m_rivers_lake_centerlines");
+  const result: Record<string, Line> = {};
+  for (const element of readElements("fluesse.json")) {
+    const found = pick(features, "name", element.ne);
+    if (found.length === 0) throw new Error(`no Natural Earth river "${element.ne}"`);
+    const lines = clipLines(found.flatMap((f) => (f.geometry === null ? [] : linesOf(f.geometry))));
+    result[element.id] = {
+      type: "line",
+      lines: lines.map((line) => simplifyLine([...line], EPSILON).map(round)).filter((line) => line.length > 1),
+    };
+  }
+  write("fluesse.json", result);
+  return result;
+}
+
+/** Areas from a layer: mountain ranges, lakes, seas. */
+async function areasOf(file: string, layer: string, property: string, epsilon: number): Promise<Record<string, Area>> {
+  const features = await readLayer(layer);
+  const result: Record<string, Area> = {};
+  for (const element of readElements(file)) {
+    const found = pick(features, property, element.ne);
+    if (found.length === 0) throw new Error(`no Natural Earth feature "${element.ne}" in ${layer}`);
+    const polygons = found.flatMap((f) => (f.geometry === null ? [] : polygonsOf(f.geometry)));
+    result[element.id] = { type: "area", polygons: simplifyPolygons(clipToFrame(polygons), epsilon, 0) };
+  }
+  return result;
+}
+
+interface Relation {
+  type: string;
+  from: string;
+  to: string;
+}
+
+/** The sub-regions of Europe: the shapes of their countries, by the relations gehoert-zu in relations.json. */
+function regions(countryAreas: Record<string, Area>): Record<string, Area> {
+  const relations = JSON.parse(readFileSync(join(root, "src", "data", "relations.json"), "utf-8")) as Relation[];
+  const result: Record<string, Area> = {};
+  for (const element of readElements("teilraeume.json")) {
+    const members = relations.filter((r) => r.type === "gehoert-zu" && r.to === element.id);
+    result[element.id] = {
+      type: "area",
+      polygons: members.flatMap((r) => countryAreas[r.from]?.polygons ?? []),
+    };
+  }
+  return result;
+}
+
+// Relations from the shapes: which country a river flows through, in which countries a lake or a range lies, which
+// countries share a border. Written to src/data/relations-geo.json, never edited by hand.
+
+function inRing(p: Position, ring: Ring): boolean {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const a = ring[i];
+    const b = ring[j];
+    if (a === undefined || b === undefined) continue;
+    if (a[1] > p[1] !== b[1] > p[1] && p[0] < ((b[0] - a[0]) * (p[1] - a[1])) / (b[1] - a[1]) + a[0]) inside = !inside;
+  }
+  return inside;
+}
+
+function inArea(p: Position, area: Area): boolean {
+  return area.polygons.some((polygon) => {
+    const [outer, ...holes] = polygon;
+    return outer !== undefined && inRing(p, outer) && !holes.some((hole) => inRing(p, hole));
+  });
+}
+
+function vertices(area: Area): Position[] {
+  return area.polygons.flatMap((polygon) => polygon.flatMap((ring) => ring));
+}
+
+function denser(line: Ring, step: number): Position[] {
+  const result: Position[] = [];
+  for (let i = 0; i + 1 < line.length; i++) {
+    const a = line[i] as Position;
+    const b = line[i + 1] as Position;
+    const n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / step));
+    for (let k = 0; k < n; k++) result.push([a[0] + ((b[0] - a[0]) * k) / n, a[1] + ((b[1] - a[1]) * k) / n]);
+  }
+  const last = line[line.length - 1];
+  if (last !== undefined) result.push(last);
+  return result;
+}
+
+function nearDegrees(a: Position, b: Position): number {
+  return Math.hypot((a[0] - b[0]) * Math.cos((a[1] * Math.PI) / 180), a[1] - b[1]);
+}
+
+/** Countries that have at least `share` of the sample points (inside them, or within `near` degrees of their shape). */
+function countriesOf(points: Position[], countryAreas: Record<string, Area>, share: number, near: number): string[] {
+  const found: string[] = [];
+  for (const [id, area] of Object.entries(countryAreas)) {
+    const vs = near > 0 ? vertices(area) : [];
+    let count = 0;
+    for (const p of points) {
+      if (inArea(p, area) || (near > 0 && vs.some((v) => nearDegrees(p, v) <= near))) count++;
+    }
+    if (count / points.length >= share) found.push(id);
+  }
+  return found;
+}
+
+/** Pairs of countries whose shapes come within `near` degrees of each other. */
+function borders(countryAreas: Record<string, Area>, near: number, not: readonly string[]): [string, string][] {
+  const ids = Object.keys(countryAreas);
+  const pairs: [string, string][] = [];
+  for (const [i, a] of ids.entries()) {
+    for (const b of ids.slice(i + 1)) {
+      if (not.includes(`${a}|${b}`)) continue;
+      const va = vertices(countryAreas[a] as Area);
+      const vb = vertices(countryAreas[b] as Area);
+      if (va.some((p) => vb.some((q) => nearDegrees(p, q) <= near))) pairs.push([a, b]);
+    }
+  }
+  return pairs;
+}
+
+function geoRelations(
+  countryAreas: Record<string, Area>,
+  riverLines: Record<string, Line>,
+  ranges: Record<string, Area>,
+  lakes: Record<string, Area>,
+): Relation[] {
+  const relations: Relation[] = [];
+  for (const [id, river] of Object.entries(riverLines)) {
+    const points = river.lines.flatMap((line) => denser(line, 0.05));
+    for (const country of countriesOf(points, countryAreas, 0.04, 0))
+      relations.push({ type: "fliesst-durch", from: id, to: country });
+  }
+  for (const [id, range] of Object.entries(ranges)) {
+    const grid: Position[] = [];
+    const vs = vertices(range);
+    const xs = vs.map((v) => v[0]);
+    const ys = vs.map((v) => v[1]);
+    for (let x = Math.min(...xs); x <= Math.max(...xs); x += 0.15) {
+      for (let y = Math.min(...ys); y <= Math.max(...ys); y += 0.15) if (inArea([x, y], range)) grid.push([x, y]);
+    }
+    for (const country of countriesOf(grid, countryAreas, 0.06, 0))
+      relations.push({ type: "liegt-in", from: id, to: country });
+  }
+  for (const [id, lake] of Object.entries(lakes)) {
+    const points = lake.polygons.flatMap((polygon) => denser(polygon[0] ?? [], 0.05));
+    for (const country of countriesOf(points, countryAreas, 0.15, 0.06))
+      relations.push({ type: "liegt-in", from: id, to: country });
+  }
+  // Borders: straits are no borders (the Oresund is about 4 km wide)
+  const straits = ["land-daenemark|land-schweden"];
+  for (const [a, b] of borders(countryAreas, 0.04, straits)) relations.push({ type: "grenzt-an", from: a, to: b });
+  return relations;
+}
+
+const countryAreas = await countries();
 await capitals();
+const riverLines = await rivers();
+const ranges = await areasOf("gebirge.json", "ne_50m_geography_regions_polys", "NAME", 0.05);
+write("gebirge.json", ranges);
+const lakes = await areasOf("seen.json", "ne_10m_lakes", "name", 0.01);
+write("seen.json", lakes);
+write("meere.json", await areasOf("meere.json", "ne_50m_geography_marine_polys", "name", 0.1));
+write("teilraeume.json", regions(countryAreas));
+write("relations-geo.json", geoRelations(countryAreas, riverLines, ranges, lakes));

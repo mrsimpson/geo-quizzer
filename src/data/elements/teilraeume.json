@@ -1,0 +1,38 @@
+[
+  {
+    "id": "raum-nordeuropa",
+    "kind": "raum",
+    "level": 1,
+    "ne": "Nordeuropa"
+  },
+  {
+    "id": "raum-westeuropa",
+    "kind": "raum",
+    "level": 1,
+    "ne": "Westeuropa"
+  },
+  {
+    "id": "raum-mitteleuropa",
+    "kind": "raum",
+    "level": 1,
+    "ne": "Mitteleuropa"
+  },
+  {
+    "id": "raum-suedeuropa",
+    "kind": "raum",
+    "level": 1,
+    "ne": "Südeuropa"
+  },
+  {
+    "id": "raum-suedosteuropa",
+    "kind": "raum",
+    "level": 1,
+    "ne": "Südosteuropa"
+  },
+  {
+    "id": "raum-osteuropa",
+    "kind": "raum",
+    "level": 1,
+    "ne": "Osteuropa"
+  }
+]

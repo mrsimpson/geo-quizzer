@@ -29,15 +29,18 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
 
 - Element kinds and files in `src/data/elements/`: `laender.json` (countries), `hauptstaedte.json` (capitals, points),
   `fluesse.json` (rivers, lines), `gebirge.json`, `seen.json`, `meere.json`, `teilraeume.json` (areas). One record per
-  element, same fields everywhere: `id`, `kind`, `level` (first level in which it appears, 1 to 4), `geo` (key in
-  `src/data/geo/<kind>.json`).
+  element, same fields everywhere: `id`, `kind` (`land`, `stadt`, `fluss`, `gebirge`, `see`, `meer`, `raum`), `level`
+  (first level in which it appears, 1 to 4), `ne` (the name in the Natural Earth layer the shape comes from; several
+  names separated by `|`). The shape is in `src/data/geo/<file>.json` under the same id.
 - Ids: lower-case ASCII, kind first: `land-frankreich`, `stadt-paris`, `fluss-seine`, `gebirge-alpen`, `see-bodensee`,
   `meer-nordsee`, `raum-westeuropa`. An id never changes once published (it keys the learner's progress).
-- Relations in `src/data/relations.json`: records `{ "type", "from", "to" }`. Types: `hauptstadt-von` (stadt → land),
+- Relations: records `{ "type", "from", "to" }` in `src/data/relations.json` (by hand: `hauptstadt-von`, `gehoert-zu`, and the corrections of the generated ones) and in `src/data/geo/relations-geo.json` (generated from the shapes by the script: `fliesst-durch`, `liegt-in`, `grenzt-an`; never edit). Types: `hauptstadt-von` (stadt → land),
   `fliesst-durch` (fluss → land), `liegt-in` (see, gebirge → land), `grenzt-an` (land → land, listed once, read both
   ways), `gehoert-zu` (land → raum). Each relation creates tasks of levels 2 to 4 in both directions.
-- Geometry in `src/data/geo/<kind>.json`: simplified shapes made from Natural Earth by `tools/build-geodata.ts`
-  (public domain); never edit by hand, change the script and run it again.
+- Geometry in `src/data/geo/<file>.json`: simplified shapes made from Natural Earth by `tools/build-geodata.ts`
+  (public domain; the zip files go into `tools/cache`, not committed); never edit by hand, change the script and run
+  `npm run geodata`. The sub-regions (`raum-*`) are the shapes of their countries (relations `gehoert-zu`).
+- The six sub-regions follow the common division of German atlases; the assignment of the countries is not checked against an atlas (not checked).
 - Texts in `src/messages/de.json`: `el.<id>.name` (required), `el.<id>.fact` (one or two sentences for children),
   `el.<id>.link` (address to read more, only when the page exists and was opened). Other languages: a new file
   `src/messages/<language>.json` with every key.
