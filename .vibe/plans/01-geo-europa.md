@@ -79,6 +79,10 @@ Kinder der 6. Klasse üben auf einer Europakarte wie in einem Spiel: Sie finden 
 - Weiterlesen: Klexikon, klexikon.zum.de (Stichproben geöffnet, geprüft: Frankreich, Liechtenstein, Paris, Rhein, Donau, Alpen, Bodensee, Nordsee und mehr). Fehlen: Skandinavisches Gebirge, Ladogasee, Reykjavík, Tajo, Don. Keine Sätze kopiert, nur verlinkt.
 - Fakten: eigene Formulierung nach geöffneten Quellen; jeder Fakt wird in Code anhand einer geöffneten Seite geprüft. Noch ungeprüft.
 
+**Lehrwerk und Länderliste (geprüft):** Bildungsplan Baden-Württemberg, Geographie Klassen 5 und 6, Lesehilfe 2025 (km.baden-wuerttemberg.de, geöffnet): Kompetenz „die politische Gliederung Deutschlands und Europas beschreiben (…, Hauptstadt, Staat)", Hinweis „ausgewählte Staaten Europas mit Hauptstädten". Keine feste Länderliste. Andere Länder (NRW, Hessen) und Atlanten/Schulbücher nicht geöffnet, ungeprüft. Die Suche fand nur Verlagsmaterialien, die Türkei und Russland als Grenzfälle (teils Asien) und den Kosovo als eigenen Staat führen.
+
+**Erweiterbarkeit (Wunsch des Erstellers):** Alle Elemente und Beziehungen stehen in Datendateien; ein neues Land, Gewässer oder Gebirge ist nur eine Datenänderung, kein Code. Jedes Element hat ein Feld für die Stufe, ab der es drankommt.
+
 **Offene Fragen:** Auswahl der Elemente und der Teilräume; Kosovo und Türkei/Russland.
 
 ## Explore
