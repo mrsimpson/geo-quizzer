@@ -49,7 +49,7 @@ Kinder der 6. Klasse üben auf einer Europakarte wie in einem Spiel: Sie finden 
 - Zusätzlich zur Lernlandkarte: Teilräume Europas und Meere aufnehmen, weil der Baustein sie nennt. (guess, beim Checkpoint bestätigen)
 - Auswahl der Elemente (siehe Notes: Umfang) bestätigt. Russland, Türkei, Kosovo und Mikrostaaten dabei, ab höherer Stufe (bestätigt).
 - Vier Stufen statt drei: Erkennen, Beziehungen, Zeigen, Frei. (guess)
-- Abdeckung statt feste 10 Aufgaben: Fortschritt pro Element und Stufe, Runde = alles noch nicht Gekonnte; Stufen alle von Anfang an frei wählbar. (guess)
+- Runde = 10 Aufgaben, Gesamtfortschritt = Anteil gekonnter Aufgaben an der Gesamtmenge je Stufe und Thema; Stufen alle von Anfang an frei wählbar. (guess)
 - Autokorrektur beim Tippen: Groß/klein, Umlaute, ß und kleine Fehler ignorieren (Abstand höchstens 1 bei kurzen, 2 bei langen Namen, nur bei eindeutigem Treffer); Vorschlag "Meintest du …"; richtige Schreibweise wird danach gezeigt. (guess)
 - Alle Inhalte als Daten, neue Elemente ohne Code (Wunsch des Erstellers).
 - Dunkelmodus: folgt dem Gerät. (guess)
@@ -72,7 +72,7 @@ Kinder der 6. Klasse üben auf einer Europakarte wie in einem Spiel: Sie finden 
 - Stufe 2 Beziehungen: "Welche Hauptstadt hat dieses Land?", "Welches Land durchfließt dieser Fluss?", "Wo liegt der See?" aus den Beziehungsdaten, mit Nachbarn als Hilfe.
 - Stufe 3 Zeigen: Name gegeben, das Element auf der Karte mit Grenzen und Ländernamen als Hilfe anklicken; Rückmeldung zeigt Abstand zur richtigen Stelle (Linie, km).
 - Stufe 4 Frei, zwei Aufgabenarten auf der leeren Karte (nur Küstenumriss): (a) Name gegeben, Ort setzen, Wertung nach Abstand; (b) Element markiert, Namen tippen mit Autokorrektur (Vorschläge aus den echten Namen, kleine Tippfehler zählen nicht; Wunsch des Erstellers). Rückmeldung wie Stufe 3 plus Beziehung ("Paris liegt in Frankreich, an der Seine").
-- Abdeckung (Wunsch des Erstellers): Die Kinder sollen am Ende alles können, nicht nur 10 Aufgaben üben. Eine Runde fragt alle noch nicht gekonnten Aufgaben der gewählten Themen in der Stufe ab; Fehler kommen in derselben Runde nach einigen anderen Aufgaben wieder. Gekonnt = zweimal in verschiedenen Runden beim ersten Versuch richtig (guess). Pause jederzeit, Fortschritt wird auf dem Gerät gespeichert.
+- Abdeckung (Wunsch des Erstellers): Eine Runde hat 10 Aufgaben; der Gesamtfortschritt orientiert sich an den Gesamtfähigkeiten, also an der Gesamtmenge aller Aufgaben je Stufe und Thema ("112 von 133 gekonnt"). Die 10 Aufgaben einer Runde kommen vor allem aus dem noch nicht Gekonnten (Fehler zuerst), mit etwas Wiederholung von Gekonntem. Gekonnt = zweimal in verschiedenen Runden beim ersten Versuch richtig (guess). Pause jederzeit, Fortschritt wird auf dem Gerät gespeichert.
 
 **Umfang (Vorschlag, beim Checkpoint zu bestätigen):**
 - Länder: rund 45 Staaten Europas mit Hauptstadt (Kosovo, Zypern und die Mikrostaaten Andorra, Liechtenstein, Malta, Monaco, San Marino, Vatikanstadt dabei; Türkei und Russland als Staaten mit europäischem Teil; Kaukasus-Staaten nicht).
@@ -217,7 +217,7 @@ limits: Auf dem Handy nur im Querformat nutzbar, weil die Karte Platz braucht; d
 ### Content method
 
 **Teile (interactive-design):**
-- **Kern** `src/core/`: reiner TypeScript-Code ohne DOM. Aus Seed, Route (Stufe), gewählten Themen und dem gespeicherten Fortschritt entsteht eine Runde mit allen noch nicht gekonnten Aufgaben, gemischt (Zufall nur aus dem Seed); falsch beantwortete kommen nach einigen anderen Aufgaben wieder. Nimmt Eingaben (Antwort wählen, Ort setzen, Namen tippen, Weiter) und wertet aus: Treffer, Abstand in km, Fortschritt je Element und Stufe, Serie, Sterne je Thema und Stufe. Enthält auch den Namensvergleich mit Autokorrektur (Normalisieren, Abstand, Vorschläge). Enthält die GIS-Funktionen: Projektion Länge/Breite → Karte, Punkt-in-Fläche, Abstand zu Fläche, Linie oder Punkt (Haversine), Trefferradius je Elementgröße.
+- **Kern** `src/core/`: reiner TypeScript-Code ohne DOM. Aus Seed, Route (Stufe), gewählten Themen und dem gespeicherten Fortschritt entsteht eine Runde mit 10 Aufgaben (Zufall nur aus dem Seed): zuerst Fehler und Ungekonntes, dazu etwas Wiederholung. Nimmt Eingaben (Antwort wählen, Ort setzen, Namen tippen, Weiter) und wertet aus: Treffer, Abstand in km, Fortschritt je Element und Stufe, Serie, Sterne je Thema und Stufe. Enthält auch den Namensvergleich mit Autokorrektur (Normalisieren, Abstand, Vorschläge). Enthält die GIS-Funktionen: Projektion Länge/Breite → Karte, Punkt-in-Fläche, Abstand zu Fläche, Linie oder Punkt (Haversine), Trefferradius je Elementgröße.
 - **Oberfläche** `src/ui/`: Vue-Komponenten. Karte als SVG (zoombar mit Knöpfen, Mausrad, Pinch und Tastatur), Fragefeld, Antwortknöpfe, Rückmeldung, Startbildschirm, Hinweis im Hochformat. Kein Spielstand in den Komponenten.
 - **Daten** `src/data/`: `geo/*.json` (vereinfachte Geometrien aus Natural Earth, mit einem Skript `tools/build-geodata` erzeugt und eingecheckt), `elements/*.json` (ein Datensatz je Element: id, Art, Stufe, Geometrie, Beziehungen, Linkadresse), Texte in `src/messages/de.json` (Namen, Fakten, Oberfläche) mit den Elements-Ids als Schlüssel.
 - **Routen:** `stufe-1` bis `stufe-4` (je ein Link auf `app/#stufe-n`).
@@ -229,7 +229,7 @@ limits: Auf dem Handy nur im Querformat nutzbar, weil die Karte Platz braucht; d
 - **Zeigen** (ablesen): Name gegeben → anklicken auf der Karte mit Grenzen und Ländernamen. Treffer: im Land (Fläche) bzw. innerhalb des Trefferradius (Punkt, Linie).
 - **Frei, Ort setzen:** Name gegeben → Ort setzen auf der Karte nur mit Küstenumriss; Treffer nach Abstand. Tastatur: Fadenkreuz mit Pfeiltasten, Enter setzt.
 - **Frei, Namen tippen:** Element markiert auf der Küstenkarte → Namen tippen; Vorschläge und Fehlertoleranz aus den echten Namen der Art (nie aus anderen Arten). Beispiel: „Itallien" → „Meintest du: Italien"; zählt als richtig, die Schreibweise wird gezeigt.
-- **Abdeckung:** Aufgaben entstehen aus den Daten (jedes Element, jede Beziehung, beide Richtungen); der Fortschritt je Element und Stufe liegt im Lernstand (klein, unter 100 kB). Ein Thema ist geschafft, wenn alle seine Aufgaben gekonnt sind.
+- **Abdeckung:** Aufgaben entstehen aus den Daten (jedes Element, jede Beziehung, beide Richtungen). Der Fortschritt je Aufgabe liegt im Lernstand (klein, unter 100 kB); der Gesamtfortschritt zählt gekonnte Aufgaben an der Gesamtmenge je Stufe und Thema. Ein Thema ist geschafft, wenn alle seine Aufgaben gekonnt sind.
 - **Falsche Antwort, immer:** Linie zwischen gewähltem und richtigem Ort mit Abstand in km, richtiges Element hervorgehoben, Fakt, Beziehung („liegt in …, an …") und, wo vorhanden, Klexikon-Link (lädt erst nach Klick).
 
 **Karte (Lernhandlung):** Das Ganze ist Europa in einer flächentreuen Projektion, Küsten und Grenzen aus den Geodaten. Orange ist das gesuchte Element (Fläche, Punkt oder Linie), blau die Antwort der Kinder, grün der richtige Ort, die gestrichelte Linie der Abstand. Gleich bleiben Projektion und Maßstab; es ändert sich, was beschriftet und angeklickt werden darf. So lernen die Kinder, wo etwas liegt, und sehen, wie weit sie danebenlagen.
@@ -275,7 +275,7 @@ limits: Auf dem Handy nur im Querformat nutzbar, weil die Karte Platz braucht; d
 - [ ] Weitere Elemente: Hauptstädte (Punkte), Flüsse (Linien), Gebirge, Seen, Meere, Teilräume (Flächen) als Daten, Zeichnung und Stufe 1; Stufenfeld je Element. Commit.
 - [ ] Beziehungsdaten und Stufe 2 (Hauptstadt von, fließt durch, liegt in, grenzt an). Commit.
 - [ ] Stufe 3 (Zeigen mit Hilfe) und Stufe 4 (Frei: Ort setzen und Namen tippen mit Autokorrektur), Fadenkreuz mit Tastatur, Zoom, Trefferradius, Abstandsrückmeldung überall. Commit.
-- [ ] Abdeckung: Fortschritt je Element und Stufe, Runde aus allem Offenen, Wiederholung von Fehlern, Sterne je Thema, Pause und Fortsetzen, Lernstand lokal. Commit.
+- [ ] Abdeckung: Fortschritt je Aufgabe, Gesamtfortschritt je Stufe und Thema, Runde mit 10 Aufgaben aus dem noch nicht Gekonnten (Fehler zuerst) mit etwas Wiederholung, Sterne je Thema, Pause und Fortsetzen, Lernstand lokal. Commit.
 - [ ] Fakten und Klexikon-Links für alle Elemente: Fakt je Element nach einer geöffneten Seite geprüft, Link nur wo die Seite existiert und geöffnet wurde. Commit.
 - [ ] Spielgefühl und Rahmen: Startbildschirm mit Stufenkarten und Themen, Sterne und Serie, Lernstand lokal, Hochformat-Hinweis, Dunkelmodus, kräftige Farben ohne Blitzen. Commit.
 - [ ] Startseite (`app.yaml`: Beschreibung, So geht's, Kompetenz, Hinweis auf `kontinente-und-ozeane`, Routen), Katalogeintrag-Entwurf, Architektur `docs/arc42/` je Aufgabe im selben Commit. Commit.
