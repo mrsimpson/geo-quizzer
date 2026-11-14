@@ -1,0 +1,266 @@
+[
+  {
+    "id": "stadt-tirana",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Tirana"
+  },
+  {
+    "id": "stadt-andorra-la-vella",
+    "kind": "stadt",
+    "level": 3,
+    "ne": "Andorra"
+  },
+  {
+    "id": "stadt-minsk",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Minsk"
+  },
+  {
+    "id": "stadt-bruessel",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Brussels"
+  },
+  {
+    "id": "stadt-sarajevo",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Sarajevo"
+  },
+  {
+    "id": "stadt-sofia",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Sofia"
+  },
+  {
+    "id": "stadt-kopenhagen",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Kobenhavn"
+  },
+  {
+    "id": "stadt-berlin",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Berlin"
+  },
+  {
+    "id": "stadt-tallinn",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Tallinn"
+  },
+  {
+    "id": "stadt-helsinki",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Helsinki"
+  },
+  {
+    "id": "stadt-paris",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Paris"
+  },
+  {
+    "id": "stadt-athen",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Athens"
+  },
+  {
+    "id": "stadt-dublin",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Dublin"
+  },
+  {
+    "id": "stadt-reykjavik",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Reykjavik"
+  },
+  {
+    "id": "stadt-rom",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Rome"
+  },
+  {
+    "id": "stadt-pristina",
+    "kind": "stadt",
+    "level": 3,
+    "ne": "Pristina"
+  },
+  {
+    "id": "stadt-zagreb",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Zagreb"
+  },
+  {
+    "id": "stadt-riga",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Riga"
+  },
+  {
+    "id": "stadt-vaduz",
+    "kind": "stadt",
+    "level": 3,
+    "ne": "Vaduz"
+  },
+  {
+    "id": "stadt-vilnius",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Vilnius"
+  },
+  {
+    "id": "stadt-luxemburg-stadt",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Luxembourg"
+  },
+  {
+    "id": "stadt-valletta",
+    "kind": "stadt",
+    "level": 3,
+    "ne": "Valletta"
+  },
+  {
+    "id": "stadt-chisinau",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Chisinau"
+  },
+  {
+    "id": "stadt-podgorica",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Podgorica"
+  },
+  {
+    "id": "stadt-amsterdam",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Amsterdam"
+  },
+  {
+    "id": "stadt-skopje",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Skopje"
+  },
+  {
+    "id": "stadt-oslo",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Oslo"
+  },
+  {
+    "id": "stadt-wien",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Vienna"
+  },
+  {
+    "id": "stadt-warschau",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Warsaw"
+  },
+  {
+    "id": "stadt-lissabon",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Lisbon"
+  },
+  {
+    "id": "stadt-bukarest",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Bucharest"
+  },
+  {
+    "id": "stadt-moskau",
+    "kind": "stadt",
+    "level": 3,
+    "ne": "Moscow"
+  },
+  {
+    "id": "stadt-stockholm",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Stockholm"
+  },
+  {
+    "id": "stadt-bern",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Bern"
+  },
+  {
+    "id": "stadt-belgrad",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Belgrade"
+  },
+  {
+    "id": "stadt-bratislava",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Bratislava"
+  },
+  {
+    "id": "stadt-ljubljana",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Ljubljana"
+  },
+  {
+    "id": "stadt-madrid",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Madrid"
+  },
+  {
+    "id": "stadt-prag",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Prague"
+  },
+  {
+    "id": "stadt-ankara",
+    "kind": "stadt",
+    "level": 3,
+    "ne": "Ankara"
+  },
+  {
+    "id": "stadt-kiew",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Kiev"
+  },
+  {
+    "id": "stadt-budapest",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "Budapest"
+  },
+  {
+    "id": "stadt-london",
+    "kind": "stadt",
+    "level": 1,
+    "ne": "London"
+  },
+  {
+    "id": "stadt-nikosia",
+    "kind": "stadt",
+    "level": 3,
+    "ne": "Nicosia"
+  }
+]

@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Stufe 3: den Namen auf der Karte anklicken. Ein Treffer (Moldau), dann ein Fehlversuch (Finnland von Frankreich aus
+# gesucht): die Rückmeldung nennt den Abstand in Kilometern bis zum nächsten Punkt des gesuchten Landes.
+seed: 21
+route: stufe-3
+steps:
+  - inputs: [{ kind: action, name: start }]
+    state: { phase: asking, level: 3, index: 0, pin: null }
+    announce: "Aufgabe 1 von 10. Klicke auf das Land Moldau."
+  - inputs: [{ kind: action, name: pin, value: [28.45, 47.2] }]
+    state: { phase: asking, pin: [28.45, 47.2] }
+  - inputs: [{ kind: action, name: confirm }]
+    state: { phase: feedback, right: 1, pin: null, answer: { right: true, km: 0, point: [28.45, 47.2] } }
+    announce: "Richtig! Getroffen: die Moldau!"
+  - inputs: [{ kind: action, name: next }]
+    state: { phase: asking, index: 1 }
+    announce: "Aufgabe 2 von 10. Klicke auf das Land Finnland."
+  - inputs: [{ kind: action, name: pin, value: [200, 45] }]
+    state: { pin: null }
+  - inputs: [{ kind: action, name: pin, value: [2, 45] }, { kind: action, name: confirm }]
+    state:
+      phase: feedback
+      right: 1
+      answer: { right: false, km: 2180, point: [2, 45], nearest: [19.75, 60.1] }
+      progress:
+        "zeigen:land-moldau": [1, 0]
+        "zeigen:land-finnland": [0, 1]
+    announce: "Nicht ganz. Gesucht war: Finnland (grün). Dein Punkt lag ungefähr 2.180 km daneben. Von deinem Punkt aus liegt es im Nordosten."

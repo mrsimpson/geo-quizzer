@@ -1,0 +1,74 @@
+[
+  {
+    "id": "fluss-rhein",
+    "kind": "fluss",
+    "level": 1,
+    "ne": "Rhine"
+  },
+  {
+    "id": "fluss-donau",
+    "kind": "fluss",
+    "level": 1,
+    "ne": "Danube|Donau"
+  },
+  {
+    "id": "fluss-elbe",
+    "kind": "fluss",
+    "level": 1,
+    "ne": "Elbe"
+  },
+  {
+    "id": "fluss-oder",
+    "kind": "fluss",
+    "level": 1,
+    "ne": "Oder"
+  },
+  {
+    "id": "fluss-weichsel",
+    "kind": "fluss",
+    "level": 1,
+    "ne": "Vistula"
+  },
+  {
+    "id": "fluss-seine",
+    "kind": "fluss",
+    "level": 1,
+    "ne": "Seine"
+  },
+  {
+    "id": "fluss-loire",
+    "kind": "fluss",
+    "level": 1,
+    "ne": "Loire"
+  },
+  {
+    "id": "fluss-rhone",
+    "kind": "fluss",
+    "level": 1,
+    "ne": "Rhône"
+  },
+  {
+    "id": "fluss-po",
+    "kind": "fluss",
+    "level": 1,
+    "ne": "Po"
+  },
+  {
+    "id": "fluss-ebro",
+    "kind": "fluss",
+    "level": 1,
+    "ne": "Ebro"
+  },
+  {
+    "id": "fluss-wolga",
+    "kind": "fluss",
+    "level": 1,
+    "ne": "Volga"
+  },
+  {
+    "id": "fluss-dnepr",
+    "kind": "fluss",
+    "level": 1,
+    "ne": "Dnipro"
+  }
+]

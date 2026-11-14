@@ -1,0 +1,667 @@
+[
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-tirana",
+    "to": "land-albanien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-andorra-la-vella",
+    "to": "land-andorra"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-minsk",
+    "to": "land-belarus"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-bruessel",
+    "to": "land-belgien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-sarajevo",
+    "to": "land-bosnien-herzegowina"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-sofia",
+    "to": "land-bulgarien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-kopenhagen",
+    "to": "land-daenemark"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-berlin",
+    "to": "land-deutschland"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-tallinn",
+    "to": "land-estland"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-helsinki",
+    "to": "land-finnland"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-paris",
+    "to": "land-frankreich"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-athen",
+    "to": "land-griechenland"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-dublin",
+    "to": "land-irland"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-reykjavik",
+    "to": "land-island"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-rom",
+    "to": "land-italien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-pristina",
+    "to": "land-kosovo"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-zagreb",
+    "to": "land-kroatien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-riga",
+    "to": "land-lettland"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-vaduz",
+    "to": "land-liechtenstein"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-vilnius",
+    "to": "land-litauen"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-luxemburg-stadt",
+    "to": "land-luxemburg"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-valletta",
+    "to": "land-malta"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-chisinau",
+    "to": "land-moldau"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-podgorica",
+    "to": "land-montenegro"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-amsterdam",
+    "to": "land-niederlande"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-skopje",
+    "to": "land-nordmazedonien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-oslo",
+    "to": "land-norwegen"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-wien",
+    "to": "land-oesterreich"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-warschau",
+    "to": "land-polen"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-lissabon",
+    "to": "land-portugal"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-bukarest",
+    "to": "land-rumaenien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-moskau",
+    "to": "land-russland"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-stockholm",
+    "to": "land-schweden"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-bern",
+    "to": "land-schweiz"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-belgrad",
+    "to": "land-serbien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-bratislava",
+    "to": "land-slowakei"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-ljubljana",
+    "to": "land-slowenien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-madrid",
+    "to": "land-spanien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-prag",
+    "to": "land-tschechien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-ankara",
+    "to": "land-tuerkei"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-kiew",
+    "to": "land-ukraine"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-budapest",
+    "to": "land-ungarn"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-london",
+    "to": "land-vereinigtes-koenigreich"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-nikosia",
+    "to": "land-zypern"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-island",
+    "to": "raum-nordeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-norwegen",
+    "to": "raum-nordeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-schweden",
+    "to": "raum-nordeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-finnland",
+    "to": "raum-nordeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-daenemark",
+    "to": "raum-nordeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-estland",
+    "to": "raum-nordeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-lettland",
+    "to": "raum-nordeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-litauen",
+    "to": "raum-nordeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-vereinigtes-koenigreich",
+    "to": "raum-westeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-irland",
+    "to": "raum-westeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-frankreich",
+    "to": "raum-westeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-belgien",
+    "to": "raum-westeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-niederlande",
+    "to": "raum-westeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-luxemburg",
+    "to": "raum-westeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-monaco",
+    "to": "raum-westeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-deutschland",
+    "to": "raum-mitteleuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-polen",
+    "to": "raum-mitteleuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-tschechien",
+    "to": "raum-mitteleuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-slowakei",
+    "to": "raum-mitteleuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-ungarn",
+    "to": "raum-mitteleuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-oesterreich",
+    "to": "raum-mitteleuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-schweiz",
+    "to": "raum-mitteleuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-liechtenstein",
+    "to": "raum-mitteleuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-slowenien",
+    "to": "raum-mitteleuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-portugal",
+    "to": "raum-suedeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-spanien",
+    "to": "raum-suedeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-andorra",
+    "to": "raum-suedeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-italien",
+    "to": "raum-suedeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-san-marino",
+    "to": "raum-suedeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-vatikanstadt",
+    "to": "raum-suedeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-malta",
+    "to": "raum-suedeuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-kroatien",
+    "to": "raum-suedosteuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-bosnien-herzegowina",
+    "to": "raum-suedosteuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-serbien",
+    "to": "raum-suedosteuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-montenegro",
+    "to": "raum-suedosteuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-kosovo",
+    "to": "raum-suedosteuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-nordmazedonien",
+    "to": "raum-suedosteuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-albanien",
+    "to": "raum-suedosteuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-griechenland",
+    "to": "raum-suedosteuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-bulgarien",
+    "to": "raum-suedosteuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-rumaenien",
+    "to": "raum-suedosteuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-zypern",
+    "to": "raum-suedosteuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-tuerkei",
+    "to": "raum-suedosteuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-russland",
+    "to": "raum-osteuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-ukraine",
+    "to": "raum-osteuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-belarus",
+    "to": "raum-osteuropa"
+  },
+  {
+    "type": "gehoert-zu",
+    "from": "land-moldau",
+    "to": "raum-osteuropa"
+  },
+  {
+    "type": "fliesst-durch",
+    "from": "fluss-rhein",
+    "to": "land-schweiz"
+  },
+  {
+    "type": "liegt-in",
+    "from": "gebirge-alpen",
+    "to": "land-slowenien"
+  },
+  {
+    "type": "liegt-in",
+    "from": "gebirge-alpen",
+    "to": "land-liechtenstein"
+  },
+  {
+    "type": "liegt-in",
+    "from": "gebirge-pyrenaeen",
+    "to": "land-andorra"
+  },
+  {
+    "type": "liegt-in",
+    "from": "gebirge-apenninen",
+    "to": "land-san-marino"
+  },
+  {
+    "type": "grenzt-an",
+    "from": "land-schweiz",
+    "to": "land-liechtenstein"
+  },
+  {
+    "type": "grenzt-an",
+    "from": "land-frankreich",
+    "to": "land-monaco"
+  },
+  {
+    "type": "grenzt-an",
+    "from": "land-italien",
+    "to": "land-san-marino"
+  },
+  {
+    "type": "grenzt-an",
+    "from": "land-italien",
+    "to": "land-vatikanstadt"
+  },
+  {
+    "type": "grenzt-an",
+    "from": "land-griechenland",
+    "to": "land-tuerkei"
+  },
+  {
+    "type": "fliesst-durch",
+    "from": "fluss-rhein",
+    "to": "land-liechtenstein"
+  },
+  {
+    "type": "fliesst-durch",
+    "from": "fluss-rhein",
+    "to": "land-oesterreich"
+  },
+  {
+    "type": "fliesst-durch",
+    "from": "fluss-donau",
+    "to": "land-kroatien"
+  },
+  {
+    "type": "fliesst-durch",
+    "from": "fluss-donau",
+    "to": "land-moldau"
+  },
+  {
+    "type": "fliesst-durch",
+    "from": "fluss-donau",
+    "to": "land-ukraine"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-slowenien",
+    "to": "raum-suedosteuropa"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-kroatien",
+    "to": "raum-mitteleuropa"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-griechenland",
+    "to": "raum-suedeuropa"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-estland",
+    "to": "raum-osteuropa"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-lettland",
+    "to": "raum-osteuropa"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-litauen",
+    "to": "raum-osteuropa"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-ungarn",
+    "to": "raum-suedosteuropa"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-polen",
+    "to": "raum-osteuropa"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-tschechien",
+    "to": "raum-osteuropa"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-slowakei",
+    "to": "raum-osteuropa"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-ungarn",
+    "to": "raum-osteuropa"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-rumaenien",
+    "to": "raum-osteuropa"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-bulgarien",
+    "to": "raum-osteuropa"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-deutschland",
+    "to": "raum-westeuropa"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-oesterreich",
+    "to": "raum-westeuropa"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-schweiz",
+    "to": "raum-westeuropa"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-liechtenstein",
+    "to": "raum-westeuropa"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-vereinigtes-koenigreich",
+    "to": "raum-nordeuropa"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-irland",
+    "to": "raum-nordeuropa"
+  },
+  {
+    "type": "gehoert-zu-auch",
+    "from": "land-moldau",
+    "to": "raum-suedosteuropa"
+  },
+  {
+    "type": "fliesst-durch-auch",
+    "from": "fluss-rhein",
+    "to": "land-frankreich"
+  },
+  {
+    "type": "liegt-in-auch",
+    "from": "gebirge-karpaten",
+    "to": "land-serbien"
+  },
+  {
+    "type": "liegt-in-auch",
+    "from": "gebirge-karpaten",
+    "to": "land-oesterreich"
+  },
+  {
+    "type": "liegt-in-auch",
+    "from": "gebirge-karpaten",
+    "to": "land-tschechien"
+  },
+  {
+    "type": "liegt-in-auch",
+    "from": "gebirge-karpaten",
+    "to": "land-ungarn"
+  },
+  {
+    "type": "liegt-in-auch",
+    "from": "gebirge-karpaten",
+    "to": "land-moldau"
+  },
+  {
+    "type": "liegt-in-auch",
+    "from": "gebirge-alpen",
+    "to": "land-monaco"
+  }
+]

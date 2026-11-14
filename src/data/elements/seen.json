@@ -1,0 +1,50 @@
+[
+  {
+    "id": "see-bodensee",
+    "kind": "see",
+    "level": 1,
+    "ne": "Bodensee"
+  },
+  {
+    "id": "see-genfer-see",
+    "kind": "see",
+    "level": 1,
+    "ne": "Lake Geneva"
+  },
+  {
+    "id": "see-gardasee",
+    "kind": "see",
+    "level": 1,
+    "ne": "Lago di Garda"
+  },
+  {
+    "id": "see-plattensee",
+    "kind": "see",
+    "level": 1,
+    "ne": "Lake Balaton"
+  },
+  {
+    "id": "see-vaenern",
+    "kind": "see",
+    "level": 1,
+    "ne": "Vänern"
+  },
+  {
+    "id": "see-ladogasee",
+    "kind": "see",
+    "level": 1,
+    "ne": "Lake Ladoga"
+  },
+  {
+    "id": "see-onegasee",
+    "kind": "see",
+    "level": 1,
+    "ne": "Lake Onega"
+  },
+  {
+    "id": "see-peipussee",
+    "kind": "see",
+    "level": 1,
+    "ne": "Lake Peipus"
+  }
+]

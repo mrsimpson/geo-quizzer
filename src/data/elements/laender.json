@@ -1,0 +1,284 @@
+[
+  {
+    "id": "land-albanien",
+    "kind": "land",
+    "level": 1,
+    "ne": "Albania"
+  },
+  {
+    "id": "land-andorra",
+    "kind": "land",
+    "level": 3,
+    "ne": "Andorra"
+  },
+  {
+    "id": "land-belarus",
+    "kind": "land",
+    "level": 1,
+    "ne": "Belarus"
+  },
+  {
+    "id": "land-belgien",
+    "kind": "land",
+    "level": 1,
+    "ne": "Belgium"
+  },
+  {
+    "id": "land-bosnien-herzegowina",
+    "kind": "land",
+    "level": 1,
+    "ne": "Bosnia and Herz."
+  },
+  {
+    "id": "land-bulgarien",
+    "kind": "land",
+    "level": 1,
+    "ne": "Bulgaria"
+  },
+  {
+    "id": "land-daenemark",
+    "kind": "land",
+    "level": 1,
+    "ne": "Denmark"
+  },
+  {
+    "id": "land-deutschland",
+    "kind": "land",
+    "level": 1,
+    "ne": "Germany"
+  },
+  {
+    "id": "land-estland",
+    "kind": "land",
+    "level": 1,
+    "ne": "Estonia"
+  },
+  {
+    "id": "land-finnland",
+    "kind": "land",
+    "level": 1,
+    "ne": "Finland"
+  },
+  {
+    "id": "land-frankreich",
+    "kind": "land",
+    "level": 1,
+    "ne": "France"
+  },
+  {
+    "id": "land-griechenland",
+    "kind": "land",
+    "level": 1,
+    "ne": "Greece"
+  },
+  {
+    "id": "land-irland",
+    "kind": "land",
+    "level": 1,
+    "ne": "Ireland"
+  },
+  {
+    "id": "land-island",
+    "kind": "land",
+    "level": 1,
+    "ne": "Iceland"
+  },
+  {
+    "id": "land-italien",
+    "kind": "land",
+    "level": 1,
+    "ne": "Italy"
+  },
+  {
+    "id": "land-kosovo",
+    "kind": "land",
+    "level": 3,
+    "ne": "Kosovo"
+  },
+  {
+    "id": "land-kroatien",
+    "kind": "land",
+    "level": 1,
+    "ne": "Croatia"
+  },
+  {
+    "id": "land-lettland",
+    "kind": "land",
+    "level": 1,
+    "ne": "Latvia"
+  },
+  {
+    "id": "land-liechtenstein",
+    "kind": "land",
+    "level": 3,
+    "ne": "Liechtenstein"
+  },
+  {
+    "id": "land-litauen",
+    "kind": "land",
+    "level": 1,
+    "ne": "Lithuania"
+  },
+  {
+    "id": "land-luxemburg",
+    "kind": "land",
+    "level": 1,
+    "ne": "Luxembourg"
+  },
+  {
+    "id": "land-malta",
+    "kind": "land",
+    "level": 3,
+    "ne": "Malta"
+  },
+  {
+    "id": "land-moldau",
+    "kind": "land",
+    "level": 1,
+    "ne": "Moldova"
+  },
+  {
+    "id": "land-monaco",
+    "kind": "land",
+    "level": 3,
+    "ne": "Monaco"
+  },
+  {
+    "id": "land-montenegro",
+    "kind": "land",
+    "level": 1,
+    "ne": "Montenegro"
+  },
+  {
+    "id": "land-niederlande",
+    "kind": "land",
+    "level": 1,
+    "ne": "Netherlands"
+  },
+  {
+    "id": "land-nordmazedonien",
+    "kind": "land",
+    "level": 1,
+    "ne": "North Macedonia"
+  },
+  {
+    "id": "land-norwegen",
+    "kind": "land",
+    "level": 1,
+    "ne": "Norway"
+  },
+  {
+    "id": "land-oesterreich",
+    "kind": "land",
+    "level": 1,
+    "ne": "Austria"
+  },
+  {
+    "id": "land-polen",
+    "kind": "land",
+    "level": 1,
+    "ne": "Poland"
+  },
+  {
+    "id": "land-portugal",
+    "kind": "land",
+    "level": 1,
+    "ne": "Portugal"
+  },
+  {
+    "id": "land-rumaenien",
+    "kind": "land",
+    "level": 1,
+    "ne": "Romania"
+  },
+  {
+    "id": "land-russland",
+    "kind": "land",
+    "level": 3,
+    "ne": "Russia"
+  },
+  {
+    "id": "land-san-marino",
+    "kind": "land",
+    "level": 3,
+    "ne": "San Marino"
+  },
+  {
+    "id": "land-schweden",
+    "kind": "land",
+    "level": 1,
+    "ne": "Sweden"
+  },
+  {
+    "id": "land-schweiz",
+    "kind": "land",
+    "level": 1,
+    "ne": "Switzerland"
+  },
+  {
+    "id": "land-serbien",
+    "kind": "land",
+    "level": 1,
+    "ne": "Serbia"
+  },
+  {
+    "id": "land-slowakei",
+    "kind": "land",
+    "level": 1,
+    "ne": "Slovakia"
+  },
+  {
+    "id": "land-slowenien",
+    "kind": "land",
+    "level": 1,
+    "ne": "Slovenia"
+  },
+  {
+    "id": "land-spanien",
+    "kind": "land",
+    "level": 1,
+    "ne": "Spain"
+  },
+  {
+    "id": "land-tschechien",
+    "kind": "land",
+    "level": 1,
+    "ne": "Czechia"
+  },
+  {
+    "id": "land-tuerkei",
+    "kind": "land",
+    "level": 3,
+    "ne": "Turkey"
+  },
+  {
+    "id": "land-ukraine",
+    "kind": "land",
+    "level": 1,
+    "ne": "Ukraine"
+  },
+  {
+    "id": "land-ungarn",
+    "kind": "land",
+    "level": 1,
+    "ne": "Hungary"
+  },
+  {
+    "id": "land-vatikanstadt",
+    "kind": "land",
+    "level": 3,
+    "ne": "Vatican"
+  },
+  {
+    "id": "land-vereinigtes-koenigreich",
+    "kind": "land",
+    "level": 1,
+    "ne": "United Kingdom"
+  },
+  {
+    "id": "land-zypern",
+    "kind": "land",
+    "level": 3,
+    "ne": "Cyprus"
+  }
+]
