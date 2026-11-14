@@ -195,28 +195,28 @@ hosts: bb-shell, bb-interactive-core, bb-interactive-ui, bb-interactive-data, bb
 
 <!-- app: begin -->
 
-## Geo Europa build
+## Geo Quizzer build
 
 The leaf blocks of the app are built and tested on the CI runner, with the template's parts.
 
 ```arc42
 :::deployment-node
 id: dn-geo-build
-title: Geo Europa build
+title: Geo Quizzer build
 type: container
 parent: dn-ci-runner
 hosts: bb-geo, bb-game, bb-app, bb-map, bb-geodata
 :::
 ```
 
-## Geo Europa app page
+## Geo Quizzer app page
 
 The same blocks run in the learner's browser, in the app page of the template.
 
 ```arc42
 :::deployment-node
 id: dn-geo-app-page
-title: Geo Europa app page
+title: Geo Quizzer app page
 type: container
 parent: dn-learner-browser
 hosts: bb-geo, bb-game, bb-app, bb-map, bb-geodata
