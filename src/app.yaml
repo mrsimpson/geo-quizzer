@@ -1,8 +1,9 @@
 # yaml-language-server: $schema=../node_modules/@lernapps/app-templates/runtime/interactive/interactive.v1.schema.json
 title: Geo Europa
 description: |
-  Ein Kartenspiel für die 6. Klasse: Finde die Länder Europas auf der Karte und lerne ihre Hauptstädte kennen. Du
-  übst in kurzen Runden mit zehn Aufgaben und sammelst Sterne, je besser du es kannst.
+  Ein Kartenspiel für die 6. Klasse: Finde die Länder Europas auf der Karte und lerne ihre Hauptstädte kennen. Eine
+  Runde hat zehn Aufgaben. Die Stufen werden Schritt für Schritt schwerer, in Stufe 1 wählst du den Namen eines
+  markierten Landes. Für jedes Thema sammelst du bis zu drei Sterne: je sicherer du es weißt, desto mehr.
 howto: |
   - Wähle eine Stufe und die Themen, dann starte eine Runde.
   - In Stufe 1 ist ein Land orange markiert. Tippe auf den richtigen Namen oder drücke die Taste 1 bis 4.

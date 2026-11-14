@@ -8,6 +8,7 @@ import { translator } from "@lernapps/tooling/i18n";
 import { createStorage } from "@lernapps/tooling/storage";
 import type { Input } from "@lernapps/app-templates/interactive";
 import { KINDS, RELATIONS, elementById } from "../core/data.ts";
+import { compass } from "../core/geo.ts";
 import { currentTask, type State } from "../core/index.ts";
 import { stars } from "../core/progress.ts";
 import { taskKeys } from "../core/tasks.ts";
@@ -87,6 +88,12 @@ const link = computed(() =>
   target.value !== undefined && has(`el.${target.value.id}.link`) ? t(`el.${target.value.id}.link`) : "",
 );
 
+const direction = computed(() => {
+  const answer = props.state.answer;
+  if (answer === null || answer.right || target.value === undefined) return "";
+  return t(`dir${compass(elementById(answer.chosen).centre, target.value.centre)}`);
+});
+
 const levelTitle = computed(() => t(`level${props.state.level}`));
 const levelKeys = (kinds: readonly string[]) => taskKeys(props.state.level, kinds);
 const starsOf = (kinds: readonly string[]): number => stars(props.state.progress, levelKeys(kinds));
@@ -99,7 +106,7 @@ const summaryHeading = ref<HTMLElement | null>(null);
 
 watch(
   () => [props.state.phase, props.state.index] as const,
-  async ([phase]) => {
+  async ([phase], [previous]) => {
     const { answer } = props.state;
     if (phase === "feedback" && answer !== null) {
       announce(
@@ -115,6 +122,8 @@ watch(
       );
       await nextTick();
       if (questionHeading.value !== null) moveFocus(questionHeading.value);
+    } else if (phase === "menu" && previous !== undefined && previous !== "menu") {
+      announce(t("announcePause"));
     } else if (phase === "summary") {
       announce(t("summary", { right: props.state.right, total: props.state.tasks.length }));
       await nextTick();
@@ -132,14 +141,15 @@ watch(
       <h2 class="menu-title">{{ levelTitle }}</h2>
       <p class="menu-stars">
         <span aria-hidden="true">{{ starText(starsOf(state.topics)) }}</span>
-        <span class="sr-only">{{ t("stars", { count: starsOf(state.topics) }) }}</span>
+        <span class="sr-only">{{ t("starsLabel") }}: {{ t("stars", { count: starsOf(state.topics) }) }}</span>
       </p>
+      <p class="menu-hint">{{ t("stageHint") }}</p>
       <p class="menu-hint">{{ t("starsHint") }}</p>
       <h3 class="menu-topics">{{ t("topics") }}</h3>
       <ul class="topics">
         <li v-for="kind in KINDS" :key="kind">
           <button type="button" class="topic" :aria-pressed="state.topics.includes(kind)" @click="act('topic', kind)">
-            <span>{{ t(`kind.${kind}`) }}</span>
+            <span>{{ state.topics.includes(kind) ? "✓ " : "" }}{{ t(`kind.${kind}`) }}</span>
             <span class="topic-stars" aria-hidden="true">{{ starText(starsOf([kind])) }}</span>
             <span class="sr-only">{{ t("stars", { count: starsOf([kind]) }) }}</span>
           </button>
@@ -151,13 +161,17 @@ watch(
 
     <!-- Round: the whole screen -->
     <div v-else class="round" @keydown.esc="act('pause')">
-      <div class="portrait-note" role="note">{{ t("rotate") }}</div>
+      <div class="portrait-note" role="note">
+        <p>{{ t("rotate") }}</p>
+        <button type="button" class="pause" @click="act('pause')">{{ t("toMenu") }}</button>
+      </div>
       <header class="bar">
         <h2 class="bar-title">{{ levelTitle }}</h2>
         <p class="bar-progress">
           <span v-if="state.phase !== 'summary'">{{
             t("progress", { index: state.index + 1, total: state.tasks.length })
           }}</span>
+          <span v-if="state.phase !== 'summary'"> · {{ t("rightCount", { count: state.right }) }}</span>
           <span v-if="state.streak > 1"> · {{ t("streak", { count: state.streak }) }}</span>
         </p>
         <button type="button" class="pause" @click="act('pause')">{{ t("pause") }}</button>
@@ -166,6 +180,7 @@ watch(
       <div v-if="state.phase === 'summary'" class="summary">
         <h2 ref="summaryHeading" tabindex="-1">{{ t("summaryTitle") }}</h2>
         <p>{{ t("summary", { right: state.right, total: state.tasks.length }) }}</p>
+        <p class="summary-hint">{{ t("summaryHint") }}</p>
         <p class="menu-stars">
           <span aria-hidden="true">{{ starText(starsOf(state.topics)) }}</span>
           <span class="sr-only">{{ t("stars", { count: starsOf(state.topics) }) }}</span>
@@ -195,7 +210,14 @@ watch(
               <template v-if="state.answer.right">{{ t("rightDetail", { target: name(target?.id ?? "") }) }}</template>
               <template v-else
                 >{{ t("wrongDetail", { chosen: name(state.answer.chosen), target: name(target?.id ?? "") }) }}
-                {{ t("distance", { km: state.answer.km }) }}</template
+                {{
+                  t("distance", {
+                    km: state.answer.km,
+                    chosen: name(state.answer.chosen),
+                    target: name(target?.id ?? ""),
+                    direction,
+                  })
+                }}</template
               >
             </p>
             <p v-if="relationText">{{ relationText }}</p>
@@ -495,14 +517,32 @@ a:focus-visible,
   display: none;
 }
 
+.feedback .primary {
+  position: sticky;
+  bottom: 0;
+}
+
+.summary-hint {
+  max-width: 28rem;
+}
+
 /* A phone held upright: the game needs the width of the landscape format. */
 @media (orientation: portrait) and (max-width: 600px) {
+  .bar,
+  .board,
+  .summary {
+    visibility: hidden;
+  }
+
   .portrait-note {
+    flex-direction: column;
+    gap: 1rem;
     position: absolute;
     inset: 0;
     z-index: 2;
-    display: grid;
-    place-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 2rem;
     background: var(--geo-bg);
     font-size: 1.25rem;
@@ -517,8 +557,32 @@ a:focus-visible,
     padding: 0.25rem 0.5rem;
   }
 
+  .bar-title {
+    display: none;
+  }
+
+  .bar-progress {
+    text-align: left;
+  }
+
+  .pause {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+  }
+
   .board {
-    grid-template-columns: minmax(0, 1fr) minmax(13rem, 45%);
+    grid-template-columns: minmax(0, 1fr) minmax(12rem, 38%);
+    gap: 0.5rem;
+  }
+
+  .panel {
+    padding: 0.5rem;
+    gap: 0.25rem;
+  }
+
+  .feedback p {
+    margin-bottom: 0.25rem;
+    font-size: 0.9375rem;
   }
 
   .question {

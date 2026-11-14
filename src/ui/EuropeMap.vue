@@ -5,7 +5,7 @@
 import { computed, ref, watch } from "vue";
 import { translator } from "@lernapps/tooling/i18n";
 import { elementById } from "../core/data.ts";
-import { VIEW } from "../core/geo.ts";
+import { project, VIEW } from "../core/geo.ts";
 import de from "../messages/de.json";
 import { AREA_PATHS, CONTEXT_PATH, centreOf } from "./paths.ts";
 
@@ -31,7 +31,7 @@ const ZOOM_MAX = 12;
 const view = ref({ x: VIEW.x, y: VIEW.y, width: VIEW.width, height: VIEW.height });
 
 const viewBox = computed(() => `${view.value.x} ${view.value.y} ${view.value.width} ${view.value.height}`);
-/** One screen pixel in map units, roughly: sizes of circles and lines stay the same when zoomed. */
+/** One screen pixel in map units, roughly: circles keep their size when the map is zoomed. */
 const unit = computed(() => view.value.width / 700);
 
 watch(
@@ -48,6 +48,41 @@ function clamp(next: { x: number; y: number; width: number; height: number }): v
   const y = Math.max(VIEW.y, Math.min(VIEW.y + VIEW.height - height, next.y));
   view.value = { x, y, width, height };
 }
+
+/** The part of the map plane the given elements cover. */
+function boundsOf(ids: readonly string[]): { minX: number; minY: number; maxX: number; maxY: number } {
+  const bounds = { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity };
+  const add = (lon: number, lat: number): void => {
+    const p = project(lon, lat);
+    bounds.minX = Math.min(bounds.minX, p.x);
+    bounds.minY = Math.min(bounds.minY, p.y);
+    bounds.maxX = Math.max(bounds.maxX, p.x);
+    bounds.maxY = Math.max(bounds.maxY, p.y);
+  };
+  for (const id of ids) {
+    const geometry = elementById(id).geometry;
+    if (geometry.type === "point") add(geometry.point[0], geometry.point[1]);
+    else for (const polygon of geometry.polygons) for (const point of polygon[0] ?? []) add(point[0], point[1]);
+  }
+  return bounds;
+}
+
+/** Shows the given elements with room around them: after an answer, the learner sees where the two lie. */
+function fitTo(ids: readonly string[]): void {
+  const b = boundsOf(ids);
+  const ratio = VIEW.height / VIEW.width;
+  const width = Math.max((b.maxX - b.minX) * 1.8, ((b.maxY - b.minY) * 1.8) / ratio, VIEW.width / 6);
+  const cx = (b.minX + b.maxX) / 2;
+  const cy = (b.minY + b.maxY) / 2;
+  clamp({ x: cx - width / 2, y: cy - (width * ratio) / 2, width, height: width * ratio });
+}
+
+watch(
+  () => props.marks.map((mark) => `${mark.role}:${mark.id}`).join(),
+  () => {
+    if (props.marks.some((mark) => mark.role === "right")) fitTo(props.marks.map((mark) => mark.id));
+  },
+);
 
 function zoom(factor: number, fx = 0.5, fy = 0.5): void {
   const { x, y, width, height } = view.value;
@@ -115,9 +150,7 @@ const plainAreas = computed(() => [...AREA_PATHS.entries()]);
 
 const lineEnds = computed(() => {
   if (props.line === undefined) return undefined;
-  const a = centreOf(elementById(props.line.from));
-  const b = centreOf(elementById(props.line.to));
-  return { a, b, mid: { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 } };
+  return { a: centreOf(elementById(props.line.from)), b: centreOf(elementById(props.line.to)) };
 });
 </script>
 
@@ -148,23 +181,7 @@ const lineEnds = computed(() => {
         fill-rule="evenodd"
       />
       <g v-if="lineEnds !== undefined && line !== undefined">
-        <line
-          :x1="lineEnds.a.x"
-          :y1="lineEnds.a.y"
-          :x2="lineEnds.b.x"
-          :y2="lineEnds.b.y"
-          class="distance"
-          :stroke-dasharray="`${unit * 8} ${unit * 6}`"
-        />
-        <text
-          :x="lineEnds.mid.x"
-          :y="lineEnds.mid.y - unit * 8"
-          :font-size="unit * 15"
-          text-anchor="middle"
-          class="distance-label"
-        >
-          {{ line.label }}
-        </text>
+        <line :x1="lineEnds.a.x" :y1="lineEnds.a.y" :x2="lineEnds.b.x" :y2="lineEnds.b.y" class="distance" />
       </g>
       <g v-for="mark in pointMarks" :key="`${mark.role}-${mark.id}`">
         <circle
@@ -181,10 +198,13 @@ const lineEnds = computed(() => {
         />
       </g>
     </svg>
+    <p v-if="line !== undefined" class="distance-box">{{ t("distanceLabel", { label: line.label }) }}</p>
     <div class="zoom">
       <button type="button" :aria-label="t('zoomIn')" @click="zoom(1.4)">+</button>
       <button type="button" :aria-label="t('zoomOut')" @click="zoom(1 / 1.4)">−</button>
-      <button type="button" :aria-label="t('zoomReset')" @click="reset">⌂</button>
+      <button type="button" class="zoom-reset" :aria-label="t('zoomReset')" @click="reset">
+        {{ t("zoomResetShort") }}
+      </button>
     </div>
   </div>
 </template>
@@ -254,31 +274,37 @@ const lineEnds = computed(() => {
 
 .distance {
   stroke: var(--geo-ink);
-  stroke-width: 2.5px;
+  stroke-width: 3px;
+  stroke-dasharray: 8 6;
   vector-effect: non-scaling-stroke;
 }
 
-.distance-label {
-  fill: var(--geo-ink);
+.distance-box {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  margin: 0;
+  padding: 0.25rem 0.625rem;
+  border: 2px solid var(--geo-ink);
+  border-radius: 0.5rem;
+  background: var(--geo-button);
+  color: var(--geo-ink);
   font-weight: 700;
-  paint-order: stroke;
-  stroke: var(--geo-sea);
-  stroke-width: 4px;
-  stroke-linejoin: round;
 }
 
 .zoom {
   position: absolute;
+  top: 0.5rem;
   right: 0.5rem;
-  bottom: 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
 
 .zoom button {
-  width: 2.5rem;
+  min-width: 2.5rem;
   height: 2.5rem;
+  padding: 0 0.5rem;
   border: 2px solid var(--geo-ink);
   border-radius: 0.5rem;
   background: var(--geo-button);

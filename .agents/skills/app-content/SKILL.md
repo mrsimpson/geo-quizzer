@@ -84,6 +84,7 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
 - One figure: the map of Europe (SVG in the app page), equal-area projection, same extent in every task. Orange =
   the element asked for (area, point or line); blue = the learner's answer; green = the right place; dashed line =
   distance. Capitals are circles with a ring, rivers lines, lakes and seas areas.
+- After an answer the map zooms to the right element and, if wrong, the chosen one, so that the distance line is readable; the distance (rounded to 10 km, middle to middle) is also written in a box and in the feedback, with the direction from the chosen element to the right one ("im Westen").
 - Level 3 shows borders and country names; level 4 shows only the coastline; levels 1 and 2 show borders without
   names.
 - Alternative text: every task has a text that says what is asked without the picture ("Welches Land ist markiert? Es

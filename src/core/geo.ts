@@ -179,3 +179,11 @@ function signedArea(ring: Ring): number {
   }
   return sum / 2;
 }
+
+/** The direction from one point to another as one of eight: 0 north, 1 north-east, 2 east, ... 7 north-west. */
+export function compass(from: Position, to: Position): number {
+  const dx = (to[0] - from[0]) * Math.cos(((from[1] + to[1]) / 2) * RAD);
+  const dy = to[1] - from[1];
+  const angle = (Math.atan2(dx, dy) * 180) / Math.PI;
+  return (Math.round(angle / 45) + 8) % 8;
+}
