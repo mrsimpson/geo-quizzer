@@ -203,3 +203,42 @@ export function compass(from: Position, to: Position): number {
   const angle = (Math.atan2(dx, dy) * 180) / Math.PI;
   return (Math.round(angle / 45) + 8) % 8;
 }
+
+/** The point of a segment nearest to `point`, on a flat map around the point. */
+function nearestOnSegment(point: Position, a: Position, b: Position): { at: Position; km: number } {
+  const kmPerDegree = (Math.PI / 180) * EARTH_RADIUS_KM;
+  const scale = Math.max(Math.cos(point[1] * RAD), 0.01);
+  const ax = (a[0] - point[0]) * scale * kmPerDegree;
+  const ay = (a[1] - point[1]) * kmPerDegree;
+  const bx = (b[0] - point[0]) * scale * kmPerDegree;
+  const by = (b[1] - point[1]) * kmPerDegree;
+  const dx = bx - ax;
+  const dy = by - ay;
+  const length = dx * dx + dy * dy;
+  const t = length === 0 ? 0 : Math.max(0, Math.min(1, -(ax * dx + ay * dy) / length));
+  return { at: [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t], km: Math.hypot(ax + t * dx, ay + t * dy) };
+}
+
+/** The nearest point of lines (or of the edges of rings) to `point`, with its distance in kilometres. */
+export function nearestOnLines(point: Position, lines: readonly Ring[]): { at: Position; km: number } {
+  let best: { at: Position; km: number } = { at: point, km: Infinity };
+  for (const line of lines) {
+    for (let i = 0; i + 1 < line.length; i++) {
+      const a = line[i];
+      const b = line[i + 1];
+      if (a === undefined || b === undefined) continue;
+      const found = nearestOnSegment(point, a, b);
+      if (found.km < best.km) best = found;
+    }
+  }
+  return best;
+}
+
+/** The nearest point of an area to `point`: the point itself when it lies inside. */
+export function nearestOnArea(point: Position, polygons: readonly Polygon[]): { at: Position; km: number } {
+  if (inPolygons(point, polygons)) return { at: point, km: 0 };
+  return nearestOnLines(
+    point,
+    polygons.flatMap((polygon) => polygon),
+  );
+}

@@ -58,3 +58,16 @@ export function planeOf(position: Position): { x: number; y: number } {
 export function centreOf(element: Element): { x: number; y: number } {
   return planeOf(element.centre);
 }
+
+/** The countries with the place of their name and the width of their largest part on the map plane, in kilometres. */
+export const COUNTRY_LABELS: readonly { id: string; x: number; y: number; width: number }[] = ELEMENTS.flatMap(
+  (element) => {
+    if (element.kind !== "land" || element.geometry.type !== "area") return [];
+    let width = 0;
+    for (const polygon of element.geometry.polygons) {
+      const xs = (polygon[0] ?? []).map((position) => project(position[0], position[1]).x);
+      width = Math.max(width, Math.max(...xs) - Math.min(...xs));
+    }
+    return [{ id: element.id, ...planeOf(element.centre), width }];
+  },
+);

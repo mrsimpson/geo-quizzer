@@ -20,6 +20,12 @@ routes:
   - id: stufe-2
     title: Stufe 2 · Beziehungen
     description: Hauptstadt, Fluss, Nachbarland, Teil Europas. Was gehört zusammen?
+  - id: stufe-3
+    title: Stufe 3 · Zeigen
+    description: Der Name ist gegeben. Klicke das Gesuchte auf der Karte an.
+  - id: stufe-4
+    title: Stufe 4 · Frei
+    description: Keine Hilfe auf der Karte. Setze den Ort selbst oder tippe den Namen.
 sections:
   - id: vorwissen
     title: Das solltest du schon wissen

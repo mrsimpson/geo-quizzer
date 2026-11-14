@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Stufe 4: ohne Hilfe. Einen Ort setzen (Liechtenstein, ein Treffer), einen Namen tippen (Nordmazedonien mit einem
+# Buchstaben zu wenig zählt als richtig) und ein Fehlversuch beim Setzen (Bosnien und Herzegowina).
+seed: 31
+route: stufe-4
+steps:
+  - inputs: [{ kind: action, name: start }]
+    state: { phase: asking, level: 4, index: 0 }
+    announce: "Aufgabe 1 von 10. Klicke auf das Land Liechtenstein."
+  - inputs: [{ kind: action, name: pin, value: [9.54, 47.14] }, { kind: action, name: confirm }]
+    state: { phase: feedback, right: 1, answer: { right: true, km: 0 } }
+  - inputs: [{ kind: action, name: next }]
+    state: { phase: asking, index: 1, typed: "" }
+    announce: "Aufgabe 2 von 10. Wie heißt das orange markierte Land?"
+  - inputs: [{ kind: action, name: type, value: Nordmazedonin }]
+    state: { typed: Nordmazedonin }
+  - inputs: [{ kind: action, name: check }]
+    state:
+      {
+        phase: feedback,
+        right: 2,
+        answer: { chosen: land-nordmazedonien, right: true, typed: Nordmazedonin, km: null },
+      }
+    announce: "Richtig! Richtig! Es schreibt sich: Nordmazedonien."
+  - inputs:
+      [{ kind: action, name: next }, { kind: action, name: pin, value: [10, 56] }, { kind: action, name: confirm }]
+    state: { phase: feedback, answer: { right: false, km: 1250, nearest: [15.82, 45.2] } }

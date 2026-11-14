@@ -75,19 +75,29 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
   no article of a name is needed. A wrong option is never the subject and never another right answer to the same
   question (all answers of the same relation to the same subject are right). Topics of level 2: Nachbarländer
   (`grenzt-an`), Hauptstädte, Flüsse, Gebirge, Seen, Teilräume. Data: `relations.json`, `geo/relations-geo.json`.
-- **Zeigen** (level 3): name given; learners click it on the map with borders and country names as help. Task kind
-  `zeigen`. Hit: inside the area, or within the hit radius for points and lines.
-- **Frei, Ort setzen** (level 4): name given; learners place a point on the map with only the coastline. Task kind
-  `setzen`. Hit by distance.
+- **Zeigen** (level 3): name given (`askPoint.<kind>`); learners tap the map, which puts a pin, then press "Hier setzen" (the
+  map shows borders, country names that fit at the zoom, capitals as unnamed dots and rivers as help). Task kind
+  `zeigen`, key `zeigen:<id>`. A hit is a point inside the area or within the radius of the element: `RADIUS_KM` in
+  `src/core/pick.ts` (land 10 km, Hauptstadt 80, Fluss 50, Gebirge 10, See 40, Meer and Teilraum inside only). The
+  feedback draws a dashed line from the pin to the nearest point of the right element, with the distance (rounded to
+  10 km) and the direction.
+- **Frei, Ort setzen** (level 4): like Zeigen, but the map shows only the coast: no borders, names, dots, rivers or lakes.
+  Task kind `setzen`, key `setzen:<id>`. Keyboard: the arrow keys move a crosshair (it puts the pin), Shift and the arrow
+  keys move the map, Enter sets.
 - **Frei, Namen tippen** (level 4): element highlighted on the coastline map; learners type the name; suggestions and
-  tolerance come only from the names of the same kind. Task kind `tippen`. Tolerance: ignore case, umlauts, ß and
-  spaces; distance at most 1 for names up to 5 letters, 2 above, only when exactly one name is that close.
+  tolerance come only from the names of the same kind (`src/core/typing.ts`). Task kind `tippen`, key `tippen:<id>`.
+  Tolerance: ignore case, ä/ö/ü as ae/oe/ue, ß, accents, spaces and hyphens; distance at most 0 for names up to 3
+  letters, 1 up to 5, 2 above, and only when exactly one name of the kind is that close. A right answer with another
+  spelling says how the name is written. The names the core compares are the message file of the language (`src/core/names.ts`).
 - **Wrong answer, in every pattern:** the right element in green and the chosen one in blue, the fact, the relations
   ("liegt in …, an …") and the link (opens only after a click). The distance line, the kilometres and the direction
   appear only where learners point (Zeigen, Frei with placing a point), never in Erkennen, Beziehung or Tippen
   (`SHOWS_DISTANCE` in `src/core/tasks.ts`). The heading of the feedback speaks of what was marked, never of its colour
   ("Welches Land war markiert?").
   Wrong options are real neighbours or look-alikes; each is told why it is wrong where a relation says so.
+
+- Progress per task key (`<kind>:…`) and the stars per level and topic: see the end of Content structure; a round has ten
+  tasks and "Ich brauche eine Pause" keeps what was answered.
 
 ## Figures
 

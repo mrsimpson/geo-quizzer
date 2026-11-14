@@ -9,10 +9,16 @@ import { grade, type Progress } from "./progress.ts";
 import { draw, shuffle } from "./random.ts";
 
 /** The kinds of tasks. */
-export type TaskKind = "erkennen" | "beziehung";
+export type TaskKind = "erkennen" | "beziehung" | "zeigen" | "setzen" | "tippen";
 
 /** Whether the feedback of a kind of task shows the distance between answer and right place: only where learners point. */
-export const SHOWS_DISTANCE: Readonly<Record<TaskKind, boolean>> = { erkennen: false, beziehung: false };
+export const SHOWS_DISTANCE: Readonly<Record<TaskKind, boolean>> = {
+  erkennen: false,
+  beziehung: false,
+  zeigen: true,
+  setzen: true,
+  tippen: false,
+};
 
 export interface Task {
   /** The key of the progress. */
@@ -96,7 +102,9 @@ export function taskKeys(level: number, topics: readonly string[]): string[] {
     return relationTasks(level)
       .filter((t) => topics.includes(t.topic))
       .map((t) => t.key);
-  return [];
+  const inScope = ELEMENTS.filter((e) => e.level <= level && topics.includes(e.kind));
+  if (level === 3) return inScope.map((e) => taskKey("zeigen", e.id));
+  return inScope.flatMap((e) => [taskKey("setzen", e.id), taskKey("tippen", e.id)]);
 }
 
 /** The elements that are right answers to the same question: the answers of the same relation to the same subject. */
@@ -150,6 +158,9 @@ function makeTask(key: string, level: number, rng: number): [Task, number] {
     ];
   }
   const target = parts[1] ?? "";
+  if (parts[0] === "zeigen" || parts[0] === "setzen" || parts[0] === "tippen") {
+    return [{ key, kind: parts[0], subject: target, target, options: [] }, rng];
+  }
   const element = elementById(target);
   const [wrong, afterWrong] = wrongOptions(element, element, new Set([target]), level, rng);
   const [options, next] = shuffle([target, ...wrong], afterWrong);

@@ -8,7 +8,8 @@ import { translator } from "@lernapps/tooling/i18n";
 import { createStorage } from "@lernapps/tooling/storage";
 import type { Input } from "@lernapps/app-templates/interactive";
 import { KINDS, RELATIONS, elementById } from "../core/data.ts";
-import { compass } from "../core/geo.ts";
+import { compass, type Position } from "../core/geo.ts";
+import { suggestions } from "../core/typing.ts";
 import { currentTask, type State } from "../core/index.ts";
 import { stars } from "../core/progress.ts";
 import { taskKeys } from "../core/tasks.ts";
@@ -38,6 +39,9 @@ watch(
 const act = (name: string, value?: string): void => {
   emit("input", value === undefined ? { kind: "action", name } : { kind: "action", name, value });
 };
+const pick = (point: Position): void => {
+  emit("input", { kind: "action", name: "pin", value: [point[0], point[1]] });
+};
 
 const name = (id: string): string => t(`el.${id}.name`);
 const task = computed(() => currentTask(props.state));
@@ -47,8 +51,20 @@ const target = computed(() => (task.value === undefined ? undefined : elementByI
 const subject = computed(() => (task.value === undefined ? undefined : elementById(task.value.subject)));
 const kindOfTarget = computed(() => subject.value?.kind ?? "land");
 
+/** Whether the learner points at the map (Stufen 3 and 4) or types a name (Stufe 4). */
+const isPick = computed(() => task.value?.kind === "zeigen" || task.value?.kind === "setzen");
+const isTyping = computed(() => task.value?.kind === "tippen");
+const detail = computed<"borders" | "names" | "coast">(() =>
+  props.state.level === 3 ? "names" : props.state.level === 4 ? "coast" : "borders",
+);
+
 const question = computed(() => {
   const current = task.value;
+  if (isPick.value && subject.value !== undefined) {
+    const done = props.state.phase === "feedback";
+    return t(done ? "askPointDone" : `askPoint.${subject.value.kind}`, { subject: name(subject.value.id) });
+  }
+  if (isTyping.value && props.state.phase === "asking") return t(`askType.${kindOfTarget.value}`);
   if (current?.kind === "beziehung" && current.relation !== undefined && subject.value !== undefined) {
     const direction = current.dir ?? "f";
     const kind = direction === "f" ? subject.value.kind : (target.value?.kind ?? "");
@@ -59,9 +75,11 @@ const question = computed(() => {
   return t(`${done ? "askDone" : "ask"}.${kindOfTarget.value}`);
 });
 const mapLabel = computed(() =>
-  task.value?.kind === "beziehung" && subject.value !== undefined
-    ? t("mapLabel.relation", { subject: name(subject.value.id) })
-    : t(`mapLabel.${kindOfTarget.value}`),
+  isPick.value && subject.value !== undefined
+    ? t("mapLabel.point", { subject: name(subject.value.id) })
+    : task.value?.kind === "beziehung" && subject.value !== undefined
+      ? t("mapLabel.relation", { subject: name(subject.value.id) })
+      : t(`mapLabel.${kindOfTarget.value}`),
 );
 
 const feedback = computed(
@@ -69,19 +87,43 @@ const feedback = computed(
 );
 const marks = computed<Mark[]>(() => {
   if (target.value === undefined || subject.value === undefined) return [];
-  if (!feedback.value || props.state.answer === null) return [{ id: subject.value.id, role: "asked" }];
+  if (!feedback.value || props.state.answer === null) {
+    // where learners point, the map does not show what they look for
+    return isPick.value ? [] : [{ id: subject.value.id, role: "asked" }];
+  }
   const result: Mark[] = [{ id: target.value.id, role: "right" }];
-  if (!props.state.answer.right) result.unshift({ id: props.state.answer.chosen, role: "chosen" });
+  if (props.state.answer.chosen !== "" && !props.state.answer.right) {
+    result.unshift({ id: props.state.answer.chosen, role: "chosen" });
+  }
   if (subject.value.id !== target.value.id) result.unshift({ id: subject.value.id, role: "asked" });
   return result;
 });
+/** The dashed line from the learner's pin to the nearest point of the right element, where learners point. */
 const line = computed(() => {
   const answer = props.state.answer;
-  if (!feedback.value || answer === null || answer.right || answer.km === null || target.value === undefined) {
-    return undefined;
-  }
-  return { from: answer.chosen, to: target.value.id, label: t("kmLabel", { km: answer.km }) };
+  if (!feedback.value || answer === null || answer.km === null || answer.km === 0) return undefined;
+  if (answer.point === null || answer.nearest === null) return undefined;
+  return { from: answer.point, to: answer.nearest, label: t("kmLabel", { km: answer.km }) };
 });
+
+/** The pin on the map: the learner's, before and after "Hier setzen". */
+const pinShown = computed<Position | null>(() =>
+  feedback.value ? (props.state.answer?.point ?? null) : props.state.pin,
+);
+
+const typedValue = computed({
+  get: () => props.state.typed,
+  set: (text: string) => emit("input", { kind: "action", name: "type", value: text }),
+});
+const suggested = computed(() =>
+  isTyping.value && target.value !== undefined ? suggestions(target.value.kind, props.state.typed) : [],
+);
+const wasSpelledOtherwise = computed(
+  () =>
+    props.state.answer?.right === true &&
+    props.state.answer.typed !== null &&
+    props.state.answer.typed !== name(target.value?.id ?? ""),
+);
 
 /** What the learner may read about the right element, once answered: how it is related to the others. */
 const relationText = computed(() => {
@@ -130,7 +172,28 @@ const link = computed(() =>
 const direction = computed(() => {
   const answer = props.state.answer;
   if (answer === null || answer.right || answer.km === null || target.value === undefined) return "";
-  return t(`dir${compass(elementById(answer.chosen).centre, target.value.centre)}`);
+  const from = answer.point ?? (answer.chosen === "" ? undefined : elementById(answer.chosen).centre);
+  return from === undefined ? "" : t(`dir${compass(from, target.value.centre)}`);
+});
+
+/** What the feedback says about the answer, in a sentence or two. */
+const detailText = computed(() => {
+  const answer = props.state.answer;
+  if (answer === null || target.value === undefined) return "";
+  const target_ = name(target.value.id);
+  if (isPick.value) {
+    if (answer.right) return t("hitDetail", { target: target_ });
+    return t("missDetail", { target: target_, km: answer.km ?? 0, direction: direction.value });
+  }
+  if (isTyping.value) {
+    if (answer.right)
+      return wasSpelledOtherwise.value
+        ? t("typedSpelling", { target: target_ })
+        : t("rightDetail", { target: target_ });
+    return t("typedWrong", { typed: answer.typed ?? "", target: target_ });
+  }
+  if (answer.right) return t("rightDetail", { target: target_ });
+  return t("wrongDetail", { chosen: name(answer.chosen), target: target_ });
 });
 
 const levelTitle = computed(() => t(`level${props.state.level}`));
@@ -141,6 +204,7 @@ const noTasks = computed(() => levelKeys(props.state.level, props.state.topics).
 
 const nextButton = ref<HTMLButtonElement | null>(null);
 const questionHeading = ref<HTMLElement | null>(null);
+const typedInput = ref<HTMLInputElement | null>(null);
 const summaryHeading = ref<HTMLElement | null>(null);
 
 watch(
@@ -148,15 +212,14 @@ watch(
   async ([phase], [previous]) => {
     const { answer } = props.state;
     if (phase === "feedback" && answer !== null) {
-      announce(
-        answer.right
-          ? t("announceRight", { target: name(target.value?.id ?? "") })
-          : t(answer.km === null ? "announceWrong" : "announceWrongKm", {
-              target: name(target.value?.id ?? ""),
-              chosen: name(answer.chosen),
-              km: answer.km ?? 0,
-            }),
-      );
+      if (isPick.value || isTyping.value) announce(`${answer.right ? t("right") : t("wrong")} ${detailText.value}`);
+      else {
+        announce(
+          answer.right
+            ? t("announceRight", { target: name(target.value?.id ?? "") })
+            : t("announceWrong", { target: name(target.value?.id ?? ""), chosen: name(answer.chosen) }),
+        );
+      }
       await nextTick();
       if (nextButton.value !== null) moveFocus(nextButton.value);
     } else if (phase === "asking") {
@@ -164,7 +227,8 @@ watch(
         `${t("progress", { index: props.state.index + 1, total: props.state.tasks.length })}. ${question.value}`,
       );
       await nextTick();
-      if (questionHeading.value !== null) moveFocus(questionHeading.value);
+      if (isTyping.value && typedInput.value !== null) moveFocus(typedInput.value);
+      else if (questionHeading.value !== null) moveFocus(questionHeading.value);
     } else if (phase === "menu" && previous !== undefined && previous !== "menu") {
       announce(t("announcePause"));
     } else if (phase === "summary") {
@@ -261,10 +325,19 @@ watch(
       </div>
 
       <div v-else class="board">
-        <EuropeMap :marks="marks" :line="line" :label="mapLabel" :reset-key="state.index" />
+        <EuropeMap
+          :marks="marks"
+          :line="line"
+          :label="mapLabel"
+          :reset-key="state.index"
+          :detail="detail"
+          :pickable="isPick && state.phase === 'asking'"
+          :pin="pinShown"
+          @pick="pick"
+        />
         <div class="panel">
           <h3 ref="questionHeading" tabindex="-1" class="question">{{ question }}</h3>
-          <ol v-if="task !== undefined && state.phase === 'asking'" class="options">
+          <ol v-if="task !== undefined && state.phase === 'asking' && task.options.length > 0" class="options">
             <li v-for="(id, i) in task.options" :key="id">
               <button type="button" class="option" @click="act('answer', id)">
                 <span class="option-number" aria-hidden="true">{{ i + 1 }}</span
@@ -272,24 +345,40 @@ watch(
               </button>
             </li>
           </ol>
+          <div v-else-if="task !== undefined && state.phase === 'asking' && isPick" class="pick">
+            <p>{{ t("pickHint") }}</p>
+            <button type="button" class="primary" :disabled="state.pin === null" @click="act('confirm')">
+              {{ t("place") }}
+            </button>
+          </div>
+          <form
+            v-else-if="task !== undefined && state.phase === 'asking' && isTyping"
+            class="typing"
+            @submit.prevent="act('check')"
+          >
+            <label for="typed" class="sr-only">{{ t("typedLabel") }}</label>
+            <input
+              id="typed"
+              ref="typedInput"
+              v-model="typedValue"
+              type="text"
+              autocomplete="off"
+              autocapitalize="words"
+              spellcheck="false"
+              :placeholder="t('typedPlaceholder')"
+            />
+            <ul v-if="suggested.length > 0" class="suggestions" :aria-label="t('suggestions')">
+              <li v-for="id in suggested" :key="id">
+                <button type="button" class="suggestion" @click="typedValue = name(id)">{{ name(id) }}</button>
+              </li>
+            </ul>
+            <button type="submit" class="primary" :disabled="state.typed.trim() === ''">{{ t("check") }}</button>
+          </form>
           <div v-else-if="state.answer !== null" class="feedback" role="group" :aria-label="t('feedback')">
             <p :class="['verdict', state.answer.right ? 'right' : 'wrong']">
               {{ state.answer.right ? t("right") : t("wrong") }}
             </p>
-            <p>
-              <template v-if="state.answer.right">{{ t("rightDetail", { target: name(target?.id ?? "") }) }}</template>
-              <template v-else
-                >{{ t("wrongDetail", { chosen: name(state.answer.chosen), target: name(target?.id ?? "") }) }}
-                <template v-if="state.answer.km !== null">{{
-                  t("distance", {
-                    km: state.answer.km,
-                    chosen: name(state.answer.chosen),
-                    target: name(target?.id ?? ""),
-                    direction,
-                  })
-                }}</template></template
-              >
-            </p>
+            <p>{{ detailText }}</p>
             <p v-if="relationText">{{ relationText }}</p>
             <template v-if="fact">
               <p class="fact-title">{{ t("factTitle") }}</p>
@@ -301,7 +390,9 @@ watch(
                 <span class="sr-only">({{ t("opensNew") }})</span></a
               >
             </p>
-            <button ref="nextButton" type="button" class="primary" @click="act('next')">{{ t("next") }}</button>
+            <div class="feedback-actions">
+              <button ref="nextButton" type="button" class="primary" @click="act('next')">{{ t("next") }}</button>
+            </div>
           </div>
         </div>
       </div>
@@ -596,9 +687,58 @@ a:focus-visible,
   display: none;
 }
 
-.feedback .primary {
+.feedback-actions {
   position: sticky;
-  bottom: 0;
+  bottom: -0.75rem;
+  margin: 0 -0.25rem;
+  padding: 0.5rem 0.25rem 0.25rem;
+  background: var(--geo-surface);
+}
+
+.pick p {
+  margin: 0 0 0.5rem;
+}
+
+.typing {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.typing input {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.25rem 0.75rem;
+  border: 2px solid var(--geo-ink);
+  border-radius: 0.75rem;
+  background: var(--geo-button);
+  color: var(--geo-ink);
+  font: inherit;
+  font-size: 1.125rem;
+}
+
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.suggestion {
+  min-height: 2.5rem;
+  padding: 0.25rem 0.75rem;
+  border: 2px solid var(--geo-ink);
+  border-radius: 0.75rem;
+  background: var(--geo-button);
+  color: var(--geo-ink);
+  font-weight: 600;
+}
+
+.primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .summary-hint {
