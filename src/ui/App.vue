@@ -45,7 +45,10 @@ const playing = computed(() => props.state.phase !== "menu");
 const target = computed(() => (task.value === undefined ? undefined : elementById(task.value.target)));
 const kindOfTarget = computed(() => target.value?.kind ?? "land");
 
-const question = computed(() => t(kindOfTarget.value === "stadt" ? "askCity" : "askCountry"));
+const question = computed(() => {
+  const done = props.state.phase === "feedback";
+  return t(`${kindOfTarget.value === "stadt" ? "askCity" : "askCountry"}${done ? "Done" : ""}`);
+});
 const mapLabel = computed(() => t(kindOfTarget.value === "stadt" ? "mapLabelCity" : "mapLabelCountry"));
 
 const feedback = computed(
@@ -60,7 +63,9 @@ const marks = computed<Mark[]>(() => {
 });
 const line = computed(() => {
   const answer = props.state.answer;
-  if (!feedback.value || answer === null || answer.right || target.value === undefined) return undefined;
+  if (!feedback.value || answer === null || answer.right || answer.km === null || target.value === undefined) {
+    return undefined;
+  }
   return { from: answer.chosen, to: target.value.id, label: t("kmLabel", { km: answer.km }) };
 });
 
@@ -90,7 +95,7 @@ const link = computed(() =>
 
 const direction = computed(() => {
   const answer = props.state.answer;
-  if (answer === null || answer.right || target.value === undefined) return "";
+  if (answer === null || answer.right || answer.km === null || target.value === undefined) return "";
   return t(`dir${compass(elementById(answer.chosen).centre, target.value.centre)}`);
 });
 
@@ -112,7 +117,11 @@ watch(
       announce(
         answer.right
           ? t("announceRight", { target: name(target.value?.id ?? "") })
-          : t("announceWrong", { target: name(target.value?.id ?? ""), chosen: name(answer.chosen), km: answer.km }),
+          : t(answer.km === null ? "announceWrong" : "announceWrongKm", {
+              target: name(target.value?.id ?? ""),
+              chosen: name(answer.chosen),
+              km: answer.km ?? 0,
+            }),
       );
       await nextTick();
       if (nextButton.value !== null) moveFocus(nextButton.value);
@@ -210,14 +219,14 @@ watch(
               <template v-if="state.answer.right">{{ t("rightDetail", { target: name(target?.id ?? "") }) }}</template>
               <template v-else
                 >{{ t("wrongDetail", { chosen: name(state.answer.chosen), target: name(target?.id ?? "") }) }}
-                {{
+                <template v-if="state.answer.km !== null">{{
                   t("distance", {
                     km: state.answer.km,
                     chosen: name(state.answer.chosen),
                     target: name(target?.id ?? ""),
                     direction,
                   })
-                }}</template
+                }}</template></template
               >
             </p>
             <p v-if="relationText">{{ relationText }}</p>

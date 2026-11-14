@@ -41,7 +41,8 @@ Kinder der 6. Klasse üben auf einer Europakarte wie in einem Spiel: Sie finden 
 - Archetyp `interactive`: Lernende handeln in einem Karten-Spiel (anklicken, setzen, zuordnen, Position raten); ein Quiz kann keine Klicks auf einer Karte, ein Explainer ist auf Seiten mit Text ausgelegt.
 - Karte als einfaches GIS: Geodaten (Natural Earth, gemeinfrei) vereinfacht gebündelt, Projektion und Treffertest im Kern der App, keine Server.
 - Beziehungen zwischen Elementen als Daten (Hauptstadt von, fließt durch, liegt in, grenzt an), aus denen Aufgaben und Rückmeldungen entstehen.
-- Falsche Antwort: Abstand zur richtigen Stelle auf der Karte zeigen (Linie, km).
+- Falsche Antwort: Der Abstand (Linie, km, Himmelsrichtung) erscheint nur beim freien Markieren (Zeigen, Frei mit Ort setzen); in Erkennen, Beziehung und Tippen zeigt die Karte das richtige Element (grün) und die Wahl (blau) ohne Abstand (Wunsch des Erstellers). Die Rückmeldung spricht nie von der Farbe der Markierung.
+- Kartenausschnitt: 25° W bis 50° O, 34° bis 71,5° N, damit Russland nicht dominiert (Wunsch des Erstellers). Der Ural liegt außerhalb: offen, ob größerer Ausschnitt oder anderes Gebirge.
 - Nur Deutsch, Texte in Nachrichtendateien (vorbereitet für weitere Sprachen). Nur Europa.
 - Querformat auf Handys; Abweichung von 360 px, wird in `limits` des Eintrags gesagt.
 - Strang `erdkunde/orientierung`, Baustein `topographie-europa`.
@@ -232,7 +233,7 @@ limits: Auf dem Handy nur im Querformat nutzbar, weil die Karte Platz braucht; d
 - **Frei, Ort setzen:** Name gegeben → Ort setzen auf der Karte nur mit Küstenumriss; Treffer nach Abstand. Tastatur: Fadenkreuz mit Pfeiltasten, Enter setzt.
 - **Frei, Namen tippen:** Element markiert auf der Küstenkarte → Namen tippen; Vorschläge und Fehlertoleranz aus den echten Namen der Art (nie aus anderen Arten). Beispiel: „Itallien" → „Meintest du: Italien"; zählt als richtig, die Schreibweise wird gezeigt.
 - **Abdeckung:** Aufgaben entstehen aus den Daten (jedes Element, jede Beziehung, beide Richtungen). Der Lerngrad je Aufgabe liegt im Lernstand (klein, unter 100 kB); die Sterne je Stufe und Thema ergeben sich daraus (siehe Key decisions). Ein Thema ist geschafft (★★★), wenn mehr als 95 % seiner Aufgaben gekonnt sind. Eine Runde hat 10 Aufgaben; "Ich brauche eine Pause" speichert und beendet sie, der Start setzt sie fort.
-- **Falsche Antwort, immer:** Linie zwischen gewähltem und richtigem Ort mit Abstand in km, richtiges Element hervorgehoben, Fakt, Beziehung („liegt in …, an …") und, wo vorhanden, Klexikon-Link (lädt erst nach Klick).
+- **Falsche Antwort:** richtiges Element (grün) und Wahl (blau), Fakt, Beziehung („liegt in …, an …") und, wo vorhanden, Klexikon-Link (lädt erst nach Klick). Linie zwischen gewähltem und richtigem Ort mit Abstand in km und Himmelsrichtung nur beim freien Markieren (Zeigen, Frei mit Ort setzen).
 
 **Karte (Lernhandlung):** Das Ganze ist Europa in einer flächentreuen Projektion, Küsten und Grenzen aus den Geodaten. Orange ist das gesuchte Element (Fläche, Punkt oder Linie), blau die Antwort der Kinder, grün der richtige Ort, die gestrichelte Linie der Abstand. Gleich bleiben Projektion und Maßstab; es ändert sich, was beschriftet und angeklickt werden darf. So lernen die Kinder, wo etwas liegt, und sehen, wie weit sie danebenlagen.
 

@@ -44,7 +44,7 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
 - Amount (first version): all states of Europe with capital (including Kosovo, Cyprus, Turkey and Russia with their
   European part, and the micro-states Andorra, Liechtenstein, Malta, Monaco, San Marino, Vatican City), 12 rivers
   (Rhein, Donau, Elbe, Oder, Weichsel, Seine, Loire, Rhône, Po, Ebro, Wolga, Dnepr), 7 mountain ranges (Alpen, Pyrenäen,
-  Karpaten, Apenninen, Skandinavisches Gebirge, Ural, Balkan), 8 lakes (Bodensee, Genfer See, Gardasee, Plattensee,
+  Karpaten, Apenninen, Skandinavisches Gebirge, Ural (outside the frame: open, see Figures), Balkan), 8 lakes (Bodensee, Genfer See, Gardasee, Plattensee,
   Vänern, Ladogasee, Onegasee, Peipussee), 7 seas (Nordsee, Ostsee, Mittelmeer, Schwarzes Meer, Adria, Atlantischer Ozean,
   Europäisches Nordmeer), 6 sub-regions (Nord-, West-, Mittel-, Süd-, Südost-, Osteuropa). Micro-states, Kosovo, Turkey
   and Russia have `level` 3 or higher.
@@ -75,16 +75,19 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
 - **Frei, Namen tippen** (level 4): element highlighted on the coastline map; learners type the name; suggestions and
   tolerance come only from the names of the same kind. Task kind `tippen`. Tolerance: ignore case, umlauts, ß and
   spaces; distance at most 1 for names up to 5 letters, 2 above, only when exactly one name is that close.
-- **Wrong answer, in every pattern:** a dashed line from the learner's answer to the right place with the distance, the
-  right element highlighted, its fact, its relations ("liegt in …, an …") and its link (opens only after a click).
+- **Wrong answer, in every pattern:** the right element in green and the chosen one in blue, the fact, the relations
+  ("liegt in …, an …") and the link (opens only after a click). The distance line, the kilometres and the direction
+  appear only where learners point (Zeigen, Frei with placing a point), never in Erkennen, Beziehung or Tippen
+  (`SHOWS_DISTANCE` in `src/core/tasks.ts`). The heading of the feedback speaks of what was marked, never of its colour
+  ("Welches Land war markiert?").
   Wrong options are real neighbours or look-alikes; each is told why it is wrong where a relation says so.
 
 ## Figures
 
-- One figure: the map of Europe (SVG in the app page), equal-area projection, same extent in every task. Orange =
+- One figure: the map of Europe (SVG in the app page), equal-area projection, same extent in every task: longitude 25° W to 50° E, latitude 34° N to 71.5° N (Russia is cut at the frame, so that it does not dominate; the Ural is outside). Orange =
   the element asked for (area, point or line); blue = the learner's answer; green = the right place; dashed line =
   distance. Capitals are circles with a ring, rivers lines, lakes and seas areas.
-- After an answer the map zooms to the right element and, if wrong, the chosen one, so that the distance line is readable; the distance (rounded to 10 km, middle to middle) is also written in a box and in the feedback, with the direction from the chosen element to the right one ("im Westen").
+- After an answer the map zooms to the right element and, if wrong, the chosen one. Where learners point, the distance (rounded to 10 km, middle to middle) is drawn as a dashed line and written in a box and in the feedback, with the direction from the chosen element to the right one ("im Westen").
 - Level 3 shows borders and country names; level 4 shows only the coastline; levels 1 and 2 show borders without
   names.
 - Alternative text: every task has a text that says what is asked without the picture ("Welches Land ist markiert? Es

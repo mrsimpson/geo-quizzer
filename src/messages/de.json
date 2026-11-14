@@ -40,7 +40,7 @@
   "summary": "{right} von {total} Aufgaben hast du gleich beim ersten Mal richtig gelöst.",
   "menu": "Zum Menü",
   "announceRight": "Richtig! Das ist {target}.",
-  "announceWrong": "Nicht ganz. Gesucht war {target}, du hast {chosen} gewählt. Ungefähr {km} Kilometer liegen dazwischen.",
+  "announceWrong": "Nicht ganz. Gesucht war {target}, du hast {chosen} gewählt.",
   "el.land-albanien.name": "Albanien",
   "el.stadt-tirana.name": "Tirana",
   "el.land-andorra.name": "Andorra",
@@ -157,5 +157,8 @@
   "zoomResetShort": "Europa",
   "distanceLabel": "Abstand: {label}",
   "selected": "ausgewählt",
-  "streak": "{count} in Folge"
+  "streak": "{count} in Folge",
+  "askCountryDone": "Welches Land war markiert?",
+  "askCityDone": "Welche Hauptstadt war markiert?",
+  "announceWrongKm": "Nicht ganz. Gesucht war {target}, du hast {chosen} gewählt. Ungefähr {km} Kilometer liegen dazwischen."
 }

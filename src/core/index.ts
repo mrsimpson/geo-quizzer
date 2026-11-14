@@ -8,7 +8,7 @@ import type { Input } from "@lernapps/app-templates/interactive";
 import { elementById, KINDS } from "./data.ts";
 import { distanceKm } from "./geo.ts";
 import { parseProgress, record, type Progress } from "./progress.ts";
-import { buildRound, type Task } from "./tasks.ts";
+import { buildRound, SHOWS_DISTANCE, type Task } from "./tasks.ts";
 
 export type Phase = "menu" | "asking" | "feedback" | "summary";
 
@@ -16,8 +16,11 @@ export type Phase = "menu" | "asking" | "feedback" | "summary";
 export interface Answer {
   readonly chosen: string;
   readonly right: boolean;
-  /** Kilometres between the middle of the chosen element and the right one (0 when right), rounded to 10. */
-  readonly km: number;
+  /**
+   * Kilometres between the middle of the chosen element and the right one (0 when right), rounded to 10; null for
+   * kinds of tasks that do not show a distance (see SHOWS_DISTANCE).
+   */
+  readonly km: number | null;
 }
 
 export interface State {
@@ -70,7 +73,10 @@ function answer(state: State, chosen: string): State {
   const task = currentTask(state);
   if (state.phase !== "asking" || task === undefined || !task.options.includes(chosen)) return state;
   const right = chosen === task.target;
-  const km = right ? 0 : Math.round(distanceKm(elementById(chosen).centre, elementById(task.target).centre) / 10) * 10;
+  let km: number | null = null;
+  if (SHOWS_DISTANCE[task.kind]) {
+    km = right ? 0 : Math.round(distanceKm(elementById(chosen).centre, elementById(task.target).centre) / 10) * 10;
+  }
   return {
     ...state,
     phase: "feedback",

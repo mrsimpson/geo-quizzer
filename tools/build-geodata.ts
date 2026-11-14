@@ -31,7 +31,7 @@ const cache = join(root, "tools", "cache");
 const out = join(root, "src", "data", "geo");
 
 /** The map frame: longitude west, south, east, north in degrees. Must agree with src/core/geo.ts (FRAME). */
-const FRAME = { west: -25, south: 33, east: 65, north: 72 };
+const FRAME = { west: -25, south: 34, east: 50, north: 71.5 };
 /** Simplification in degrees: about 2 km. */
 const EPSILON = 0.03;
 /** Rings smaller than this (square degrees) are dropped unless they are the largest of their element. */

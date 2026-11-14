@@ -9,11 +9,11 @@ export type Ring = readonly Position[];
 export type Polygon = readonly Ring[];
 
 /** The map frame in degrees. The data in src/data/geo is cut to it (tools/build-geodata.ts, FRAME). */
-export const FRAME = { west: -25, south: 33, east: 65, north: 72 } as const;
+export const FRAME = { west: -25, south: 34, east: 50, north: 71.5 } as const;
 
 const EARTH_RADIUS_KM = 6371.0088;
-const CENTRE_LON = 20;
-const CENTRE_LAT = 53;
+const CENTRE_LON = 12;
+const CENTRE_LAT = 54;
 const RAD = Math.PI / 180;
 
 /** A point on the map plane: kilometres east and kilometres south of the centre (y grows downwards, as in SVG). */

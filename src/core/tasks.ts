@@ -8,6 +8,9 @@ import { draw, shuffle } from "./random.ts";
 /** The kinds of tasks: erkennen is a marked element and four names (Stufe 1). */
 export type TaskKind = "erkennen";
 
+/** Whether the feedback of a kind of task shows the distance between answer and right place: only where learners point. */
+export const SHOWS_DISTANCE: Readonly<Record<TaskKind, boolean>> = { erkennen: false };
+
 export interface Task {
   /** `<kind>:<element id>`, the key of the progress. */
   readonly key: string;
