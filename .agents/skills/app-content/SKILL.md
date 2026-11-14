@@ -113,6 +113,7 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
 - Alternative text: every task has a text that says what is asked without the picture ("Welches Land ist markiert? Es
   liegt im Westen Europas ..." only when it does not give the answer away; else "Eine Karte von Europa, ein Land ist
   markiert"). The tasks work with a keyboard: options with arrow keys and Enter, map by crosshair.
+- A marked area too small to see at the current zoom (Vatican City, Monaco, San Marino; under 16 px) gets a ring around it in the colour of its mark (`smallMarks` in `src/ui/EuropeMap.vue`).
 - Colours also differ in pattern or shape, never colour alone. Zoom with buttons, wheel, pinch and keys.
 - Origin: Natural Earth, public domain (https://www.naturalearthdata.com/about/terms-of-use/); no attribution needed.
 

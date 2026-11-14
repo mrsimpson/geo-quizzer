@@ -58,3 +58,22 @@ export function planeOf(position: Position): { x: number; y: number } {
 export function centreOf(element: Element): { x: number; y: number } {
   return planeOf(element.centre);
 }
+
+/** The larger side of the box around each area on the map plane, in kilometres: small shapes get a ring on the map. */
+export const AREA_SIZE: ReadonlyMap<string, number> = new Map(
+  ELEMENTS.flatMap((element): [string, number][] => {
+    if (element.geometry.type !== "area") return [];
+    const xs: number[] = [];
+    const ys: number[] = [];
+    for (const polygon of element.geometry.polygons) {
+      for (const position of polygon[0] ?? []) {
+        const p = project(position[0], position[1]);
+        xs.push(p.x);
+        ys.push(p.y);
+      }
+    }
+    return xs.length === 0
+      ? []
+      : [[element.id, Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys))]];
+  }),
+);

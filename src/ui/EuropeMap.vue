@@ -9,7 +9,7 @@ import { translator } from "@lernapps/tooling/i18n";
 import { elementById } from "../core/data.ts";
 import { EXTENT, project, unproject, VIEW, type Position } from "../core/geo.ts";
 import de from "../messages/de.json";
-import { AREA_PATHS, CONTEXT_PATH, LINE_PATHS, centreOf, planeOf } from "./paths.ts";
+import { AREA_PATHS, AREA_SIZE, CONTEXT_PATH, LINE_PATHS, centreOf, planeOf } from "./paths.ts";
 
 export interface Mark {
   id: string;
@@ -231,6 +231,10 @@ function onKeydown(event: KeyboardEvent): void {
 const areaMarks = computed(() =>
   props.marks.filter((mark) => elementById(mark.id).geometry.type === "area" && AREA_PATHS.has(mark.id)),
 );
+/** Marked areas too small to see at this zoom (Vatican City, Monaco): a ring shows where they are. */
+const smallMarks = computed(() =>
+  areaMarks.value.filter((mark) => (AREA_SIZE.get(mark.id) ?? Infinity) / unit.value < 16),
+);
 const lineMarks = computed(() => props.marks.filter((mark) => LINE_PATHS.has(mark.id)));
 const riverPaths = [...LINE_PATHS.entries()];
 const pointMarks = computed(() => props.marks.filter((mark) => elementById(mark.id).geometry.type === "point"));
@@ -274,6 +278,21 @@ const pinAt = computed(() => (props.pin === null ? undefined : planeOf(props.pin
         :style="mark.color === undefined ? undefined : { fill: mark.color }"
         fill-rule="evenodd"
       />
+      <g v-for="mark in smallMarks" :key="`ring-${mark.role}-${mark.id}`" class="locator">
+        <circle
+          :cx="centreOf(elementById(mark.id)).x"
+          :cy="centreOf(elementById(mark.id)).y"
+          :r="unit * 13"
+          class="outer"
+        />
+        <circle
+          :cx="centreOf(elementById(mark.id)).x"
+          :cy="centreOf(elementById(mark.id)).y"
+          :r="unit * 13"
+          :class="['inner', mark.role]"
+          :style="mark.color === undefined ? undefined : { stroke: mark.color }"
+        />
+      </g>
       <path
         v-for="mark in lineMarks"
         :key="`${mark.role}-${mark.id}`"
@@ -368,6 +387,32 @@ const pinAt = computed(() => (props.pin === null ? undefined : planeOf(props.pin
 .coast .river,
 .coast .lake {
   display: none;
+}
+
+.locator circle {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.locator .outer {
+  stroke: var(--geo-ink);
+  stroke-width: 8px;
+}
+
+.locator .inner {
+  stroke-width: 4px;
+}
+
+.locator .inner.asked {
+  stroke: var(--geo-asked);
+}
+
+.locator .inner.right {
+  stroke: var(--geo-right);
+}
+
+.locator .inner.chosen {
+  stroke: var(--geo-chosen);
 }
 
 .pin-ring.pending {
