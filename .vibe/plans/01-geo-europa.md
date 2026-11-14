@@ -4,7 +4,7 @@
 # Archetype, null until chosen in Explore. Allowed values: explainer, interactive, quiz.
 archetype: interactive
 # Current phase. Allowed values: explore, plan, code, commit. Change the value line below, never this comment.
-phase: plan
+phase: code
 # prePushFailures: written by the pre-push hook. Never change it.
 prePushFailures: 0
 # failedChecks: failed rules and runs, written by lernapps check and the hooks. Never change it.
@@ -74,7 +74,7 @@ Kinder der 6. Klasse üben auf einer Europakarte wie in einem Spiel: Sie finden 
 - Stufe 4 Frei, zwei Aufgabenarten auf der leeren Karte (nur Küstenumriss): (a) Name gegeben, Ort setzen, Wertung nach Abstand; (b) Element markiert, Namen tippen mit Autokorrektur (Vorschläge aus den echten Namen, kleine Tippfehler zählen nicht; Wunsch des Erstellers). Rückmeldung wie Stufe 3 plus Beziehung ("Paris liegt in Frankreich, an der Seine").
 - Abdeckung (Wunsch des Erstellers, Symbiose): Runden bleiben kurz (10 Aufgaben), damit Kinder nicht gestresst werden; zusätzlich ein Knopf "Ich brauche eine Pause", der den Fortschritt speichert und die Runde später fortsetzt. Der Gesamtfortschritt orientiert sich an der Gesamtmenge aller Aufgaben je Stufe und Thema, wird den Kindern aber als Sterne gezeigt, nicht als Zahl ("3 von 133" motiviert weniger als "0 Sterne").
 - Lerngrad je Aufgabe (guess): neu → geübt (einmal richtig) → gekonnt (zweimal in verschiedenen Runden beim ersten Versuch richtig). Eine gekonnte Aufgabe kommt nur noch selten zur Wiederholung; wird sie dabei falsch beantwortet, fällt sie auf geübt zurück und wird wieder öfter vorgelegt. Die 10 Aufgaben einer Runde kommen vor allem aus Neuem und Schwerem (Fehler zuerst), mit etwas Wiederholung von Gekonntem.
-- Sterne = Übersetzung des Lerngrads, je Stufe und je Thema (guess): ★ ab einem Drittel der Aufgaben geübt oder gekonnt, ★★ ab zwei Dritteln, ★★★ wenn alle gekonnt sind. Ein Stern geht nur zurück, wenn gekonnte Aufgaben bei der Wiederholung auf geübt zurückfallen und die Schwelle unterschritten wird.
+- Sterne = Übersetzung des Lerngrads, je Stufe und je Thema (guess): ★ ab einem Drittel der Aufgaben geübt oder gekonnt, ★★ ab zwei Dritteln, ★★★ bei mehr als 95 % gekonnt (Ja des Erstellers). Ein Stern geht nur zurück, wenn gekonnte Aufgaben bei der Wiederholung auf geübt zurückfallen und die Schwelle unterschritten wird.
 
 **Umfang (Vorschlag, beim Checkpoint zu bestätigen):**
 - Länder: rund 45 Staaten Europas mit Hauptstadt (Kosovo, Zypern und die Mikrostaaten Andorra, Liechtenstein, Malta, Monaco, San Marino, Vatikanstadt dabei; Türkei und Russland als Staaten mit europäischem Teil; Kaukasus-Staaten nicht).
@@ -212,9 +212,9 @@ limits: Auf dem Handy nur im Querformat nutzbar, weil die Karte Platz braucht; d
       learners see after each). Words alone are not enough. Keep sketch files in `.vibe/sketches/`, which `create` leaves alone.
 - [x] Show the creator, short: goal, competencies by chapter (chapters along the map's `requires`), entry draft, tasks, sketches; the content method in
       plain words (what learners see and do, what it cannot do). At most 2 questions.
-- [ ] **Checkpoint:** confirm the plan and the content method, with the sketches shown. Stop and wait for an
+- [x] **Checkpoint:** confirm the plan and the content method, with the sketches shown. Stop and wait for an
       explicit yes. Changes → change, ask again. No `create` before the yes.
-- [ ] Set `phase: code`: change the value line (`grep '^phase:'` prints `phase: code`).
+- [x] Set `phase: code`: change the value line (`grep '^phase:'` prints `phase: code`).
 
 ### Content method
 
@@ -231,7 +231,7 @@ limits: Auf dem Handy nur im Querformat nutzbar, weil die Karte Platz braucht; d
 - **Zeigen** (ablesen): Name gegeben → anklicken auf der Karte mit Grenzen und Ländernamen. Treffer: im Land (Fläche) bzw. innerhalb des Trefferradius (Punkt, Linie).
 - **Frei, Ort setzen:** Name gegeben → Ort setzen auf der Karte nur mit Küstenumriss; Treffer nach Abstand. Tastatur: Fadenkreuz mit Pfeiltasten, Enter setzt.
 - **Frei, Namen tippen:** Element markiert auf der Küstenkarte → Namen tippen; Vorschläge und Fehlertoleranz aus den echten Namen der Art (nie aus anderen Arten). Beispiel: „Itallien" → „Meintest du: Italien"; zählt als richtig, die Schreibweise wird gezeigt.
-- **Abdeckung:** Aufgaben entstehen aus den Daten (jedes Element, jede Beziehung, beide Richtungen). Der Lerngrad je Aufgabe liegt im Lernstand (klein, unter 100 kB); die Sterne je Stufe und Thema ergeben sich daraus (siehe Key decisions). Ein Thema ist geschafft (★★★), wenn alle seine Aufgaben gekonnt sind. Eine Runde hat 10 Aufgaben; "Ich brauche eine Pause" speichert und beendet sie, der Start setzt sie fort.
+- **Abdeckung:** Aufgaben entstehen aus den Daten (jedes Element, jede Beziehung, beide Richtungen). Der Lerngrad je Aufgabe liegt im Lernstand (klein, unter 100 kB); die Sterne je Stufe und Thema ergeben sich daraus (siehe Key decisions). Ein Thema ist geschafft (★★★), wenn mehr als 95 % seiner Aufgaben gekonnt sind. Eine Runde hat 10 Aufgaben; "Ich brauche eine Pause" speichert und beendet sie, der Start setzt sie fort.
 - **Falsche Antwort, immer:** Linie zwischen gewähltem und richtigem Ort mit Abstand in km, richtiges Element hervorgehoben, Fakt, Beziehung („liegt in …, an …") und, wo vorhanden, Klexikon-Link (lädt erst nach Klick).
 
 **Karte (Lernhandlung):** Das Ganze ist Europa in einer flächentreuen Projektion, Küsten und Grenzen aus den Geodaten. Orange ist das gesuchte Element (Fläche, Punkt oder Linie), blau die Antwort der Kinder, grün der richtige Ort, die gestrichelte Linie der Abstand. Gleich bleiben Projektion und Maßstab; es ändert sich, was beschriftet und angeklickt werden darf. So lernen die Kinder, wo etwas liegt, und sehen, wie weit sie danebenlagen.
