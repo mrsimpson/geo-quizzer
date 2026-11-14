@@ -5,7 +5,7 @@ description: Use for any content work in this app - researching, writing, extend
 
 # Content guide of this app
 
-Geo Europa: an `interactive` map game for the topography of Europe. Learners find countries, capitals, rivers, mountain
+Geo Quizzer: an `interactive` map game for the topography of Europe. Learners find countries, capitals, rivers, mountain
 ranges, lakes, seas and sub-regions on a map. All content is data: a new element needs no code.
 
 ## Curriculum
