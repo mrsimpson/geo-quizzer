@@ -9,7 +9,7 @@ steps:
     announce: "Aufgabe 1 von 10. Welches Land grenzt an das Land Serbien?"
   - inputs: [{ kind: action, name: answer, value: land-bosnien-herzegowina }]
     state: { phase: feedback, right: 1, answer: { chosen: land-bosnien-herzegowina, right: true, km: null } }
-    announce: "Richtig! Das ist Bosnien und Herzegowina."
+    announce: "Richtig! Bosnien und Herzegowina."
   - inputs: [{ kind: action, name: next }]
     state: { phase: asking, index: 1 }
     announce: "Aufgabe 2 von 10. Welches Land grenzt an das Land Ukraine?"
@@ -21,4 +21,4 @@ steps:
       progress:
         "beziehung:grenzt-an:land-bosnien-herzegowina:land-serbien:r": [1, 0]
         "beziehung:grenzt-an:land-slowakei:land-ukraine:r": [0, 1]
-    announce: "Nicht ganz. Gesucht war Slowakei, du hast Litauen gewählt."
+    announce: "Nicht ganz. Gesucht: die Slowakei. Deine Wahl: Litauen."

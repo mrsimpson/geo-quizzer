@@ -63,6 +63,7 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
   Runde (ten tasks), gekonnt. Learners are addressed with "du".
 - Plain German for grade 6; short sentences; no jargon like "Topographie" in task texts (only in the entry keywords).
 - Distances in km, rounded to 10 km; "ungefähr" in front.
+- Articles: where a name needs one in a sentence (die Niederlande, der Rhein, das Mittelmeer), the message `el.<id>.article` holds it (nominative); sentences use the article only in the nominative and avoid verbs that must agree with a plural ("Das stimmt: die Alpen"). Other names a learner may type (Holland, Weißrussland, Großbritannien) go into `el.<id>.alt`, separated by |.
 - Names as a school atlas writes them (German exonyms: "Prag", "Moskau"; capital "Bern", not "Berne").
 
 ## Exercise patterns
@@ -145,4 +146,6 @@ A new language: copy `src/messages/de.json`, translate every value, add the lang
 ## Rules learned from mistakes
 
 - A wrong option must never be the subject of the question or another right answer: in `makeTask` the right answers of a relation are excluded (found when "Ukraine" was offered as a neighbour of Ukraine).
+- The direction of a relation task: `f` has the `from` of the relation as subject, `r` the `to`. `hauptstadt-von` runs from the city to the country, so `f` asks "Von welchem Land ist {Stadt} die Hauptstadt?" and `r` "Was ist die Hauptstadt des Landes {Land}?" (the first version had them swapped).
+- Relations with the type `<type>-auch` (`gehoert-zu-auch`, `fliesst-durch-auch`, `liegt-in-auch`) say what is defensible too (Slowenien is also Südosteuropa, the Rhein borders Frankreich): they make no tasks, but such an element is never a wrong option.
 - Names in question texts carry no article; the question names the kind ("das Land", "der Fluss") instead ("von Niederlande" is wrong German).

@@ -2,7 +2,7 @@
 // count, and a small mistake does not either (one letter in a short name, two in a long one), but only when exactly
 // one name of the same kind is that near: the learner may not hit another name by chance.
 import { ELEMENTS, type Kind } from "./data.ts";
-import { nameOf } from "./names.ts";
+import { alternativesOf, nameOf } from "./names.ts";
 
 /** A name or a text typed, without what does not count: lower case, ae/oe/ue for umlauts, no accents, no spaces. */
 export function normalize(text: string): string {
@@ -48,10 +48,14 @@ interface Candidate {
 /** The names of a kind with their distance to the text, nearest first. */
 function candidates(kind: Kind, text: string, lang: string): Candidate[] {
   const typed = normalize(text);
+  // an element is as near as its nearest name: the name itself or another one it is known by (Weißrussland, Holland)
   return ELEMENTS.filter((e) => e.kind === kind)
     .map((e) => {
       const name = nameOf(e.id, lang);
-      return { id: e.id, name, distance: distance(typed, normalize(name)) };
+      const best = [name, ...alternativesOf(e.id, lang)]
+        .map((n) => ({ n, distance: distance(typed, normalize(n)) }))
+        .sort((a, b) => a.distance - b.distance)[0] ?? { n: name, distance: Infinity };
+      return { id: e.id, name: best.n, distance: best.distance };
     })
     .sort((a, b) => a.distance - b.distance || a.name.localeCompare(b.name));
 }

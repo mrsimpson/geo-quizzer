@@ -8,3 +8,9 @@ const MESSAGES: { readonly [lang: string]: { readonly [key: string]: string } } 
 export function nameOf(id: string, lang = "de"): string {
   return MESSAGES[lang]?.[`el.${id}.name`] ?? MESSAGES["de"]?.[`el.${id}.name`] ?? id;
 }
+
+/** The other names an element is known by (typed names only), from the message `el.<id>.alt`, separated by |. */
+export function alternativesOf(id: string, lang = "de"): string[] {
+  const alt = MESSAGES[lang]?.[`el.${id}.alt`];
+  return alt === undefined ? [] : alt.split("|");
+}

@@ -12,7 +12,7 @@ import { compass, type Position } from "../core/geo.ts";
 import { suggestions } from "../core/typing.ts";
 import { currentTask, type State } from "../core/index.ts";
 import { stars } from "../core/progress.ts";
-import { taskKeys } from "../core/tasks.ts";
+import { rightAnswers, taskKeys } from "../core/tasks.ts";
 import de from "../messages/de.json";
 import EuropeMap, { type Mark } from "./EuropeMap.vue";
 
@@ -30,6 +30,13 @@ onMounted(() => {
 });
 
 watch(
+  () => props.state.pin,
+  (point) => {
+    if (point !== null) announce(t("pinSet"));
+  },
+);
+
+watch(
   () => props.state.progress,
   (progress) => {
     storage.save("progress", progress);
@@ -44,6 +51,8 @@ const pick = (point: Position): void => {
 };
 
 const name = (id: string): string => t(`el.${id}.name`);
+/** The name with its article ("die Niederlande", "der Rhein") where it needs one, for sentences. */
+const nameA = (id: string): string => (has(`el.${id}.article`) ? `${t(`el.${id}.article`)} ${name(id)}` : name(id));
 const task = computed(() => currentTask(props.state));
 const playing = computed(() => props.state.phase !== "menu");
 const target = computed(() => (task.value === undefined ? undefined : elementById(task.value.target)));
@@ -62,14 +71,17 @@ const question = computed(() => {
   const current = task.value;
   if (isPick.value && subject.value !== undefined) {
     const done = props.state.phase === "feedback";
-    return t(done ? "askPointDone" : `askPoint.${subject.value.kind}`, { subject: name(subject.value.id) });
+    return t(done ? "askPointDone" : `askPoint.${subject.value.kind}`, {
+      subject: done ? nameA(subject.value.id) : name(subject.value.id),
+    });
   }
   if (isTyping.value && props.state.phase === "asking") return t(`askType.${kindOfTarget.value}`);
   if (current?.kind === "beziehung" && current.relation !== undefined && subject.value !== undefined) {
     const direction = current.dir ?? "f";
     const kind = direction === "f" ? subject.value.kind : (target.value?.kind ?? "");
     const suffix = current.relation === "liegt-in" ? `.${kind}` : "";
-    return t(`q.${current.relation}.${direction}${suffix}`, { subject: name(subject.value.id) });
+    const named = subject.value.kind === "fluss" || subject.value.kind === "see" ? nameA : name;
+    return t(`q.${current.relation}.${direction}${suffix}`, { subject: named(subject.value.id) });
   }
   const done = props.state.phase === "feedback";
   return t(`${done ? "askDone" : "ask"}.${kindOfTarget.value}`);
@@ -173,14 +185,25 @@ const direction = computed(() => {
   const answer = props.state.answer;
   if (answer === null || answer.right || answer.km === null || target.value === undefined) return "";
   const from = answer.point ?? (answer.chosen === "" ? undefined : elementById(answer.chosen).centre);
-  return from === undefined ? "" : t(`dir${compass(from, target.value.centre)}`);
+  const towards = answer.nearest ?? target.value.centre;
+  return from === undefined ? "" : t(`dir${compass(from, towards)}`);
+});
+
+/** Where several answers are right (several neighbours), the others: a learner may know another one. */
+const alsoRight = computed(() => {
+  const current = task.value;
+  if (current?.kind !== "beziehung" || current.relation === undefined || subject.value === undefined) return "";
+  const all = [...rightAnswers(current.relation, subject.value.id)];
+  if (all.length < 2) return "";
+  const list = all.slice(0, 8).map(name).join(", ");
+  return t("alsoRight", { list: all.length > 8 ? `${list} …` : list });
 });
 
 /** What the feedback says about the answer, in a sentence or two. */
 const detailText = computed(() => {
   const answer = props.state.answer;
   if (answer === null || target.value === undefined) return "";
-  const target_ = name(target.value.id);
+  const target_ = nameA(target.value.id);
   if (isPick.value) {
     if (answer.right) return t("hitDetail", { target: target_ });
     return t("missDetail", { target: target_, km: answer.km ?? 0, direction: direction.value });
@@ -188,12 +211,13 @@ const detailText = computed(() => {
   if (isTyping.value) {
     if (answer.right)
       return wasSpelledOtherwise.value
-        ? t("typedSpelling", { target: target_ })
+        ? t("typedSpelling", { target: name(target.value.id) })
         : t("rightDetail", { target: target_ });
     return t("typedWrong", { typed: answer.typed ?? "", target: target_ });
   }
   if (answer.right) return t("rightDetail", { target: target_ });
-  return t("wrongDetail", { chosen: name(answer.chosen), target: target_ });
+  const others = alsoRight.value;
+  return `${t("wrongDetail", { chosen: nameA(answer.chosen), target: target_ })}${others === "" ? "" : ` ${others}`}`;
 });
 
 const levelTitle = computed(() => t(`level${props.state.level}`));
@@ -216,8 +240,8 @@ watch(
       else {
         announce(
           answer.right
-            ? t("announceRight", { target: name(target.value?.id ?? "") })
-            : t("announceWrong", { target: name(target.value?.id ?? ""), chosen: name(answer.chosen) }),
+            ? t("announceRight", { target: nameA(target.value?.id ?? "") })
+            : t("announceWrong", { target: nameA(target.value?.id ?? ""), chosen: nameA(answer.chosen) }),
         );
       }
       await nextTick();
@@ -289,6 +313,9 @@ watch(
           </button>
         </li>
       </ul>
+      <p v-if="KINDS.some((kind) => levelKeys(state.level, [kind]).length === 0)" class="menu-hint">
+        {{ t("topicDisabled") }}
+      </p>
       <p v-if="noTasks" class="menu-empty">{{ t("empty") }}</p>
       <button v-else type="button" class="primary" @click="act('start')">{{ t("start") }}</button>
     </div>
@@ -653,8 +680,16 @@ a:focus-visible,
   font-size: 0.875rem;
 }
 
+.feedback {
+  padding-bottom: 0.5rem;
+}
+
 .feedback p {
   margin: 0 0 0.5rem;
+}
+
+.panel {
+  scrollbar-gutter: stable;
 }
 
 .verdict {

@@ -65,6 +65,8 @@ function topicOf(type: string, from: Element): Kind {
 function relationTasks(level: number): RelationTask[] {
   const tasks: RelationTask[] = [];
   for (const r of RELATIONS) {
+    // "-auch" relations only say what is defensible too: no tasks, but never a wrong option
+    if (r.type.endsWith("-auch")) continue;
     const from = elementById(r.from);
     const to = elementById(r.to);
     if (from.level > level || to.level > level) continue;
@@ -108,10 +110,10 @@ export function taskKeys(level: number, topics: readonly string[]): string[] {
 }
 
 /** The elements that are right answers to the same question: the answers of the same relation to the same subject. */
-function rightAnswers(type: string, subject: string): Set<string> {
+export function rightAnswers(type: string, subject: string, also = false): Set<string> {
   const answers = new Set<string>();
   for (const r of RELATIONS) {
-    if (r.type !== type) continue;
+    if (r.type !== type && !(also && r.type === `${type}-auch`)) continue;
     if (r.from === subject) answers.add(r.to);
     if (r.to === subject) answers.add(r.from);
   }
@@ -147,7 +149,7 @@ function makeTask(key: string, level: number, rng: number): [Task, number] {
     const [wrong, afterWrong] = wrongOptions(
       elementById(answer),
       elementById(subject),
-      rightAnswers(type, subject),
+      rightAnswers(type, subject, true),
       level,
       rng,
     );

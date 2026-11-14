@@ -21,7 +21,7 @@ steps:
         right: 2,
         answer: { chosen: land-nordmazedonien, right: true, typed: Nordmazedonin, km: null },
       }
-    announce: "Richtig! Richtig! Es schreibt sich: Nordmazedonien."
+    announce: "Richtig! Es schreibt sich: Nordmazedonien."
   - inputs:
       [{ kind: action, name: next }, { kind: action, name: pin, value: [10, 56] }, { kind: action, name: confirm }]
     state: { phase: feedback, answer: { right: false, km: 1250, nearest: [15.82, 45.2] } }

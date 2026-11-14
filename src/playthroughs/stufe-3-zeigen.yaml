@@ -11,7 +11,7 @@ steps:
     state: { phase: asking, pin: [28.45, 47.2] }
   - inputs: [{ kind: action, name: confirm }]
     state: { phase: feedback, right: 1, pin: null, answer: { right: true, km: 0, point: [28.45, 47.2] } }
-    announce: "Richtig! Getroffen! Das ist Moldau."
+    announce: "Richtig! Getroffen: die Moldau!"
   - inputs: [{ kind: action, name: next }]
     state: { phase: asking, index: 1 }
     announce: "Aufgabe 2 von 10. Klicke auf das Land Finnland."

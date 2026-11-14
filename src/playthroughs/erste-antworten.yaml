@@ -9,7 +9,7 @@ steps:
     announce: "Aufgabe 1 von 10. Welches Land ist orange markiert?"
   - inputs: [{ kind: action, name: answer, value: land-frankreich }]
     state: { phase: feedback, right: 1, streak: 1, answer: { chosen: land-frankreich, right: true, km: null } }
-    announce: "Richtig! Das ist Frankreich."
+    announce: "Richtig! Frankreich."
   - inputs: [{ kind: action, name: next }]
     state: { phase: asking, index: 1, answer: null }
     announce: "Aufgabe 2 von 10. Welches Land ist orange markiert?"
@@ -22,4 +22,4 @@ steps:
       progress:
         "erkennen:land-frankreich": [1, 0]
         "erkennen:land-schweiz": [0, 1]
-    announce: "Nicht ganz. Gesucht war Schweiz, du hast Italien gewählt."
+    announce: "Nicht ganz. Gesucht: die Schweiz. Deine Wahl: Italien."
