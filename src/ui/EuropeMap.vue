@@ -525,4 +525,17 @@ const labels = computed(() =>
   font-weight: 700;
   line-height: 1;
 }
+
+@media (max-height: 480px) {
+  .zoom button {
+    min-width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
+  }
+
+  .distance-box {
+    padding: 0.125rem 0.5rem;
+    font-size: 0.875rem;
+  }
+}
 </style>
