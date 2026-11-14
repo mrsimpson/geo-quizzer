@@ -25,4 +25,4 @@ steps:
       progress:
         "zeigen:land-moldau": [1, 0]
         "zeigen:land-finnland": [0, 1]
-    announce: "Nicht ganz. Dein Punkt lag ungefähr 2.180 km vom Gesuchten (Finnland, grün) entfernt. Von deinem Punkt aus liegt es im Nordosten."
+    announce: "Nicht ganz. Gesucht war: Finnland (grün). Dein Punkt lag ungefähr 2.180 km daneben. Von deinem Punkt aus liegt es im Nordosten."

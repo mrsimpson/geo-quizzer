@@ -193,32 +193,46 @@ const direction = computed(() => {
 const alsoRight = computed(() => {
   const current = task.value;
   if (current?.kind !== "beziehung" || current.relation === undefined || subject.value === undefined) return "";
-  const all = [...rightAnswers(current.relation, subject.value.id)];
-  if (all.length < 2) return "";
+  const all = [...rightAnswers(current.relation, subject.value.id)].filter((id) => id !== current.target);
+  if (all.length < 1) return "";
   const list = all.slice(0, 8).map(name).join(", ");
   return t("alsoRight", { list: all.length > 8 ? `${list} …` : list });
 });
 
-/** What the feedback says about the answer, in a sentence or two. */
-const detailText = computed(() => {
+/**
+ * What the feedback says about the answer: first and large the right answer, then, smaller, what the learner did.
+ * Where several answers are right, the others follow the learner's own.
+ */
+const detailParts = computed<{ primary: string; secondary: string }>(() => {
   const answer = props.state.answer;
-  if (answer === null || target.value === undefined) return "";
+  if (answer === null || target.value === undefined) return { primary: "", secondary: "" };
   const target_ = nameA(target.value.id);
   if (isPick.value) {
-    if (answer.right) return t("hitDetail", { target: target_ });
-    return t("missDetail", { target: target_, km: answer.km ?? 0, direction: direction.value });
+    if (answer.right) return { primary: t("hitDetail", { target: target_ }), secondary: "" };
+    return {
+      primary: t("missRight", { target: target_ }),
+      secondary: t("missOwn", { km: answer.km ?? 0, direction: direction.value }),
+    };
   }
   if (isTyping.value) {
-    if (answer.right)
-      return wasSpelledOtherwise.value
-        ? t("typedSpelling", { target: name(target.value.id) })
-        : t("rightDetail", { target: target_ });
-    return t("typedWrong", { typed: answer.typed ?? "", target: target_ });
+    if (answer.right) {
+      return {
+        primary: wasSpelledOtherwise.value
+          ? t("typedSpelling", { target: name(target.value.id) })
+          : t("rightDetail", { target: target_ }),
+        secondary: "",
+      };
+    }
+    return { primary: t("wrongRight", { target: target_ }), secondary: t("typedOwn", { typed: answer.typed ?? "" }) };
   }
-  if (answer.right) return t("rightDetail", { target: target_ });
+  if (answer.right) return { primary: t("rightDetail", { target: target_ }), secondary: "" };
   const others = alsoRight.value;
-  return `${t("wrongDetail", { chosen: nameA(answer.chosen), target: target_ })}${others === "" ? "" : ` ${others}`}`;
+  return {
+    primary: t("wrongRight", { target: target_ }),
+    secondary: `${t("wrongOwn", { chosen: nameA(answer.chosen) })}${others === "" ? "" : ` ${others}`}`,
+  };
 });
+const detailText = computed(() => `${detailParts.value.primary} ${detailParts.value.secondary}`.trim());
 
 const levelTitle = computed(() => t(`level${props.state.level}`));
 const levelKeys = (level: number, kinds: readonly string[]) => taskKeys(level, kinds);
@@ -405,7 +419,8 @@ watch(
             <p :class="['verdict', state.answer.right ? 'right' : 'wrong']">
               {{ state.answer.right ? t("right") : t("wrong") }}
             </p>
-            <p>{{ detailText }}</p>
+            <p class="answer-main">{{ detailParts.primary }}</p>
+            <p v-if="detailParts.secondary" class="answer-own">{{ detailParts.secondary }}</p>
             <p v-if="relationText">{{ relationText }}</p>
             <template v-if="fact">
               <p class="fact-title">{{ t("factTitle") }}</p>
@@ -443,6 +458,7 @@ watch(
   --geo-asked: #f28c28;
   --geo-right: #3fae6a;
   --geo-chosen: #4f86c6;
+  --geo-muted: #4a5663;
   --geo-river: #5f9fc7;
   --geo-button: #ffffff;
   --geo-focus: #1a56db;
@@ -461,6 +477,7 @@ watch(
     --geo-asked: #f59a3e;
     --geo-right: #4cc17c;
     --geo-chosen: #78a8e8;
+    --geo-muted: #b8c2cc;
     --geo-river: #4a8ab5;
     --geo-button: #25313d;
     --geo-focus: #8ab4ff;
@@ -478,6 +495,7 @@ watch(
   --geo-asked: #f59a3e;
   --geo-right: #4cc17c;
   --geo-chosen: #78a8e8;
+  --geo-muted: #b8c2cc;
   --geo-river: #4a8ab5;
   --geo-button: #25313d;
   --geo-focus: #8ab4ff;
@@ -703,6 +721,16 @@ a:focus-visible,
 
 .verdict.wrong {
   color: var(--geo-chosen);
+}
+
+.feedback .answer-main {
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.feedback .answer-own {
+  color: var(--geo-muted);
+  font-size: 0.875rem;
 }
 
 .fact-title {

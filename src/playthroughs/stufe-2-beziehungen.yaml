@@ -21,4 +21,4 @@ steps:
       progress:
         "beziehung:grenzt-an:land-bosnien-herzegowina:land-serbien:r": [1, 0]
         "beziehung:grenzt-an:land-slowakei:land-ukraine:r": [0, 1]
-    announce: "Nicht ganz. Gesucht: die Slowakei. Deine Wahl: Litauen."
+    announce: "Nicht ganz. Richtig ist: die Slowakei. Deine Wahl: Litauen."

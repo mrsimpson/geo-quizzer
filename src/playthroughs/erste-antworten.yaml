@@ -22,4 +22,4 @@ steps:
       progress:
         "erkennen:land-frankreich": [1, 0]
         "erkennen:land-schweiz": [0, 1]
-    announce: "Nicht ganz. Gesucht: die Schweiz. Deine Wahl: Italien."
+    announce: "Nicht ganz. Richtig ist: die Schweiz. Deine Wahl: Italien."
