@@ -4,7 +4,7 @@
 # Archetype, null until chosen in Explore. Allowed values: explainer, interactive, quiz.
 archetype: interactive
 # Current phase. Allowed values: explore, plan, code, commit. Change the value line below, never this comment.
-phase: explore
+phase: plan
 # prePushFailures: written by the pre-push hook. Never change it.
 prePushFailures: 0
 # failedChecks: failed rules and runs, written by lernapps check and the hooks. Never change it.
@@ -47,7 +47,13 @@ Kinder der 6. Klasse üben auf einer Europakarte wie in einem Spiel: Sie finden 
 - Strang `erdkunde/orientierung`, Baustein `topographie-europa`.
 - Fakt und Klexikon-Link je Element, nur wo eine Seite existiert. (guess)
 - Zusätzlich zur Lernlandkarte: Teilräume Europas und Meere aufnehmen, weil der Baustein sie nennt. (guess, beim Checkpoint bestätigen)
-- Auswahl der Elemente (siehe Notes: Umfang) ist ein Vorschlag. (guess)
+- Auswahl der Elemente (siehe Notes: Umfang) bestätigt. Russland, Türkei, Kosovo und Mikrostaaten dabei, ab höherer Stufe (bestätigt).
+- Vier Stufen statt drei: Erkennen, Beziehungen, Zeigen, Frei. (guess)
+- Alle Inhalte als Daten, neue Elemente ohne Code (Wunsch des Erstellers).
+- Dunkelmodus: folgt dem Gerät. (guess)
+- Hochformat auf dem Handy: Hinweis "Bitte drehe dein Gerät" statt Spiel. (guess)
+- Lernstand (Sterne je Stufe, bekannte Elemente) lokal, unter 100 kB. (guess)
+- Routen: je Stufe eine Route (`stufe-1` bis `stufe-4`); Themen und Rundenstart auf dem App-Bildschirm. (guess)
 
 ## Notes
 
@@ -62,7 +68,8 @@ Kinder der 6. Klasse üben auf einer Europakarte wie in einem Spiel: Sie finden 
 **Wie Kinder dorthin kommen (Herleiten):**
 - Stufe 1 Erkennen: markiertes Land oder Element auf der Karte → Name aus Auswahl. Fehlvorstellung: ähnliche Namen und Lagen verwechseln; Rückmeldung zeigt den Abstand auf der Karte.
 - Stufe 2 Beziehungen: "Welche Hauptstadt hat dieses Land?", "Welches Land durchfließt dieser Fluss?", "Wo liegt der See?" aus den Beziehungsdaten, mit Nachbarn als Hilfe.
-- Stufe 3 Frei: Name gegeben, ohne Hilfen auf die Karte klicken; Rückmeldung zeigt Abstand zur richtigen Stelle (Linie, km) und die Beziehung ("Paris liegt in Frankreich, an der Seine").
+- Stufe 3 Zeigen: Name gegeben, das Element auf der Karte mit Grenzen und Ländernamen als Hilfe anklicken; Rückmeldung zeigt Abstand zur richtigen Stelle (Linie, km).
+- Stufe 4 Frei: Name gegeben, auf der leeren Karte (nur Küstenumriss) einen Ort setzen, ohne Hilfe; Wertung nach Abstand; Rückmeldung wie Stufe 3 plus Beziehung ("Paris liegt in Frankreich, an der Seine").
 
 **Umfang (Vorschlag, beim Checkpoint zu bestätigen):**
 - Länder: rund 45 Staaten Europas mit Hauptstadt (Kosovo, Zypern und die Mikrostaaten Andorra, Liechtenstein, Malta, Monaco, San Marino, Vatikanstadt dabei; Türkei und Russland als Staaten mit europäischem Teil; Kaukasus-Staaten nicht).
@@ -132,12 +139,12 @@ Kinder der 6. Klasse üben auf einer Europakarte wie in einem Spiel: Sie finden 
 - [x] Fetch https://lernapps.net/apps/schemas/entry.v1.schema.json and read each property's description. Ask what
       helps teachers and parents find the app. Fill "Entry draft". Search words: one or two words each, as people
       type them.
-- [ ] **Checkpoint:** research. Show in plain words: the strand or why none, curriculum orientation (not with a
+- [x] **Checkpoint:** research. Show in plain words: the strand or why none, curriculum orientation (not with a
       strand), competencies by chapter (with their ids) and their pages, didactic approach, scope, every "(guess)", sources and how you
       checked them, what is unchecked, archetype and reason. With a strand, the map decides the structure: competencies
       that build on each other (its `requires`) share a chapter, in that order; no curriculum search is needed for it.
       Stop and wait. Changes → change, ask again.
-- [ ] Set `phase: plan`: change the value line (`grep '^phase:'` prints `phase: plan`).
+- [x] Set `phase: plan`: change the value line (`grep '^phase:'` prints `phase: plan`).
 
 ### Answers
 
@@ -189,16 +196,16 @@ limits: Auf dem Handy nur im Querformat nutzbar, weil die Karte Platz braucht; d
 
 ### Tasks
 
-- [ ] `grep '^phase:'` prints `phase: plan`; else set it.
-- [ ] Map the content as skill `lernapps-<archetype>-design` says; reread it if it is no longer in view.
-- [ ] Choose a pattern per competency as skill `lernapps-exercise-patterns` says (loaded in Explore; reread it if it
+- [x] `grep '^phase:'` prints `phase: plan`; else set it.
+- [x] Map the content as skill `lernapps-<archetype>-design` says; reread it if it is no longer in view.
+- [x] Choose a pattern per competency as skill `lernapps-exercise-patterns` says (loaded in Explore; reread it if it
       is no longer in view). Write "Content method".
-- [ ] Write the Code tasks under "Code": pages or screens, their content, what each shows. Each ends in a commit:
+- [x] Write the Code tasks under "Code": pages or screens, their content, what each shows. Each ends in a commit:
       one task, one commit. Steps too small for a commit of their own → one task.
       The first task: one complete page or screen as the pattern for the others (`early-preview`).
-- [ ] Each screen, component or interactive exercise: a sketch (static SVG or image, or the steps with what
+- [x] Each screen, component or interactive exercise: a sketch (static SVG or image, or the steps with what
       learners see after each). Words alone are not enough. Keep sketch files in `.vibe/sketches/`, which `create` leaves alone.
-- [ ] Show the creator, short: goal, competencies by chapter (chapters along the map's `requires`), entry draft, tasks, sketches; the content method in
+- [x] Show the creator, short: goal, competencies by chapter (chapters along the map's `requires`), entry draft, tasks, sketches; the content method in
       plain words (what learners see and do, what it cannot do). At most 2 questions.
 - [ ] **Checkpoint:** confirm the plan and the content method, with the sketches shown. Stop and wait for an
       explicit yes. Changes → change, ask again. No `create` before the yes.
@@ -206,11 +213,25 @@ limits: Auf dem Handy nur im Querformat nutzbar, weil die Karte Platz braucht; d
 
 ### Content method
 
-<!-- One line each: exercise patterns and where; figures and how they are made; data files; each component, what it
-checks and cannot; how a later agent adds a chapter. Each figure, model and component: its learning action in two to
-four sentences: the whole, what its parts and marks mean, what learners do and what stays the same, how that leads to
-the statement (an explainer: rule `explainer-representation-explained`). A control without a part in it goes. An explainer on the map: per page its prerequisites (`requires`)
-the app does not practise, and which get a recap page, which a link. Becomes the content guide in Code. -->
+**Teile (interactive-design):**
+- **Kern** `src/core/`: reiner TypeScript-Code ohne DOM. Aus Seed, Route (Stufe) und gewählten Themen entsteht eine Runde mit 10 Aufgaben (Zufall nur aus dem Seed). Nimmt Eingaben (Antwort wählen, Ort setzen, Weiter) und wertet aus: Treffer, Abstand in km, Punkte, Serie, Sterne. Enthält die GIS-Funktionen: Projektion Länge/Breite → Karte, Punkt-in-Fläche, Abstand zu Fläche, Linie oder Punkt (Haversine), Trefferradius je Elementgröße.
+- **Oberfläche** `src/ui/`: Vue-Komponenten. Karte als SVG (zoombar mit Knöpfen, Mausrad, Pinch und Tastatur), Fragefeld, Antwortknöpfe, Rückmeldung, Startbildschirm, Hinweis im Hochformat. Kein Spielstand in den Komponenten.
+- **Daten** `src/data/`: `geo/*.json` (vereinfachte Geometrien aus Natural Earth, mit einem Skript `tools/build-geodata` erzeugt und eingecheckt), `elements/*.json` (ein Datensatz je Element: id, Art, Stufe, Geometrie, Beziehungen, Linkadresse), Texte in `src/messages/de.json` (Namen, Fakten, Oberfläche) mit den Elements-Ids als Schlüssel.
+- **Routen:** `stufe-1` bis `stufe-4` (je ein Link auf `app/#stufe-n`).
+- **Playthroughs:** je Stufe einer (Seed, Eingaben, erwartete Wertung), dazu Fehlerfälle (Abstand), Stufenwechsel, Sterne.
+
+**Übungsmuster:**
+- **Erkennen** (benennen): Element markiert → eine von vier Optionen derselben Art; falsche Optionen sind Nachbarn oder Elemente ähnlicher Größe. Beispiel: Frankreich orange → Spanien, Frankreich, Italien, Deutschland. Daten: `elements/*.json`.
+- **Beziehung** (zuordnen): Frage aus einer Beziehung, Antwort aus vier Optionen. Beispiel: „Durch welches Land fließt die Seine?". Daten: `relations.json` (Arten: hauptstadt-von, fliesst-durch, liegt-in, grenzt-an, gehoert-zu-teilraum).
+- **Zeigen** (ablesen): Name gegeben → anklicken auf der Karte mit Grenzen und Ländernamen. Treffer: im Land (Fläche) bzw. innerhalb des Trefferradius (Punkt, Linie).
+- **Frei:** Name gegeben → Ort setzen auf der Karte nur mit Küstenumriss; Treffer nach Abstand. Tastatur: Fadenkreuz mit Pfeiltasten, Enter setzt.
+- **Falsche Antwort, immer:** Linie zwischen gewähltem und richtigem Ort mit Abstand in km, richtiges Element hervorgehoben, Fakt, Beziehung („liegt in …, an …") und, wo vorhanden, Klexikon-Link (lädt erst nach Klick).
+
+**Karte (Lernhandlung):** Das Ganze ist Europa in einer flächentreuen Projektion, Küsten und Grenzen aus den Geodaten. Orange ist das gesuchte Element (Fläche, Punkt oder Linie), blau die Antwort der Kinder, grün der richtige Ort, die gestrichelte Linie der Abstand. Gleich bleiben Projektion und Maßstab; es ändert sich, was beschriftet und angeklickt werden darf. So lernen die Kinder, wo etwas liegt, und sehen, wie weit sie danebenlagen.
+
+**Erweitern (für einen späteren Agenten):** Neues Element = ein Datensatz in `src/data/elements/<art>.json`, Geometrie in `src/data/geo/` (Skript), Name und Fakt in `src/messages/de.json`, Beziehungen in `relations.json`, Stufe im Feld `level`. Kein Code. Neue Sprache = neue Datei `src/messages/<sprache>.json` mit allen Schlüsseln. Das wird der Inhaltsleitfaden `app-content`.
+
+**Grenzen:** Die Geodaten sind vereinfacht (Küsten, Grenzen ungefähr); umstrittene Grenzen folgen Natural Earth. Kein Ton, kein Mehrspieler, nur Europa.
 
 ### Completed
 
@@ -243,10 +264,15 @@ the app does not practise, and which get a recap page, which a link. Becomes the
 - [ ] An explainer: decide on `scope` as `references/structure.md` of skill `lernapps-explainer` says. Needed with an
       `open-task` or the creator's material: then `scope` in `src/app.yaml` and on every page
       (`explainer-scope-matches`). Write the choice under "Key decisions".
-- [ ] <the first task written in Plan, the pattern page; commit on `work`>
+- [ ] **Muster-Seite:** Geodaten-Skript und Länder-Daten, Karte als SVG, Stufe 1 (Länder erkennen) komplett: Frage, vier Optionen, richtig/falsch mit Abstandslinie, Fakt und Link, Punkte, Rundenende. Playthrough für Stufe 1. Commit auf `work`.
 - [ ] **Checkpoint:** the pattern page (`early-preview`): check it against the design rules, let a sub-agent check
       it as a learner, show it to the creator, wait for the answer. A change → change the pattern first.
-- [ ] <the other tasks written in Plan, after the pattern; after each, commit on `work`>
+- [ ] Weitere Elemente: Hauptstädte (Punkte), Flüsse (Linien), Gebirge, Seen, Meere, Teilräume (Flächen) als Daten, Zeichnung und Stufe 1; Stufenfeld je Element. Commit.
+- [ ] Beziehungsdaten und Stufe 2 (Hauptstadt von, fließt durch, liegt in, grenzt an). Commit.
+- [ ] Stufe 3 (Zeigen mit Hilfe) und Stufe 4 (Frei), Fadenkreuz mit Tastatur, Zoom, Trefferradius, Abstandsrückmeldung überall. Commit.
+- [ ] Fakten und Klexikon-Links für alle Elemente: Fakt je Element nach einer geöffneten Seite geprüft, Link nur wo die Seite existiert und geöffnet wurde. Commit.
+- [ ] Spielgefühl und Rahmen: Startbildschirm mit Stufenkarten und Themen, Sterne und Serie, Lernstand lokal, Hochformat-Hinweis, Dunkelmodus, kräftige Farben ohne Blitzen. Commit.
+- [ ] Startseite (`app.yaml`: Beschreibung, So geht's, Kompetenz, Hinweis auf `kontinente-und-ozeane`, Routen), Katalogeintrag-Entwurf, Architektur `docs/arc42/` je Aufgabe im selben Commit. Commit.
 - [ ] The content guide matches what was built (`app-content-matches`).
 - [ ] `npx --no -- lernapps check` passes.
 - [ ] Look at a screenshot of every screen and state (start, each mode, pause, end), desktop and 360 px. Compare
