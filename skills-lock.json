@@ -64,6 +64,20 @@
       "version": "0.12.3",
       "computedHash": "1d2fa747c6c2574b5dcad463cd6c6f4f701b1df2632d589ea8eb9ff0da5c9b51"
     },
+    "lernapps-interactive": {
+      "source": "@lernapps/tooling",
+      "sourceType": "node_modules",
+      "skillPath": "dist/skills/lernapps-interactive/SKILL.md",
+      "version": "0.12.3",
+      "computedHash": "39e93a19cdd955b90f54e68555e2cb05842ecf11a9e61cc9f0f3c227b9258f2f"
+    },
+    "lernapps-interactive-design": {
+      "source": "@lernapps/tooling",
+      "sourceType": "node_modules",
+      "skillPath": "dist/skills/lernapps-interactive-design/SKILL.md",
+      "version": "0.12.3",
+      "computedHash": "066e25cf9a9ae605324f42b1496f6c36386f29a3de7f3f8e92f4f89717104d00"
+    },
     "lernapps-listing": {
       "source": "@lernapps/tooling",
       "sourceType": "node_modules",

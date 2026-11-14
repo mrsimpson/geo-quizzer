@@ -62,10 +62,10 @@ questions. -->
       the folder was not started with `init`. `git branch --show-current` prints `work`; else `git switch -c work`.
 - [x] Load skill `lernapps-app`. Tell the creator in two sentences what a lernapps app is and where it will live: at
       their own address, free, public, and once listed as a copy on lernapps.net. The technical part (GitHub) comes at the end, and you do it.
-- [ ] Interview: ask the topics "Goal" and "Learners" of "Answers".
+- [x] Interview: ask the topics "Goal" and "Learners" of "Answers".
 - [ ] No fixed content yet ("an app for my class", "a gap on the map") → load skill `lernapps-map-assignment` and
       write its assignment first; its yes answers the topics it covers.
-- [ ] Load skill `lernapps-exercise-patterns` and read the patterns of the subject: how will learners practise what
+- [x] Load skill `lernapps-exercise-patterns` and read the patterns of the subject: how will learners practise what
       the goal names? The kind of practice points to the archetype, as the skill says.
 - [ ] Choose the archetype as skill `lernapps-app` says, from the kind of practice: read the README of each
       archetype in question, tell the creator what the chosen one can and cannot do. Write it and its reason under
@@ -103,8 +103,8 @@ questions. -->
 
 <!-- The interview: per topic the creator's answer, in their words. Keep the topics. -->
 
-- Goal: what learners do in the app, what they learn.
-- Learners: subject, school year, prior knowledge. Land and Schulform only if the creator names a school or class,
+- Goal: Kinder sollen die Länder Europas, ihre Hauptstädte und deren Lage kennen, dazu Flüsse in der Nähe, eventuell wichtige Gebirge und Seen. Sie sollen auf einer interaktiven Karte rätseln, Elemente benennen und Positionen erraten.
+- Learners: Geographie, 6. Klasse (Topologie Europas, übliches Thema). Land and Schulform only if the creator names a school or class,
   at most once; none → KMK-Bildungsstandards.
 - Model and focus: an app of the catalog (read https://lernapps.net/apps/llms.txt) as model; what matters most
   (exercises, visualisations, game feel).
