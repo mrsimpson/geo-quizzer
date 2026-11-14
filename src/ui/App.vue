@@ -806,6 +806,20 @@ a:focus-visible,
 }
 
 @media (max-height: 480px) {
+  .summary {
+    justify-content: flex-start;
+    overflow: auto;
+  }
+
+  .summary h2,
+  .summary p {
+    margin: 0.25rem 0;
+  }
+
+  .summary .menu-stars {
+    font-size: 1.25rem;
+  }
+
   .playing .round {
     gap: 0.25rem;
     padding: 0.25rem 0.5rem;

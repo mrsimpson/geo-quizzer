@@ -96,6 +96,10 @@ Kinder der 6. Klasse üben auf einer Europakarte wie in einem Spiel: Sie finden 
 
 **Erweiterbarkeit (Wunsch des Erstellers):** Alle Elemente und Beziehungen stehen in Datendateien; ein neues Land, Gewässer oder Gebirge ist nur eine Datenänderung, kein Code. Jedes Element hat ein Feld für die Stufe, ab der es drankommt.
 
+**Bildschirme geprüft (Code):** Im Browser angesehen (Bildschirmfotos): Menü, Aufgabe und Rückmeldung der Stufen 1 bis 4 am Computer (1000×600 und 1280×720) und im Querformat auf dem Handy (740×360, 640×360), Zusammenfassung der Runde, Hochformat-Hinweis (360×640). Nicht im Hochformat gespielt: Das Spiel braucht dort das Querformat (Eintrag `limits`). Die Skizzen waren grob; Abweichung: Stufe 1 und 2 zeigen keinen Abstand (Wunsch des Erstellers).
+
+**Von zwei Lern-Tests (Hilfs-Agenten als Kind der 6. Klasse) behoben:** vertauschte Hauptstadt-Fragen in Stufe 2, fehlende Artikel, strittige Teilraum-Zuordnungen (Relationen `-auch`), Rückmeldung mit mehreren richtigen Antworten, Layout im Querformat.
+
 **Offene Fragen:** Auswahl der Elemente und der Teilräume; Kosovo und Türkei/Russland.
 
 ## Explore
@@ -283,9 +287,9 @@ limits: Auf dem Handy nur im Querformat nutzbar, weil die Karte Platz braucht; d
       (Von Hilfs-Agenten an geöffneten Klexikon-Seiten geschrieben; 14 von 218 Texten selbst gelesen. 24 Elemente haben keine Klexikon-Seite und deshalb keinen Fakt.)
 - [x] Spielgefühl und Rahmen: Startbildschirm mit Stufenkarten und Themen, Sterne und Serie, Lernstand lokal, Hochformat-Hinweis, Dunkelmodus, kräftige Farben ohne Blitzen. Commit.
 - [ ] Startseite (`app.yaml`: Beschreibung, So geht's, Kompetenz, Hinweis auf `kontinente-und-ozeane`, Routen), Katalogeintrag-Entwurf, Architektur `docs/arc42/` je Aufgabe im selben Commit. Commit.
-- [ ] The content guide matches what was built (`app-content-matches`).
-- [ ] `npx --no -- lernapps check` passes.
-- [ ] Look at a screenshot of every screen and state (start, each mode, pause, end), desktop and 360 px. Compare
+- [x] The content guide matches what was built (`app-content-matches`).
+- [x] `npx --no -- lernapps check` passes.
+- [x] Look at a screenshot of every screen and state (start, each mode, pause, end), desktop and 360 px. Compare
       each with the confirmed sketches; each figure in its own image (`npx --no -- lernapps screenshots --desktop`).
       Your tools cannot show an image: check each screen in the browser instead (text, element boxes at both widths),
       write that under "Notes" and tick the box.
