@@ -1,8 +1,29 @@
 # yaml-language-server: $schema=../node_modules/@lernapps/app-templates/runtime/interactive/interactive.v1.schema.json
-title: Platzhalter
-description: Ein Knopf, der bis drei zählt. Er hält den Platz frei, bis die geplante App da ist.
+title: Geo Europa
+description: |
+  Ein Kartenspiel für die 6. Klasse: Finde die Länder Europas auf der Karte und lerne ihre Hauptstädte kennen. Du
+  übst in kurzen Runden mit zehn Aufgaben und sammelst Sterne, je besser du es kannst.
 howto: |
-  - Drücke „Weiter“, bis du bei drei bist.
+  - Wähle eine Stufe und die Themen, dann starte eine Runde.
+  - In Stufe 1 ist ein Land orange markiert. Tippe auf den richtigen Namen oder drücke die Taste 1 bis 4.
+  - Ist die Antwort falsch, zeigt die Karte, wie weit du daneben lagst.
+  - Mit „Ich brauche eine Pause“ hörst du auf. Was du schon geschafft hast, bleibt auf deinem Gerät gespeichert.
+  - Auf dem Handy brauchst du das Querformat. Die Karte kannst du vergrößern und verschieben.
 competencies:
-  - Ich kann bis drei zählen.
+  - Ich kann Europa in Teilräume gliedern und seine Staaten, Hauptstädte, Gebirge, Flüsse und Meere auf einer Karte zeigen.
 languages: [de]
+routes:
+  - id: stufe-1
+    title: Stufe 1 · Erkennen
+    description: Ein Land ist markiert. Welchen Namen hat es?
+sections:
+  - id: vorwissen
+    title: Das solltest du schon wissen
+    text: |
+      Du solltest die Kontinente und Ozeane auf einer Weltkarte zeigen können. Wenn du dir dabei noch unsicher bist,
+      übe das zuerst mit deinem Atlas.
+  - id: karten
+    title: Woher kommen die Karten?
+    text: |
+      Die Umrisse stammen von Natural Earth. Diese Kartendaten sind frei nutzbar. Wir haben sie vereinfacht, deshalb
+      sind Küsten und Grenzen nur ungefähr genau.

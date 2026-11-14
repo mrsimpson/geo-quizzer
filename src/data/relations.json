@@ -1,0 +1,222 @@
+[
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-tirana",
+    "to": "land-albanien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-andorra-la-vella",
+    "to": "land-andorra"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-minsk",
+    "to": "land-belarus"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-bruessel",
+    "to": "land-belgien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-sarajevo",
+    "to": "land-bosnien-herzegowina"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-sofia",
+    "to": "land-bulgarien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-kopenhagen",
+    "to": "land-daenemark"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-berlin",
+    "to": "land-deutschland"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-tallinn",
+    "to": "land-estland"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-helsinki",
+    "to": "land-finnland"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-paris",
+    "to": "land-frankreich"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-athen",
+    "to": "land-griechenland"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-dublin",
+    "to": "land-irland"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-reykjavik",
+    "to": "land-island"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-rom",
+    "to": "land-italien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-pristina",
+    "to": "land-kosovo"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-zagreb",
+    "to": "land-kroatien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-riga",
+    "to": "land-lettland"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-vaduz",
+    "to": "land-liechtenstein"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-vilnius",
+    "to": "land-litauen"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-luxemburg-stadt",
+    "to": "land-luxemburg"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-valletta",
+    "to": "land-malta"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-chisinau",
+    "to": "land-moldau"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-podgorica",
+    "to": "land-montenegro"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-amsterdam",
+    "to": "land-niederlande"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-skopje",
+    "to": "land-nordmazedonien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-oslo",
+    "to": "land-norwegen"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-wien",
+    "to": "land-oesterreich"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-warschau",
+    "to": "land-polen"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-lissabon",
+    "to": "land-portugal"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-bukarest",
+    "to": "land-rumaenien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-moskau",
+    "to": "land-russland"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-stockholm",
+    "to": "land-schweden"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-bern",
+    "to": "land-schweiz"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-belgrad",
+    "to": "land-serbien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-bratislava",
+    "to": "land-slowakei"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-ljubljana",
+    "to": "land-slowenien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-madrid",
+    "to": "land-spanien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-prag",
+    "to": "land-tschechien"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-ankara",
+    "to": "land-tuerkei"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-kiew",
+    "to": "land-ukraine"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-budapest",
+    "to": "land-ungarn"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-london",
+    "to": "land-vereinigtes-koenigreich"
+  },
+  {
+    "type": "hauptstadt-von",
+    "from": "stadt-nikosia",
+    "to": "land-zypern"
+  }
+]

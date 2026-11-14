@@ -155,4 +155,20 @@ involves: bb-e2e, bb-interactive-description, bb-interactive-playthroughs, bb-sh
 ```
 
 <!-- app: begin -->
+
+## Playing a round
+
+The learner starts a round in the menu: the game builds ten tasks from the progress, the root component shows the map and
+four names, and an answer goes through the game into the progress. The map marks the right element and, when the
+answer is wrong, draws the distance line from the geometry; the component saves the progress on the device.
+
+```arc42
+:::runtime-scenario
+id: rs-geo-round
+title: Playing a round
+trigger: The learner starts a round and answers
+involves: bb-app, bb-game, bb-geo, bb-map, bb-geodata
+:::
+```
+
 <!-- app: end -->

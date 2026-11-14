@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Erste Antworten: eine richtige (Frankreich), eine falsche (Italien statt Schweiz, die Mitten liegen ungefähr 480 km
+# auseinander); der Fortschritt hält beides fest.
+seed: 7
+route: stufe-1
+steps:
+  - inputs: [{ kind: action, name: start }]
+    state: { phase: asking, index: 0, right: 0 }
+    announce: "Aufgabe 1 von 10. Welches Land ist orange markiert?"
+  - inputs: [{ kind: action, name: answer, value: land-frankreich }]
+    state: { phase: feedback, right: 1, streak: 1, answer: { chosen: land-frankreich, right: true, km: 0 } }
+    announce: "Richtig! Das ist Frankreich."
+  - inputs: [{ kind: action, name: next }]
+    state: { phase: asking, index: 1, answer: null }
+    announce: "Aufgabe 2 von 10. Welches Land ist orange markiert?"
+  - inputs: [{ kind: action, name: answer, value: land-italien }]
+    state:
+      phase: feedback
+      right: 1
+      streak: 0
+      answer: { chosen: land-italien, right: false, km: 480 }
+      progress:
+        "erkennen:land-frankreich": [1, 0]
+        "erkennen:land-schweiz": [0, 1]
+    announce: "Nicht ganz. Gesucht war Schweiz, du hast Italien gewählt. Ungefähr 480 Kilometer liegen dazwischen."

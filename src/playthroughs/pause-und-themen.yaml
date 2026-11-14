@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Pause und Themen: Escape beendet die Runde, der Fortschritt bleibt; ein Thema lässt sich wählen, das letzte nicht abwählen.
+seed: 7
+route: stufe-1
+steps:
+  - inputs: [{ kind: action, name: topic, value: stadt }]
+    state: { phase: menu, topics: [land, stadt] }
+  - inputs: [{ kind: action, name: topic, value: land }]
+    state: { topics: [stadt] }
+  - inputs: [{ kind: action, name: topic, value: stadt }]
+    state: { topics: [stadt] }
+  - inputs: [{ kind: action, name: topic, value: land }]
+    state: { topics: [land, stadt] }
+  - inputs: [{ kind: action, name: start }]
+    state: { phase: asking, index: 0 }
+  - keys: ["1"]
+    state: { phase: feedback }
+  - keys: [Escape]
+    state: { phase: menu, tasks: [], answer: null }

@@ -718,6 +718,82 @@ protocol: TypeScript module exports
 ```
 
 <!-- app: begin core -->
+
+### Geo functions
+
+The small GIS of the app: the equal-area projection of Europe and its inverse, great-circle distances, point-in-area tests and area centres. Pure functions on longitude and latitude, so that the core and the map agree on every position.
+
+```arc42
+:::building-block
+id: bb-geo
+title: Geo functions
+parent: bb-interactive-core
+technology: TypeScript
+path: src/core/geo.ts
+:::
+```
+
+#### Geo interface
+
+The core and the map project, measure and test positions only through these functions.
+
+```arc42
+:::interface
+id: if-geo
+title: Projection, distances, area tests
+provider: bb-geo
+protocol: TypeScript module exports
+path: src/core/geo.ts
+:::
+```
+
+### Game
+
+The state and its steps: menu, round, feedback and summary are phases of one state. The content (elements, relations, progress, rounds, seeded randomness) is read in the other files of the core, and every answer goes into the progress at once.
+
+```arc42
+:::building-block
+id: bb-game
+title: Game
+parent: bb-interactive-core
+technology: TypeScript
+requires: if-geo, if-geodata, if-interactive-data
+path: src/core/index.ts
+:::
+```
+
+#### Game interface
+
+The root component shows the state and sends inputs; it calls only these exports.
+
+```arc42
+:::interface
+id: if-game
+title: State, start, step, current task
+provider: bb-game
+protocol: TypeScript module exports
+path: src/core/index.ts
+:::
+```
+
+```arc42
+:::diagram
+id: building-block-core
+view: building-block
+notation: mermaid
+:::
+```
+
+```mermaid
+flowchart TB
+    subgraph bb-interactive-core["Core"]
+        bb-game["Game"]
+        bb-geo["Geo functions"]
+    end
+    bb-geo -->|provides| if-geo(["Geo interface"])
+    bb-game -->|uses| if-geo
+    bb-game -->|provides| if-game(["Game interface"])
+```
 <!-- app: end core -->
 
 ## UI
@@ -753,6 +829,69 @@ protocol: Vue props and events
 ```
 
 <!-- app: begin ui -->
+
+### Map
+
+The map as SVG: grey land, the countries, marks in orange, green and blue, a dashed distance line, zoom and move. It keeps only its view, no game state; the shapes come from `paths.ts`, which projects the geometry once.
+
+```arc42
+:::building-block
+id: bb-map
+title: Map
+parent: bb-interactive-ui
+technology: Vue single-file component
+requires: if-geo, if-geodata
+path: src/ui/EuropeMap.vue
+:::
+```
+
+#### Map interface
+
+The root component hands the map the marks, the line and the text for screen readers as props.
+
+```arc42
+:::interface
+id: if-map
+title: Marks, line, label, reset key (props)
+provider: bb-map
+protocol: Vue props
+path: src/ui/EuropeMap.vue
+:::
+```
+
+### Game screens
+
+Menu, round over the whole page, feedback and summary. It saves the progress on the device and hands it back to the core as the action load; it announces every change for screen readers.
+
+```arc42
+:::building-block
+id: bb-app
+title: Game screens
+parent: bb-interactive-ui
+technology: Vue single-file component
+requires: if-game, if-map, if-messages
+path: src/ui/App.vue
+:::
+```
+
+```arc42
+:::diagram
+id: building-block-ui
+view: building-block
+notation: mermaid
+:::
+```
+
+```mermaid
+flowchart TB
+    subgraph bb-interactive-ui["UI"]
+        bb-app["Game screens"]
+        bb-map["Map"]
+    end
+    bb-map -->|provides| if-map(["Map interface"])
+    bb-app -->|uses| if-map
+    bb-app -->|uses| if-game(["Game interface"])
+```
 <!-- app: end ui -->
 
 ## Data
@@ -783,6 +922,50 @@ path: src/data
 ```
 
 <!-- app: begin data -->
+
+### Geometry
+
+Simplified shapes cut to the map frame, made from Natural Earth by the script `tools/build-geodata.ts` and never edited by hand. The element records and the relations are the template's data (`src/data/elements`, `src/data/relations.json`).
+
+```arc42
+:::building-block
+id: bb-geodata
+title: Geometry
+parent: bb-interactive-data
+technology: JSON
+path: src/data/geo
+:::
+```
+
+#### Geometry interface
+
+The core imports the shapes by element id as JSON modules.
+
+```arc42
+:::interface
+id: if-geodata
+title: Shapes by element id (JSON import)
+provider: bb-geodata
+protocol: JSON module import
+path: src/data/geo
+:::
+```
+
+```arc42
+:::diagram
+id: building-block-data
+view: building-block
+notation: mermaid
+:::
+```
+
+```mermaid
+flowchart TB
+    subgraph bb-interactive-data["Data"]
+        bb-geodata["Geometry"]
+    end
+    bb-geodata -->|provides| if-geodata(["Geometry interface"])
+```
 <!-- app: end data -->
 
 ## Messages

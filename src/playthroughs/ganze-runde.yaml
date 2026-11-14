@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Eine ganze Runde mit zehn richtigen Antworten: am Ende die Zusammenfassung, die Taste Enter geht weiter.
+seed: 7
+route: stufe-1
+steps:
+  - inputs: [{ kind: action, name: start }]
+    state: { phase: asking, index: 0 }
+  - inputs: [{ kind: action, name: answer, value: land-frankreich }]
+    state: { phase: feedback, right: 1, streak: 1 }
+  - keys: [Enter]
+    state: { phase: asking, index: 1 }
+  - inputs: [{ kind: action, name: answer, value: land-schweiz }]
+    state: { phase: feedback, right: 2, streak: 2 }
+  - keys: [Enter]
+    state: { phase: asking, index: 2 }
+  - inputs: [{ kind: action, name: answer, value: land-polen }]
+    state: { phase: feedback, right: 3, streak: 3 }
+  - keys: [Enter]
+    state: { phase: asking, index: 3 }
+  - inputs: [{ kind: action, name: answer, value: land-moldau }]
+    state: { phase: feedback, right: 4, streak: 4 }
+  - keys: [Enter]
+    state: { phase: asking, index: 4 }
+  - inputs: [{ kind: action, name: answer, value: land-serbien }]
+    state: { phase: feedback, right: 5, streak: 5 }
+  - keys: [Enter]
+    state: { phase: asking, index: 5 }
+  - inputs: [{ kind: action, name: answer, value: land-irland }]
+    state: { phase: feedback, right: 6, streak: 6 }
+  - keys: [Enter]
+    state: { phase: asking, index: 6 }
+  - inputs: [{ kind: action, name: answer, value: land-belarus }]
+    state: { phase: feedback, right: 7, streak: 7 }
+  - keys: [Enter]
+    state: { phase: asking, index: 7 }
+  - inputs: [{ kind: action, name: answer, value: land-tschechien }]
+    state: { phase: feedback, right: 8, streak: 8 }
+  - keys: [Enter]
+    state: { phase: asking, index: 8 }
+  - inputs: [{ kind: action, name: answer, value: land-nordmazedonien }]
+    state: { phase: feedback, right: 9, streak: 9 }
+  - keys: [Enter]
+    state: { phase: asking, index: 9 }
+  - inputs: [{ kind: action, name: answer, value: land-vereinigtes-koenigreich }]
+    state: { phase: feedback, right: 10, streak: 10 }
+  - keys: [Enter]
+    state: { phase: summary, right: 10 }
+    announce: "10 von 10 Aufgaben hast du gleich beim ersten Mal richtig gelöst."

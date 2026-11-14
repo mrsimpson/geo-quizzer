@@ -8,7 +8,7 @@ phase: code
 # prePushFailures: written by the pre-push hook. Never change it.
 prePushFailures: 0
 # failedChecks: failed rules and runs, written by lernapps check and the hooks. Never change it.
-failedChecks: {}
+failedChecks: { accessible: 1, checks-pass: 2 }
 ---
 
 # Plan: Geo Europa, first version
@@ -271,10 +271,10 @@ limits: Auf dem Handy nur im Querformat nutzbar, weil die Karte Platz braucht; d
 - [x] (entfällt, kein Explainer) An explainer: decide on `scope` as `references/structure.md` of skill `lernapps-explainer` says. Needed with an
       `open-task` or the creator's material: then `scope` in `src/app.yaml` and on every page
       (`explainer-scope-matches`). Write the choice under "Key decisions".
-- [ ] **Muster-Seite:** Geodaten-Skript und Länder-Daten, Karte als SVG, Stufe 1 (Länder erkennen) komplett: Frage, vier Optionen, richtig/falsch mit Abstandslinie, Fakt und Link, Punkte, Rundenende. Playthrough für Stufe 1. Commit auf `work`.
+- [x] **Muster-Seite:** Geodaten-Skript und Länder-Daten, Karte als SVG, Stufe 1 (Länder erkennen) komplett: Frage, vier Optionen, richtig/falsch mit Abstandslinie, Fakt und Link, Punkte, Rundenende. Playthrough für Stufe 1. Commit auf `work`.
 - [ ] **Checkpoint:** the pattern page (`early-preview`): check it against the design rules, let a sub-agent check
       it as a learner, show it to the creator, wait for the answer. A change → change the pattern first.
-- [ ] Weitere Elemente: Hauptstädte (Punkte), Flüsse (Linien), Gebirge, Seen, Meere, Teilräume (Flächen) als Daten, Zeichnung und Stufe 1; Stufenfeld je Element. Commit.
+- [ ] Weitere Elemente: Flüsse (Linien), Gebirge, Seen, Meere, Teilräume (Flächen) als Daten, Zeichnung und Stufe 1; Hauptstädte (Punkte) sind schon in der Muster-Seite; Stufenfeld je Element. Commit.
 - [ ] Beziehungsdaten und Stufe 2 (Hauptstadt von, fließt durch, liegt in, grenzt an). Commit.
 - [ ] Stufe 3 (Zeigen mit Hilfe) und Stufe 4 (Frei: Ort setzen und Namen tippen mit Autokorrektur), Fadenkreuz mit Tastatur, Zoom, Trefferradius, Abstandsrückmeldung überall. Commit.
 - [ ] Abdeckung: Lerngrad je Aufgabe (neu, geübt, gekonnt, Rückfall), Runde mit 10 Aufgaben aus Neuem und Schwerem mit etwas Wiederholung, Sterne je Stufe und Thema aus dem Lerngrad, Pausenknopf mit Speichern und Fortsetzen, Lernstand lokal. Commit.
