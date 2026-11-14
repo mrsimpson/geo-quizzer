@@ -106,17 +106,15 @@ questions. -->
 - Goal: Kinder sollen die Länder Europas, ihre Hauptstädte und deren Lage kennen, dazu Flüsse in der Nähe, eventuell wichtige Gebirge und Seen. Sie sollen auf einer interaktiven Karte rätseln, Elemente benennen und Positionen erraten.
 - Learners: Geographie, 6. Klasse (Topologie Europas, übliches Thema). Land and Schulform only if the creator names a school or class,
   at most once; none → KMK-Bildungsstandards.
-- Model and focus: an app of the catalog (read https://lernapps.net/apps/llms.txt) as model; what matters most
-  (exercises, visualisations, game feel).
+- Model and focus: Fokus Spielgefühl auf der Karte (Ersteller: "wie ein Spiel, kartenorientiert"). Katalog gelesen; Modell-App noch offen (guess: keine).
 - Hurdles: misconceptions and mistakes of the learners; the creator's examples and experiments.
-- Content: who writes it (creator, you, from sources); own material (worksheets, tests); how it is made (sources,
+- Content: (guess) Assistent aus offenen Quellen, Kartendaten z. B. Natural Earth (gemeinfrei), als vereinfachte Geodaten in der App gebündelt. Original-Frage: who writes it (creator, you, from sources); own material (worksheets, tests); how it is made (sources,
   research, a data format).
-- Amount: how much content per level or chapter in the first version (e.g. "one text per school year"); what comes
-  later.
+- Amount: Alle Staaten Europas (rund 44) mit Hauptstädten, dazu eine überschaubare Auswahl großer Flüsse, Gebirge und Seen (Ja des Erstellers). Später mehr.
 - Languages: German only, or German and English (texts, code). Never English only: an app without German still has
   German pages and runtime texts, so it mixes both. The creator wants English → offer German and English,
   both complete, and say why.
-- Look and feel: calm like a worksheet, or like a game (colours, praise, effects); dark mode.
+- Look and feel: Wie ein Spiel, kartenorientiert. Mobil nur im Querformat (Abweichung von 360 px, kommt in `limits` des Eintrags). Mehrere Schwierigkeitsstufen entlang der Aufgabe: am einfachsten Land mit Umriss auf der Karte markiert → Frage (Hauptstadt, längster Fluss, markiertes Gebirge …), über Namen aus Auswahl wählen, bis zum freien Anklicken von Positionen auf einer Karte ohne Hilfe. Idee: ein einfaches GIS als Basis. Dunkelmodus: noch offen.
 - Terms: the creator's words for the main things in the app, used everywhere.
 
 ### Entry draft
