@@ -109,13 +109,20 @@ export function taskKeys(level: number, topics: readonly string[]): string[] {
   return inScope.flatMap((e) => [taskKey("setzen", e.id), taskKey("tippen", e.id)]);
 }
 
-/** The elements that are right answers to the same question: the answers of the same relation to the same subject. */
-export function rightAnswers(type: string, subject: string, also = false): Set<string> {
+/**
+ * The elements that are right answers to the same question: the answers of the same relation to the same subject, of
+ * the kind the question asks for (a country lies in the relation "lies in" with ranges and with lakes: "Which range?"
+ * has no lake as an answer).
+ */
+export function rightAnswers(type: string, subject: string, kind: Kind, also = false): Set<string> {
   const answers = new Set<string>();
+  const add = (id: string): void => {
+    if (elementById(id).kind === kind) answers.add(id);
+  };
   for (const r of RELATIONS) {
     if (r.type !== type && !(also && r.type === `${type}-auch`)) continue;
-    if (r.from === subject) answers.add(r.to);
-    if (r.to === subject) answers.add(r.from);
+    if (r.from === subject) add(r.to);
+    if (r.to === subject) add(r.from);
   }
   return answers;
 }
@@ -149,7 +156,7 @@ function makeTask(key: string, level: number, rng: number): [Task, number] {
     const [wrong, afterWrong] = wrongOptions(
       elementById(answer),
       elementById(subject),
-      rightAnswers(type, subject, true),
+      rightAnswers(type, subject, elementById(answer).kind, true),
       level,
       rng,
     );

@@ -115,7 +115,7 @@ const PALETTE = [
 const manyRight = computed<string[]>(() => {
   const current = task.value;
   if (current?.kind !== "beziehung" || current.relation === undefined || subject.value === undefined) return [];
-  const all = [...rightAnswers(current.relation, subject.value.id)]
+  const all = [...rightAnswers(current.relation, subject.value.id, target.value?.kind ?? "land")]
     .filter((id) => id !== current.target)
     .sort((a, b) => name(a).localeCompare(name(b), "de"));
   return all.length === 0 ? [] : [current.target, ...all];
