@@ -5,7 +5,7 @@
 import { computed, ref, watch } from "vue";
 import { translator } from "@lernapps/tooling/i18n";
 import { elementById } from "../core/data.ts";
-import { project, VIEW } from "../core/geo.ts";
+import { EXTENT, project, VIEW } from "../core/geo.ts";
 import de from "../messages/de.json";
 import { AREA_PATHS, CONTEXT_PATH, centreOf } from "./paths.ts";
 
@@ -44,8 +44,8 @@ watch(
 function clamp(next: { x: number; y: number; width: number; height: number }): void {
   const width = Math.max(VIEW.width / ZOOM_MAX, Math.min(VIEW.width, next.width));
   const height = (width / VIEW.width) * VIEW.height;
-  const x = Math.max(VIEW.x, Math.min(VIEW.x + VIEW.width - width, next.x));
-  const y = Math.max(VIEW.y, Math.min(VIEW.y + VIEW.height - height, next.y));
+  const x = Math.max(EXTENT.x, Math.min(EXTENT.x + EXTENT.width - width, next.x));
+  const y = Math.max(EXTENT.y, Math.min(EXTENT.y + EXTENT.height - height, next.y));
   view.value = { x, y, width, height };
 }
 
@@ -170,7 +170,7 @@ const lineEnds = computed(() => {
       @pointercancel="onPointerUp"
       @keydown="onKeydown"
     >
-      <rect :x="VIEW.x" :y="VIEW.y" :width="VIEW.width" :height="VIEW.height" class="sea" />
+      <rect :x="EXTENT.x" :y="EXTENT.y" :width="EXTENT.width" :height="EXTENT.height" class="sea" />
       <path :d="CONTEXT_PATH" class="context" fill-rule="evenodd" />
       <path v-for="[id, d] in plainAreas" :key="id" :d="d" class="land" fill-rule="evenodd" />
       <path

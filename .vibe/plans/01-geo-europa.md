@@ -42,7 +42,7 @@ Kinder der 6. Klasse üben auf einer Europakarte wie in einem Spiel: Sie finden 
 - Karte als einfaches GIS: Geodaten (Natural Earth, gemeinfrei) vereinfacht gebündelt, Projektion und Treffertest im Kern der App, keine Server.
 - Beziehungen zwischen Elementen als Daten (Hauptstadt von, fließt durch, liegt in, grenzt an), aus denen Aufgaben und Rückmeldungen entstehen.
 - Falsche Antwort: Der Abstand (Linie, km, Himmelsrichtung) erscheint nur beim freien Markieren (Zeigen, Frei mit Ort setzen); in Erkennen, Beziehung und Tippen zeigt die Karte das richtige Element (grün) und die Wahl (blau) ohne Abstand (Wunsch des Erstellers). Die Rückmeldung spricht nie von der Farbe der Markierung.
-- Kartenausschnitt: 25° W bis 50° O, 34° bis 71,5° N, damit Russland nicht dominiert (Wunsch des Erstellers). Der Ural liegt außerhalb: offen, ob größerer Ausschnitt oder anderes Gebirge.
+- Kartenausschnitt: 25° W bis 50° O, 34° bis 71,5° N, damit Russland nicht dominiert (Wunsch des Erstellers). Die Karte lässt sich nach Osten bis 68° O verschieben; so bleibt der Ural im Spiel (Frage des Erstellers).
 - Nur Deutsch, Texte in Nachrichtendateien (vorbereitet für weitere Sprachen). Nur Europa.
 - Querformat auf Handys; Abweichung von 360 px, wird in `limits` des Eintrags gesagt.
 - Strang `erdkunde/orientierung`, Baustein `topographie-europa`.

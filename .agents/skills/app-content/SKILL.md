@@ -44,7 +44,7 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
 - Amount (first version): all states of Europe with capital (including Kosovo, Cyprus, Turkey and Russia with their
   European part, and the micro-states Andorra, Liechtenstein, Malta, Monaco, San Marino, Vatican City), 12 rivers
   (Rhein, Donau, Elbe, Oder, Weichsel, Seine, Loire, Rhône, Po, Ebro, Wolga, Dnepr), 7 mountain ranges (Alpen, Pyrenäen,
-  Karpaten, Apenninen, Skandinavisches Gebirge, Ural (outside the frame: open, see Figures), Balkan), 8 lakes (Bodensee, Genfer See, Gardasee, Plattensee,
+  Karpaten, Apenninen, Skandinavisches Gebirge, Ural, Balkan), 8 lakes (Bodensee, Genfer See, Gardasee, Plattensee,
   Vänern, Ladogasee, Onegasee, Peipussee), 7 seas (Nordsee, Ostsee, Mittelmeer, Schwarzes Meer, Adria, Atlantischer Ozean,
   Europäisches Nordmeer), 6 sub-regions (Nord-, West-, Mittel-, Süd-, Südost-, Osteuropa). Micro-states, Kosovo, Turkey
   and Russia have `level` 3 or higher.
@@ -84,7 +84,7 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
 
 ## Figures
 
-- One figure: the map of Europe (SVG in the app page), equal-area projection, same extent in every task: longitude 25° W to 50° E, latitude 34° N to 71.5° N (Russia is cut at the frame, so that it does not dominate; the Ural is outside). Orange =
+- One figure: the map of Europe (SVG in the app page), equal-area projection, same extent in every task: the map first shows longitude 25° W to 50° E and latitude 34° N to 71.5° N (`START_FRAME` in `src/core/geo.ts`), so that Russia does not dominate; the data reach 68° E (`FRAME`, also in `tools/build-geodata.ts`) and the learner moves the map east to the Ural. Orange =
   the element asked for (area, point or line); blue = the learner's answer; green = the right place; dashed line =
   distance. Capitals are circles with a ring, rivers lines, lakes and seas areas.
 - After an answer the map zooms to the right element and, if wrong, the chosen one. Where learners point, the distance (rounded to 10 km, middle to middle) is drawn as a dashed line and written in a box and in the feedback, with the direction from the chosen element to the right one ("im Westen").

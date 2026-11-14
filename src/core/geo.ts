@@ -8,8 +8,10 @@ export type Ring = readonly Position[];
 /** An outer ring followed by the rings of its holes. */
 export type Polygon = readonly Ring[];
 
-/** The map frame in degrees. The data in src/data/geo is cut to it (tools/build-geodata.ts, FRAME). */
-export const FRAME = { west: -25, south: 34, east: 50, north: 71.5 } as const;
+/** The map frame in degrees: all the data. The data in src/data/geo is cut to it (tools/build-geodata.ts, FRAME). */
+export const FRAME = { west: -25, south: 34, east: 68, north: 71.5 } as const;
+/** The part of the frame the map shows first; the learner can move the map east to the rest (the Ural). */
+export const START_FRAME = { west: -25, south: 34, east: 50, north: 71.5 } as const;
 
 const EARTH_RADIUS_KM = 6371.0088;
 const CENTRE_LON = 12;
@@ -47,21 +49,29 @@ export function unproject(plane: Plane): Position {
   return [CENTRE_LON + lambda / RAD, phi / RAD];
 }
 
-/** The part of the map plane the frame covers, with a little margin: the view box of the map. */
-export const VIEW: { x: number; y: number; width: number; height: number } = (() => {
+/** A box on the map plane. */
+export interface Box {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+/** The box of the map plane that a frame of longitude and latitude covers, sampled along its edges. */
+function boxOf(frame: { west: number; south: number; east: number; north: number }): Box {
   let minX = Infinity;
   let minY = Infinity;
   let maxX = -Infinity;
   let maxY = -Infinity;
   const steps = 60;
   for (let i = 0; i <= steps; i++) {
-    const lon = FRAME.west + ((FRAME.east - FRAME.west) * i) / steps;
-    const lat = FRAME.south + ((FRAME.north - FRAME.south) * i) / steps;
+    const lon = frame.west + ((frame.east - frame.west) * i) / steps;
+    const lat = frame.south + ((frame.north - frame.south) * i) / steps;
     for (const [a, b] of [
-      [lon, FRAME.south],
-      [lon, FRAME.north],
-      [FRAME.west, lat],
-      [FRAME.east, lat],
+      [lon, frame.south],
+      [lon, frame.north],
+      [frame.west, lat],
+      [frame.east, lat],
     ] as const) {
       const p = project(a, b);
       minX = Math.min(minX, p.x);
@@ -71,7 +81,13 @@ export const VIEW: { x: number; y: number; width: number; height: number } = (()
     }
   }
   return { x: Math.floor(minX), y: Math.floor(minY), width: Math.ceil(maxX - minX), height: Math.ceil(maxY - minY) };
-})();
+}
+
+/** What the map shows first: the box of the start frame. */
+export const VIEW: Box = boxOf(START_FRAME);
+
+/** All the map the learner can move to: the box of the whole frame. */
+export const EXTENT: Box = boxOf(FRAME);
 
 /** The distance in kilometres between two points over the earth's surface (great circle). */
 export function distanceKm(a: Position, b: Position): number {
