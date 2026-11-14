@@ -68,9 +68,13 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
 - **Erkennen** (level 1): element highlighted in orange; four options of the same kind (neighbours or elements of
   similar size, never random). Task kind `erkennen`; example: `land-frankreich` → Spanien, Frankreich, Italien,
   Deutschland. Data: `elements/*.json`.
-- **Beziehung** (level 2): question from one relation, four options of the same kind. Task kind `beziehung`; example:
-  "Durch welches Land fließt die Seine?" from `fliesst-durch` (`fluss-seine` → `land-frankreich`). Data:
-  `relations.json`.
+- **Beziehung** (level 2): question from one relation in both directions, four options of the same kind as the right
+  one. Task kind `beziehung`, key `beziehung:<type>:<from>:<to>:<f|r>`; example: "Durch welches Land fließt der Fluss
+  Seine?" from `fliesst-durch` (`fluss-seine` → `land-frankreich`, direction f). The question texts are `q.<type>.<f|r>`
+  (for `liegt-in` also `.gebirge` or `.see`) in `src/messages/de.json`; they name the kind ("das Land", "der Fluss"), so that
+  no article of a name is needed. A wrong option is never the subject and never another right answer to the same
+  question (all answers of the same relation to the same subject are right). Topics of level 2: Nachbarländer
+  (`grenzt-an`), Hauptstädte, Flüsse, Gebirge, Seen, Teilräume. Data: `relations.json`, `geo/relations-geo.json`.
 - **Zeigen** (level 3): name given; learners click it on the map with borders and country names as help. Task kind
   `zeigen`. Hit: inside the area, or within the hit radius for points and lines.
 - **Frei, Ort setzen** (level 4): name given; learners place a point on the map with only the coastline. Task kind
@@ -103,8 +107,13 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
 
 - Geometry: Natural Earth (1:50 m, files admin_0_countries, rivers_lake_centerlines, geography_regions_polys, lakes,
   geography_marine_polys). Simplified by the script; disputed borders follow Natural Earth.
-- Facts and capitals: written by hand from an opened source per element; sentences are never copied. Read-more links:
-  Klexikon (klexikon.zum.de); an element without a Klexikon page gets no link. Wikipedia is not linked (not child-friendly).
+- Facts and capitals: written from an opened source per element; sentences are never copied. Read-more links: Klexikon
+  (klexikon.zum.de); an element without a Klexikon page gets no link and, because the fact comes from that page, no fact
+  (first version: the Weichsel, Seine, Loire, Rhône, Po, Ebro, Dnepr, Apenninen, Skandinavisches Gebirge, Plattensee,
+  Vänern, Ladogasee, Onegasee, Peipussee, Adria, Europäisches Nordmeer and the six sub-regions have none). Wikipedia is
+  not linked (not child-friendly). The relations that the pages of the Klexikon name differently from the shapes were
+  corrected by hand in `relations.json` (Rhein: also Liechtenstein, Österreich; Donau: also Kroatien, Moldau, Ukraine;
+  Balkangebirge only Bulgarien).
 - Every fact and link is checked by opening the page; list unchecked ones as "not checked" in the plan.
 - The creator's material stays local, never committed.
 
@@ -123,4 +132,5 @@ A new language: copy `src/messages/de.json`, translate every value, add the lang
 
 ## Rules learned from mistakes
 
-None yet.
+- A wrong option must never be the subject of the question or another right answer: in `makeTask` the right answers of a relation are excluded (found when "Ukraine" was offered as a neighbour of Ukraine).
+- Names in question texts carry no article; the question names the kind ("das Land", "der Fluss") instead ("von Niederlande" is wrong German).

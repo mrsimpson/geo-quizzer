@@ -105,6 +105,11 @@ function toMenu(state: State): State {
   return { ...state, phase: "menu", tasks: [], index: 0, answer: null };
 }
 
+function setLevel(state: State, level: number): State {
+  if (state.phase !== "menu") return state;
+  return { ...state, level };
+}
+
 function toggleTopic(state: State, topic: unknown): State {
   if (state.phase !== "menu" || typeof topic !== "string" || !(KINDS as readonly string[]).includes(topic))
     return state;
@@ -130,6 +135,10 @@ export function step(state: State, input: Input): State {
   switch (input.name) {
     case "load":
       return { ...state, progress: parseProgress(input.value) };
+    case "level":
+      return typeof input.value === "number" && Number.isInteger(input.value) && input.value >= 1 && input.value <= 4
+        ? setLevel(state, input.value)
+        : state;
     case "topic":
       return toggleTopic(state, input.value);
     case "start":

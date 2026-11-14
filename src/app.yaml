@@ -16,7 +16,10 @@ languages: [de]
 routes:
   - id: stufe-1
     title: Stufe 1 · Erkennen
-    description: Ein Land ist markiert. Welchen Namen hat es?
+    description: Ein Land, ein Fluss oder etwas anderes ist markiert. Welchen Namen hat es?
+  - id: stufe-2
+    title: Stufe 2 · Beziehungen
+    description: Hauptstadt, Fluss, Nachbarland, Teil Europas. Was gehört zusammen?
 sections:
   - id: vorwissen
     title: Das solltest du schon wissen

@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Stufe wählen: nur im Menü; eine Stufe ohne Aufgaben lässt sich wählen, aber nicht starten (Stufe 3 kommt später).
+seed: 3
+route: stufe-1
+steps:
+  - inputs: [{ kind: action, name: level, value: 2 }]
+    state: { phase: menu, level: 2 }
+  - inputs: [{ kind: action, name: level, value: 9 }]
+    state: { level: 2 }
+  - inputs: [{ kind: action, name: start }]
+    state: { phase: asking, level: 2 }
+  - inputs: [{ kind: action, name: level, value: 1 }]
+    state: { phase: asking, level: 2 }

@@ -480,11 +480,6 @@
     "to": "land-san-marino"
   },
   {
-    "type": "liegt-in",
-    "from": "gebirge-balkan",
-    "to": "land-serbien"
-  },
-  {
     "type": "grenzt-an",
     "from": "land-schweiz",
     "to": "land-liechtenstein"
@@ -508,5 +503,30 @@
     "type": "grenzt-an",
     "from": "land-griechenland",
     "to": "land-tuerkei"
+  },
+  {
+    "type": "fliesst-durch",
+    "from": "fluss-rhein",
+    "to": "land-liechtenstein"
+  },
+  {
+    "type": "fliesst-durch",
+    "from": "fluss-rhein",
+    "to": "land-oesterreich"
+  },
+  {
+    "type": "fliesst-durch",
+    "from": "fluss-donau",
+    "to": "land-kroatien"
+  },
+  {
+    "type": "fliesst-durch",
+    "from": "fluss-donau",
+    "to": "land-moldau"
+  },
+  {
+    "type": "fliesst-durch",
+    "from": "fluss-donau",
+    "to": "land-ukraine"
   }
 ]

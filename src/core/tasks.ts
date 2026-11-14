@@ -1,21 +1,31 @@
-// The tasks and the rounds. A task is one thing to do with one element: its key (kind and element id) is what the
-// progress is kept under. A round has ten tasks, mostly new and hard ones, some repetition.
-import { ELEMENTS, elementById, type Element } from "./data.ts";
+// The tasks and the rounds. A task is one thing to do: its key is what the progress is kept under. A round has ten
+// tasks, mostly new and hard ones, some repetition.
+//
+// Stufe 1, erkennen: an element is marked, four names. Stufe 2, beziehung: a question from a relation between two
+// elements (capital of, flows through, lies in, belongs to, borders), four answers.
+import { ELEMENTS, RELATIONS, elementById, type Element, type Kind } from "./data.ts";
 import { distanceKm } from "./geo.ts";
 import { grade, type Progress } from "./progress.ts";
 import { draw, shuffle } from "./random.ts";
 
-/** The kinds of tasks: erkennen is a marked element and four names (Stufe 1). */
-export type TaskKind = "erkennen";
+/** The kinds of tasks. */
+export type TaskKind = "erkennen" | "beziehung";
 
 /** Whether the feedback of a kind of task shows the distance between answer and right place: only where learners point. */
-export const SHOWS_DISTANCE: Readonly<Record<TaskKind, boolean>> = { erkennen: false };
+export const SHOWS_DISTANCE: Readonly<Record<TaskKind, boolean>> = { erkennen: false, beziehung: false };
 
 export interface Task {
-  /** `<kind>:<element id>`, the key of the progress. */
+  /** The key of the progress. */
   readonly key: string;
   readonly kind: TaskKind;
+  /** What is marked on the map and asked about: the element itself (erkennen) or the one the question names. */
+  readonly subject: string;
+  /** The right answer, an element id. */
   readonly target: string;
+  /** The type of the relation (beziehung only). */
+  readonly relation?: string;
+  /** "f" when the subject is the `from` of the relation, "r" when it is the `to` (beziehung only). */
+  readonly dir?: "f" | "r";
   /** The ids of the options, in the order shown; the target is one of them. */
   readonly options: readonly string[];
 }
@@ -26,31 +36,92 @@ const OPTIONS = 4;
 /** In a round: at most this many hard ones, then new ones, practised ones and mastered ones to repeat. */
 const SLOTS = { hard: 4, new: 4, practised: 2, mastered: 2 } as const;
 
-/** The kinds of tasks a level has. */
-function taskKinds(level: number): readonly TaskKind[] {
-  return level === 1 ? ["erkennen"] : [];
+interface RelationTask {
+  readonly key: string;
+  readonly type: string;
+  readonly subject: string;
+  readonly answer: string;
+  readonly dir: "f" | "r";
+  /** The topic the task belongs to: the kind of the element that owns the relation. */
+  readonly topic: Kind;
+}
+
+/** The topic of a relation: hauptstadt-von belongs to the capitals, fliesst-durch to the rivers, ... */
+function topicOf(type: string, from: Element): Kind {
+  if (type === "hauptstadt-von") return "stadt";
+  if (type === "fliesst-durch") return "fluss";
+  if (type === "gehoert-zu") return "raum";
+  if (type === "grenzt-an") return "land";
+  return from.kind;
+}
+
+/** All tasks of the relations on a level: each relation in both directions. */
+function relationTasks(level: number): RelationTask[] {
+  const tasks: RelationTask[] = [];
+  for (const r of RELATIONS) {
+    const from = elementById(r.from);
+    const to = elementById(r.to);
+    if (from.level > level || to.level > level) continue;
+    const topic = topicOf(r.type, from);
+    tasks.push({
+      key: `beziehung:${r.type}:${r.from}:${r.to}:f`,
+      type: r.type,
+      subject: r.from,
+      answer: r.to,
+      dir: "f",
+      topic,
+    });
+    tasks.push({
+      key: `beziehung:${r.type}:${r.from}:${r.to}:r`,
+      type: r.type,
+      subject: r.to,
+      answer: r.from,
+      dir: "r",
+      topic,
+    });
+  }
+  return tasks;
 }
 
 export function taskKey(kind: TaskKind, target: string): string {
   return `${kind}:${target}`;
 }
 
-/** Whether an element has tasks on a level and in the topics chosen. */
-function inScope(element: Element, level: number, topics: readonly string[]): boolean {
-  return element.level <= level && topics.includes(element.kind);
-}
-
 /** The keys of all tasks of a level and a set of topics: the whole of what there is to learn there. */
 export function taskKeys(level: number, topics: readonly string[]): string[] {
-  return taskKinds(level).flatMap((kind) =>
-    ELEMENTS.filter((element) => inScope(element, level, topics)).map((element) => taskKey(kind, element.id)),
-  );
+  if (level === 1) {
+    return ELEMENTS.filter((e) => e.level <= level && topics.includes(e.kind)).map((e) => taskKey("erkennen", e.id));
+  }
+  if (level === 2)
+    return relationTasks(level)
+      .filter((t) => topics.includes(t.topic))
+      .map((t) => t.key);
+  return [];
 }
 
-/** Three wrong options for a target: elements of the same kind, from the six nearest. */
-function wrongOptions(target: Element, level: number, rng: number): [string[], number] {
-  const near = ELEMENTS.filter((e) => e.kind === target.kind && e.id !== target.id && e.level <= level)
-    .map((e) => ({ id: e.id, km: distanceKm(e.centre, target.centre) }))
+/** The elements that are right answers to the same question: the answers of the same relation to the same subject. */
+function rightAnswers(type: string, subject: string): Set<string> {
+  const answers = new Set<string>();
+  for (const r of RELATIONS) {
+    if (r.type !== type) continue;
+    if (r.from === subject) answers.add(r.to);
+    if (r.to === subject) answers.add(r.from);
+  }
+  return answers;
+}
+
+/** Three wrong options: elements of the same kind as the right one, not right themselves, from the six nearest to the subject. */
+function wrongOptions(
+  answer: Element,
+  subject: Element,
+  not: ReadonlySet<string>,
+  level: number,
+  rng: number,
+): [string[], number] {
+  const near = ELEMENTS.filter(
+    (e) => e.kind === answer.kind && !not.has(e.id) && e.id !== answer.id && e.id !== subject.id && e.level <= level,
+  )
+    .map((e) => ({ id: e.id, km: distanceKm(e.centre, subject.centre) }))
     .sort((a, b) => a.km - b.km || a.id.localeCompare(b.id))
     .slice(0, 6)
     .map((e) => e.id);
@@ -60,10 +131,29 @@ function wrongOptions(target: Element, level: number, rng: number): [string[], n
 
 /** One task for a key: the options are drawn from the generator. */
 function makeTask(key: string, level: number, rng: number): [Task, number] {
-  const [kind, target] = key.split(":") as [TaskKind, string];
-  const [wrong, afterWrong] = wrongOptions(elementById(target), level, rng);
+  const parts = key.split(":");
+  if (parts[0] === "beziehung") {
+    const [, type = "", from = "", to = "", dir = "f"] = parts;
+    const subject = dir === "f" ? from : to;
+    const answer = dir === "f" ? to : from;
+    const [wrong, afterWrong] = wrongOptions(
+      elementById(answer),
+      elementById(subject),
+      rightAnswers(type, subject),
+      level,
+      rng,
+    );
+    const [options, next] = shuffle([answer, ...wrong], afterWrong);
+    return [
+      { key, kind: "beziehung", subject, target: answer, relation: type, dir: dir === "r" ? "r" : "f", options },
+      next,
+    ];
+  }
+  const target = parts[1] ?? "";
+  const element = elementById(target);
+  const [wrong, afterWrong] = wrongOptions(element, element, new Set([target]), level, rng);
   const [options, next] = shuffle([target, ...wrong], afterWrong);
-  return [{ key, kind, target, options }, next];
+  return [{ key, kind: "erkennen", subject: target, target, options }, next];
 }
 
 /** The next round: hard ones first, new ones, then some repetition; filled up from the other groups. */

@@ -275,11 +275,12 @@ limits: Auf dem Handy nur im Querformat nutzbar, weil die Karte Platz braucht; d
 - [x] **Muster-Seite:** Geodaten-Skript und Länder-Daten, Karte als SVG, Stufe 1 (Länder erkennen) komplett: Frage, vier Optionen, richtig/falsch mit Abstandslinie, Fakt und Link, Punkte, Rundenende. Playthrough für Stufe 1. Commit auf `work`.
 - [x] **Checkpoint:** the pattern page (`early-preview`): check it against the design rules, let a sub-agent check
       it as a learner, show it to the creator, wait for the answer. A change → change the pattern first.
-- [ ] Weitere Elemente: Flüsse (Linien), Gebirge, Seen, Meere, Teilräume (Flächen) als Daten, Zeichnung und Stufe 1; Hauptstädte (Punkte) sind schon in der Muster-Seite; Stufenfeld je Element. Commit.
-- [ ] Beziehungsdaten und Stufe 2 (Hauptstadt von, fließt durch, liegt in, grenzt an). Commit.
+- [x] Weitere Elemente: Flüsse (Linien), Gebirge, Seen, Meere, Teilräume (Flächen) als Daten, Zeichnung und Stufe 1; Hauptstädte (Punkte) sind schon in der Muster-Seite; Stufenfeld je Element. Commit.
+- [x] Beziehungsdaten und Stufe 2 (Hauptstadt von, fließt durch, liegt in, grenzt an). Commit.
 - [ ] Stufe 3 (Zeigen mit Hilfe) und Stufe 4 (Frei: Ort setzen und Namen tippen mit Autokorrektur), Fadenkreuz mit Tastatur, Zoom, Trefferradius, Abstandsrückmeldung überall. Commit.
 - [ ] Abdeckung: Lerngrad je Aufgabe (neu, geübt, gekonnt, Rückfall), Runde mit 10 Aufgaben aus Neuem und Schwerem mit etwas Wiederholung, Sterne je Stufe und Thema aus dem Lerngrad, Pausenknopf mit Speichern und Fortsetzen, Lernstand lokal. Commit.
-- [ ] Fakten und Klexikon-Links für alle Elemente: Fakt je Element nach einer geöffneten Seite geprüft, Link nur wo die Seite existiert und geöffnet wurde. Commit.
+- [x] Fakten und Klexikon-Links für alle Elemente: Fakt je Element nach einer geöffneten Seite geprüft, Link nur wo die Seite existiert und geöffnet wurde. Commit.
+      (Von Hilfs-Agenten an geöffneten Klexikon-Seiten geschrieben; 14 von 218 Texten selbst gelesen. 24 Elemente haben keine Klexikon-Seite und deshalb keinen Fakt.)
 - [ ] Spielgefühl und Rahmen: Startbildschirm mit Stufenkarten und Themen, Sterne und Serie, Lernstand lokal, Hochformat-Hinweis, Dunkelmodus, kräftige Farben ohne Blitzen. Commit.
 - [ ] Startseite (`app.yaml`: Beschreibung, So geht's, Kompetenz, Hinweis auf `kontinente-und-ozeane`, Routen), Katalogeintrag-Entwurf, Architektur `docs/arc42/` je Aufgabe im selben Commit. Commit.
 - [ ] The content guide matches what was built (`app-content-matches`).

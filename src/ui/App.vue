@@ -43,22 +43,36 @@ const name = (id: string): string => t(`el.${id}.name`);
 const task = computed(() => currentTask(props.state));
 const playing = computed(() => props.state.phase !== "menu");
 const target = computed(() => (task.value === undefined ? undefined : elementById(task.value.target)));
-const kindOfTarget = computed(() => target.value?.kind ?? "land");
+/** The element the task is about: the marked one; the target itself in Stufe 1. */
+const subject = computed(() => (task.value === undefined ? undefined : elementById(task.value.subject)));
+const kindOfTarget = computed(() => subject.value?.kind ?? "land");
 
 const question = computed(() => {
+  const current = task.value;
+  if (current?.kind === "beziehung" && current.relation !== undefined && subject.value !== undefined) {
+    const direction = current.dir ?? "f";
+    const kind = direction === "f" ? subject.value.kind : (target.value?.kind ?? "");
+    const suffix = current.relation === "liegt-in" ? `.${kind}` : "";
+    return t(`q.${current.relation}.${direction}${suffix}`, { subject: name(subject.value.id) });
+  }
   const done = props.state.phase === "feedback";
   return t(`${done ? "askDone" : "ask"}.${kindOfTarget.value}`);
 });
-const mapLabel = computed(() => t(`mapLabel.${kindOfTarget.value}`));
+const mapLabel = computed(() =>
+  task.value?.kind === "beziehung" && subject.value !== undefined
+    ? t("mapLabel.relation", { subject: name(subject.value.id) })
+    : t(`mapLabel.${kindOfTarget.value}`),
+);
 
 const feedback = computed(
   () => props.state.phase === "feedback" && task.value !== undefined && props.state.answer !== null,
 );
 const marks = computed<Mark[]>(() => {
-  if (target.value === undefined) return [];
-  if (!feedback.value || props.state.answer === null) return [{ id: target.value.id, role: "asked" }];
+  if (target.value === undefined || subject.value === undefined) return [];
+  if (!feedback.value || props.state.answer === null) return [{ id: subject.value.id, role: "asked" }];
   const result: Mark[] = [{ id: target.value.id, role: "right" }];
   if (!props.state.answer.right) result.unshift({ id: props.state.answer.chosen, role: "chosen" });
+  if (subject.value.id !== target.value.id) result.unshift({ id: subject.value.id, role: "asked" });
   return result;
 });
 const line = computed(() => {
@@ -71,7 +85,7 @@ const line = computed(() => {
 
 /** What the learner may read about the right element, once answered: how it is related to the others. */
 const relationText = computed(() => {
-  const element = target.value;
+  const element = subject.value;
   if (element === undefined) return "";
   const from = (type: string): string[] =>
     RELATIONS.filter((r) => r.type === type && r.from === element.id).map((r) => r.to);
@@ -120,10 +134,10 @@ const direction = computed(() => {
 });
 
 const levelTitle = computed(() => t(`level${props.state.level}`));
-const levelKeys = (kinds: readonly string[]) => taskKeys(props.state.level, kinds);
-const starsOf = (kinds: readonly string[]): number => stars(props.state.progress, levelKeys(kinds));
+const levelKeys = (level: number, kinds: readonly string[]) => taskKeys(level, kinds);
+const starsOf = (kinds: readonly string[]): number => stars(props.state.progress, levelKeys(props.state.level, kinds));
 const starText = (count: number): string => "★".repeat(count) + "☆".repeat(3 - count);
-const noTasks = computed(() => levelKeys(props.state.topics).length === 0);
+const noTasks = computed(() => levelKeys(props.state.level, props.state.topics).length === 0);
 
 const nextButton = ref<HTMLButtonElement | null>(null);
 const questionHeading = ref<HTMLElement | null>(null);
@@ -172,13 +186,40 @@ watch(
         <span aria-hidden="true">{{ starText(starsOf(state.topics)) }}</span>
         <span class="sr-only">{{ t("starsLabel") }}: {{ t("stars", { count: starsOf(state.topics) }) }}</span>
       </p>
-      <p class="menu-hint">{{ t("stageHint") }}</p>
+      <p class="menu-hint">{{ t(`stageHint.${state.level}`) }}</p>
       <p class="menu-hint">{{ t("starsHint") }}</p>
+      <h3 class="menu-topics">{{ t("levels") }}</h3>
+      <ul class="levels">
+        <li v-for="n in [1, 2, 3, 4]" :key="n">
+          <button
+            type="button"
+            class="topic"
+            :aria-pressed="state.level === n"
+            :disabled="levelKeys(n, KINDS).length === 0"
+            @click="emit('input', { kind: 'action', name: 'level', value: n })"
+          >
+            <span>{{ t(`level${n}`) }}</span>
+            <span class="topic-stars" aria-hidden="true">{{
+              starText(stars(state.progress, levelKeys(n, KINDS)))
+            }}</span>
+            <span class="sr-only">{{ t("stars", { count: stars(state.progress, levelKeys(n, KINDS)) }) }}</span>
+          </button>
+        </li>
+      </ul>
       <h3 class="menu-topics">{{ t("topics") }}</h3>
       <ul class="topics">
         <li v-for="kind in KINDS" :key="kind">
-          <button type="button" class="topic" :aria-pressed="state.topics.includes(kind)" @click="act('topic', kind)">
-            <span>{{ state.topics.includes(kind) ? "✓ " : "" }}{{ t(`kind.${kind}`) }}</span>
+          <button
+            type="button"
+            class="topic"
+            :aria-pressed="state.topics.includes(kind)"
+            :disabled="levelKeys(state.level, [kind]).length === 0"
+            @click="act('topic', kind)"
+          >
+            <span
+              >{{ state.topics.includes(kind) ? "✓ " : ""
+              }}{{ t(`${state.level === 2 ? "kind2" : "kind"}.${kind}`) }}</span
+            >
             <span class="topic-stars" aria-hidden="true">{{ starText(starsOf([kind])) }}</span>
             <span class="sr-only">{{ t("stars", { count: starsOf([kind]) }) }}</span>
           </button>
@@ -383,6 +424,7 @@ a:focus-visible,
   margin: 0 0 1rem;
 }
 
+.levels,
 .topics {
   display: flex;
   flex-wrap: wrap;
@@ -403,6 +445,11 @@ a:focus-visible,
   background: var(--geo-button);
   color: var(--geo-ink);
   font-weight: 700;
+}
+
+.topic:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .topic[aria-pressed="true"] {
