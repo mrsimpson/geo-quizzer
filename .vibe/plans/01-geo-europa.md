@@ -186,12 +186,31 @@ grades: [5, 6]
 summary: >-
   Kinder üben auf einer Europakarte wie in einem Spiel: Sie finden Länder, Hauptstädte, Flüsse, Gebirge, Seen und
   Meere, erst mit Hilfen, zuletzt ganz ohne. Fällt ein Tipp daneben, sehen sie, wie weit er vom richtigen Ort entfernt ist.
+url: https://mrsimpson.github.io/geo-quizzer/
+topics:
+  - title: Stufe 1 · Erkennen
+    path: app/#stufe-1
+  - title: Stufe 2 · Beziehungen
+    path: app/#stufe-2
+  - title: Stufe 3 · Zeigen
+    path: app/#stufe-3
+  - title: Stufe 4 · Frei
+    path: app/#stufe-4
 strand: erdkunde/orientierung
 competencies: [topographie-europa]
 keywords: [Europa, Hauptstädte, Länder, Karte, Topographie, Erdkunde, Geographie]
+creator:
+  name: mrsimpson
+  url: https://github.com/mrsimpson
+source: https://github.com/mrsimpson/geo-quizzer
 limits: Auf dem Handy nur im Querformat nutzbar, weil die Karte Platz braucht; die Breite von 360 px im Hochformat wird nicht unterstützt.
+fitness:
+  account: false
+  install: false
+  storage: device
+  thirdParty: none
 ```
-<!-- creator, url, source, commit, topics: later, in Commit -->
+<!-- commit: the full id of the commit that the address serves, set in the listing pull request -->
 
 ### Completed
 
@@ -318,18 +337,18 @@ limits: Auf dem Handy nur im Querformat nutzbar, weil die Karte Platz braucht; d
 - [x] (entfällt, kein Explainer) An explainer: load skill `lernapps-explainer-self-assessment` (missing → `npx --no -- lernapps skills --archetype
       explainer`). Add the self-assessment as it says, or
       write under "Key decisions" why the app has none. Commit; the hooks check.
-- [ ] Load skill `lernapps-github`. Repo and Pages as it says: ask the repo name and every click only the creator can
+- [x] Load skill `lernapps-github`. Repo and Pages as it says: ask the repo name and every click only the creator can
       make in one message.
-- [ ] Push `work`, open the preview pull request, see its checks to green as the skill says.
-- [ ] **Checkpoint:** publish. Show what the app does and the preview link from the comment "Vorschau der App"; ask
+- [x] Push `work`, open the preview pull request, see its checks to green as the skill says.
+- [x] **Checkpoint:** publish. Show what the app does and the preview link from the comment "Vorschau der App"; ask
       whether it may go online; put any open click into the same question. Wait for the yes.
-- [ ] Load skill `lernapps-commit`. Publish as skill `lernapps-github` says: `work` into `main` as one squash commit
+- [x] Load skill `lernapps-commit`. Publish as skill `lernapps-github` says: `work` into `main` as one squash commit
       with the message from this plan, the run of `Pages` watched to the end.
-- [ ] Open the address the job `deploy` printed; confirm the app shows. Use that address, never a derived one.
-- [ ] Load skill `lernapps-listing`. Complete the entry draft (e.g. the address).
-- [ ] Fill the retrospective.
-- [ ] Commit this plan on `main` and push it: the listing check and the review read it there.
-- [ ] **Checkpoint:** list. Open the listing pull request as the skill says, without asking first: the pull request
+- [x] Open the address the job `deploy` printed; confirm the app shows. Use that address, never a derived one.
+- [x] Load skill `lernapps-listing`. Complete the entry draft (e.g. the address).
+- [x] Fill the retrospective.
+- [x] Commit this plan on `main` and push it: the listing check and the review read it there.
+- [ ] **Checkpoint:** list. (Offen, bewusst: Der Ersteller hat zugesagt bekommen, dass nichts ohne sein Zeichen bei lernapps.net eingetragen wird; Frage steht.) Open the listing pull request as the skill says, without asking first: the pull request
       is the review. See it to "bestanden", then show the creator the pull request and its result; change nothing in
       it without their word.
 - [ ] Plan changed since its last push → commit it on `main`, push again.
@@ -342,12 +361,18 @@ limits: Auf dem Handy nur im Querformat nutzbar, weil die Karte Platz braucht; d
 
 ### Phases reached
 
-<!-- Last phase completed, checkpoints passed. E.g. "commit; confirmed, published". -->
+commit; checkpoints passed: research, plan and content method, pattern page, publish. Published on `main` at https://mrsimpson.github.io/geo-quizzer/ (one squash commit, `Pages` run succeeded, app opened and played). Not yet done: the listing at lernapps.net (the creator wants to decide first).
 
 ### Creator turns after the plan
 
-<!-- Number of creator messages after the confirmation, topic of each. Target: at most 3. -->
+12 (target: at most 3): remarks on the pattern page (wording of the feedback, distance only when pointing, map frame); moving the map east to the Ural; the go-ahead to build everything with a pull request; right answer first and large; several right answers in colours and wrong answers in red; the Bodensee as a range; no names or capitals in Stufe 3 and the distance to the Vatican; the tolerance for cities; "publish when no more corrections"; the Vatican not visible when marked; the Netherlands not found by the suggestions; the final "publish". Most were remarks on what the creator saw in the preview; two learner checks by sub-agents found the other mistakes before.
 
 ### Where I had to guess
 
-<!-- Each gap in plan, skills, messages or answers, and your choice. "None" if none. -->
+- Four levels instead of three, the rule for "mastered" (right at first try in two rounds), the star thresholds (a third, two thirds, above 95 percent): my choices, confirmed in the plan.
+- The assignment of the countries to the six sub-regions and the hit radii (cities 80 km, rivers 50 km, lakes 40 km): my choices; the sub-regions are not checked against an atlas; the radius is too large for close capitals such as Wien and Bratislava (offered to limit it; the creator answered "Passt schon", read as: leave it).
+- Facts and links: written by sub-agents from opened Klexikon pages, 14 of 218 read by me; 24 elements have none because the Klexikon has no page.
+- Relations between rivers, ranges and lakes and countries were computed from the shapes and corrected by hand from the Klexikon; the "-auch" relations mark defensible alternatives.
+- Kosovo, Turkey and Russia as countries, with the micro-states from Stufe 3: confirmed by the creator.
+- The repository was empty, so there was no base for the pull request to look at: I made the branch `base` from the first commit and, for the publish, an empty start commit on `main`; the pull request branch was not rewritten (the force push was refused), `main` got one squash commit from the local rebased `work`.
+- Natural Earth data are files in tools/cache (not committed); `npm run geodata` needs them downloaded by hand.
