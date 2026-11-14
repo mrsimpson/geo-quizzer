@@ -227,7 +227,7 @@
   "rel.members": "Zu {region} zählen zum Beispiel: {countries}.",
   "stageHint.1": "In Stufe 1 ist auf der Karte etwas markiert. Du wählst den richtigen Namen.",
   "stageHint.2": "In Stufe 2 fragen wir, wie die Dinge zusammenhängen: Hauptstadt, Fluss, Nachbarland, Teil Europas. Du wählst die richtige Antwort.",
-  "stageHint.3": "In Stufe 3 klickst du das Gesuchte auf der Karte an.",
+  "stageHint.3": "In Stufe 3 klickst du das Gesuchte auf der Karte an. Auf der Karte stehen keine Namen.",
   "stageHint.4": "In Stufe 4 gibt es keine Hilfe: Du setzt den Ort selbst oder tippst den Namen.",
   "levels": "Stufe",
   "mapLabel.relation": "Karte von Europa. Markiert: {subject}.",

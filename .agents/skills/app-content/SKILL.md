@@ -79,7 +79,7 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
   question (all answers of the same relation to the same subject are right). Topics of level 2: Nachbarländer
   (`grenzt-an`), Hauptstädte, Flüsse, Gebirge, Seen, Teilräume. Data: `relations.json`, `geo/relations-geo.json`.
 - **Zeigen** (level 3): name given (`askPoint.<kind>`); learners tap the map, which puts a pin, then press "Hier setzen" (the
-  map shows borders, country names that fit at the zoom, capitals as unnamed dots and rivers as help). Task kind
+  map shows borders and rivers, no names and no capitals). Task kind
   `zeigen`, key `zeigen:<id>`. A hit is a point inside the area or within the radius of the element: `RADIUS_KM` in
   `src/core/pick.ts` (land 10 km, Hauptstadt 80, Fluss 50, Gebirge 10, See 40, Meer and Teilraum inside only). The
   feedback draws a dashed line from the pin to the nearest point of the right element, with the distance (rounded to
@@ -109,8 +109,7 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
   the element asked for (area, point or line); muted red = a wrong answer of the learner (the same red for a wrong choice, a wrong pin and a wrong name, everywhere); green = the right place; dashed line =
   distance. Capitals are circles with a ring, rivers lines, lakes and seas areas.
 - After an answer the map zooms to the right element and, if wrong, the chosen one. Where learners point, the distance (rounded to 10 km, middle to middle) is drawn as a dashed line and written in a box and in the feedback, with the direction from the chosen element to the right one ("im Westen").
-- Level 3 shows borders and country names; level 4 shows only the coastline; levels 1 and 2 show borders without
-  names.
+- Levels 1 to 3 show borders and rivers, never names; level 4 shows only the coastline.
 - Alternative text: every task has a text that says what is asked without the picture ("Welches Land ist markiert? Es
   liegt im Westen Europas ..." only when it does not give the answer away; else "Eine Karte von Europa, ein Land ist
   markiert"). The tasks work with a keyboard: options with arrow keys and Enter, map by crosshair.

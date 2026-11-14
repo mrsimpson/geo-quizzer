@@ -128,14 +128,19 @@ function simplifyLine(points: Position[], epsilon: number): Position[] {
   return [...left.slice(0, -1), ...right];
 }
 
-function round(point: Position): Position {
-  return [Math.round(point[0] * 100) / 100, Math.round(point[1] * 100) / 100];
+function round(point: Position, decimals = 2): Position {
+  const factor = 10 ** decimals;
+  return [Math.round(point[0] * factor) / factor, Math.round(point[1] * factor) / factor];
 }
 
 function simplifyRing(ring: Ring, epsilon: number): Ring | undefined {
   const open = ring.slice(0, -1);
-  const simple = simplifyLine([...open, open[0] as Position], epsilon);
-  const closed = simple.map(round);
+  // tiny shapes (Monaco, the Vatican) keep their detail: a smaller tolerance and more decimals
+  const xs = open.map((p) => p[0]);
+  const ys = open.map((p) => p[1]);
+  const size = Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys));
+  const simple = simplifyLine([...open, open[0] as Position], Math.min(epsilon, size / 8));
+  const closed = simple.map((p) => round(p, size < 0.5 ? 4 : 2));
   const unique = closed.filter((p, i) => i === 0 || p[0] !== closed[i - 1]?.[0] || p[1] !== closed[i - 1]?.[1]);
   return unique.length >= 4 ? unique : undefined;
 }

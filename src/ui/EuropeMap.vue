@@ -1,15 +1,15 @@
 <script setup lang="ts">
 // The map of Europe as SVG: grey land around, the countries, rivers and lakes. Elements can be marked (orange: asked
 // for, green: the right one, blue: the learner's choice); a dashed line with the distance joins two places. The detail
-// depends on the level: borders (1, 2), borders with names (3), only the coast (4). The learner can zoom (buttons,
+// depends on the level: with borders (1 to 3), only the coast (4). The learner can zoom (buttons,
 // wheel) and move the map (drag). Where the map is pickable (3, 4), a click or tap puts the pin, the arrow keys move a
 // crosshair (Shift and the arrows move the map), and the parent asks for "Hier setzen".
 import { computed, ref, watch } from "vue";
 import { translator } from "@lernapps/tooling/i18n";
-import { ELEMENTS, elementById } from "../core/data.ts";
+import { elementById } from "../core/data.ts";
 import { EXTENT, project, unproject, VIEW, type Position } from "../core/geo.ts";
 import de from "../messages/de.json";
-import { AREA_PATHS, CONTEXT_PATH, COUNTRY_LABELS, LINE_PATHS, centreOf, planeOf } from "./paths.ts";
+import { AREA_PATHS, CONTEXT_PATH, LINE_PATHS, centreOf, planeOf } from "./paths.ts";
 
 export interface Mark {
   id: string;
@@ -23,8 +23,8 @@ const props = defineProps<{
   marks: readonly Mark[];
   /** Two places a dashed line joins, with its label. */
   line?: { from: Position; to: Position; label: string } | undefined;
-  /** How much the map shows: borders, borders with names, or only the coast. */
-  detail: "borders" | "names" | "coast";
+  /** How much the map shows: with borders and rivers, or only the coast. */
+  detail: "borders" | "coast";
   /** Whether a click or tap puts the pin. */
   pickable: boolean;
   /** Where the learner's pin is, and how it is drawn. */
@@ -243,14 +243,6 @@ const lineEnds = computed(() => {
 });
 
 const pinAt = computed(() => (props.pin === null ? undefined : planeOf(props.pin)));
-const cityDots = ELEMENTS.filter((e) => e.kind === "stadt").map((e) => ({ id: e.id, ...planeOf(e.centre) }));
-
-/** The names of the countries that fit at the current zoom: a name needs about 6.5 pixels a letter. */
-const labels = computed(() =>
-  props.detail !== "names"
-    ? []
-    : COUNTRY_LABELS.filter((l) => l.width / unit.value >= t(`el.${l.id}.name`).length * 6.5),
-);
 </script>
 
 <template>
@@ -274,25 +266,6 @@ const labels = computed(() =>
       <path v-for="[id, d] in countryPaths" :key="id" :d="d" class="land" fill-rule="evenodd" />
       <path v-for="[id, d] in lakePaths" :key="id" :d="d" class="lake" fill-rule="evenodd" />
       <path v-for="[id, d] in riverPaths" :key="id" :d="d" class="river" />
-      <circle
-        v-for="city in detail === 'names' ? cityDots : []"
-        :key="city.id"
-        :cx="city.x"
-        :cy="city.y"
-        :r="unit * 3"
-        class="city-dot"
-      />
-      <text
-        v-for="l in labels"
-        :key="l.id"
-        :x="l.x"
-        :y="l.y"
-        :font-size="unit * 11"
-        text-anchor="middle"
-        class="country-name"
-      >
-        {{ t(`el.${l.id}.name`) }}
-      </text>
       <path
         v-for="mark in areaMarks"
         :key="`${mark.role}-${mark.id}`"
@@ -395,20 +368,6 @@ const labels = computed(() =>
 .coast .river,
 .coast .lake {
   display: none;
-}
-
-.city-dot {
-  fill: var(--geo-border);
-}
-
-.country-name {
-  fill: var(--geo-ink);
-  font-weight: 600;
-  paint-order: stroke;
-  stroke: var(--geo-land);
-  stroke-width: 3px;
-  stroke-linejoin: round;
-  pointer-events: none;
 }
 
 .pin-ring.pending {

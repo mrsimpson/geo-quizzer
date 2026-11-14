@@ -63,9 +63,7 @@ const kindOfTarget = computed(() => subject.value?.kind ?? "land");
 /** Whether the learner points at the map (Stufen 3 and 4) or types a name (Stufe 4). */
 const isPick = computed(() => task.value?.kind === "zeigen" || task.value?.kind === "setzen");
 const isTyping = computed(() => task.value?.kind === "tippen");
-const detail = computed<"borders" | "names" | "coast">(() =>
-  props.state.level === 3 ? "names" : props.state.level === 4 ? "coast" : "borders",
-);
+const detail = computed<"borders" | "coast">(() => (props.state.level === 4 ? "coast" : "borders"));
 
 const question = computed(() => {
   const current = task.value;
