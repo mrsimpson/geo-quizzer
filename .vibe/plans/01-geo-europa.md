@@ -2,7 +2,7 @@
 # Read by the hooks, the review, the evals. Schema: @lernapps/tooling/guidance/plan-front-matter.v1.schema.json
 # Keep all four keys.
 # Archetype, null until chosen in Explore. Allowed values: explainer, interactive, quiz.
-archetype: null
+archetype: interactive
 # Current phase. Allowed values: explore, plan, code, commit. Change the value line below, never this comment.
 phase: explore
 # prePushFailures: written by the pre-push hook. Never change it.
@@ -11,7 +11,7 @@ prePushFailures: 0
 failedChecks: {}
 ---
 
-# Plan: <app name>, first version
+# Plan: Geo Europa, first version
 
 <!--
 For you, the assistant.
@@ -30,20 +30,56 @@ For you, the assistant.
     "**Plan · Checkpoint**", "**Code**". The creator always knows where you are.
 -->
 
-*Started <date>. Explore, Plan, Code, Commit.*
+*Gestartet 2026-11-14. Explore, Plan, Code, Commit.*
 
 ## Goal
 
-<!-- 1–2 sentences: what learners do, what they learn. -->
+Kinder der 6. Klasse üben auf einer Europakarte wie in einem Spiel: Sie finden Länder, Hauptstädte, Flüsse, Gebirge, Seen und Meere, erst mit Hilfen, zuletzt ohne. Sie lernen, diese Elemente zu benennen, auf der Karte zu zeigen und ihre Beziehungen zu kennen (Hauptstadt von, fließt durch, liegt in).
 
 ## Key decisions
 
-<!-- One line each: decision and reason. Archetype first. Your own choice without the creator: mark "(guess)". -->
+- Archetyp `interactive`: Lernende handeln in einem Karten-Spiel (anklicken, setzen, zuordnen, Position raten); ein Quiz kann keine Klicks auf einer Karte, ein Explainer ist auf Seiten mit Text ausgelegt.
+- Karte als einfaches GIS: Geodaten (Natural Earth, gemeinfrei) vereinfacht gebündelt, Projektion und Treffertest im Kern der App, keine Server.
+- Beziehungen zwischen Elementen als Daten (Hauptstadt von, fließt durch, liegt in, grenzt an), aus denen Aufgaben und Rückmeldungen entstehen.
+- Falsche Antwort: Abstand zur richtigen Stelle auf der Karte zeigen (Linie, km).
+- Nur Deutsch, Texte in Nachrichtendateien (vorbereitet für weitere Sprachen). Nur Europa.
+- Querformat auf Handys; Abweichung von 360 px, wird in `limits` des Eintrags gesagt.
+- Strang `erdkunde/orientierung`, Baustein `topographie-europa`.
+- Fakt und Klexikon-Link je Element, nur wo eine Seite existiert. (guess)
+- Zusätzlich zur Lernlandkarte: Teilräume Europas und Meere aufnehmen, weil der Baustein sie nennt. (guess, beim Checkpoint bestätigen)
+- Auswahl der Elemente (siehe Notes: Umfang) ist ein Vorschlag. (guess)
 
 ## Notes
 
-<!-- Strand (<subject>/<strand> or none) or subject of a unit app, curriculum orientation, competencies by chapter (ids), didactic approach, scope, sources and licences, open
-questions. -->
+**Strang:** `erdkunde/orientierung` (Lernlandkarte, Fach Erdkunde). Passt, weil der Baustein `topographie-europa` dort liegt und noch keine App ihn übt.
+
+**Lehrplan:** Land unbekannt, kein Lehrplan gelesen. Die Lernlandkarte verweist auf die DGfG-Bildungsstandards für den Mittleren Schulabschluss (Klasse 10); für Klasse 6 nicht geprüft. Orientierung nur die Lernlandkarte (Stufe 5–6).
+
+**Kompetenzen (Ids der Lernlandkarte, Wortlaut unverändert):**
+- `topographie-europa`: Ich kann Europa in Teilräume gliedern und seine Staaten, Hauptstädte, Gebirge, Flüsse und Meere auf einer Karte zeigen. (Voraussetzung `kontinente-und-ozeane`: nicht geübt, die Startseite verweist darauf.)
+- Die App ist ein Spiel mit Stufen, keine Kapitel-App: die Stufen bauen aufeinander auf (Land → Hauptstadt → Fluss/Gebirge/See/Meer → Beziehungen → freie Positionen).
+
+**Wie Kinder dorthin kommen (Herleiten):**
+- Stufe 1 Erkennen: markiertes Land oder Element auf der Karte → Name aus Auswahl. Fehlvorstellung: ähnliche Namen und Lagen verwechseln; Rückmeldung zeigt den Abstand auf der Karte.
+- Stufe 2 Beziehungen: "Welche Hauptstadt hat dieses Land?", "Welches Land durchfließt dieser Fluss?", "Wo liegt der See?" aus den Beziehungsdaten, mit Nachbarn als Hilfe.
+- Stufe 3 Frei: Name gegeben, ohne Hilfen auf die Karte klicken; Rückmeldung zeigt Abstand zur richtigen Stelle (Linie, km) und die Beziehung ("Paris liegt in Frankreich, an der Seine").
+
+**Umfang (Vorschlag, beim Checkpoint zu bestätigen):**
+- Länder: rund 45 Staaten Europas mit Hauptstadt (Kosovo, Zypern und die Mikrostaaten Andorra, Liechtenstein, Malta, Monaco, San Marino, Vatikanstadt dabei; Türkei und Russland als Staaten mit europäischem Teil; Kaukasus-Staaten nicht).
+- Flüsse (12): Rhein, Donau, Elbe, Oder, Weichsel, Seine, Loire, Rhône, Po, Ebro, Wolga, Dnepr.
+- Gebirge (7): Alpen, Pyrenäen, Karpaten, Apenninen, Skandinavisches Gebirge, Ural, Balkan.
+- Seen (8): Bodensee, Genfer See, Gardasee, Plattensee, Vänern, Ladogasee, Onegasee, Peipussee.
+- Meere (7): Nordsee, Ostsee, Mittelmeer, Schwarzes Meer, Adria, Atlantischer Ozean, Europäisches Nordmeer.
+- Teilräume (6): Nord-, West-, Mittel-, Süd-, Südost-, Osteuropa.
+- Nicht dabei: andere Kontinente, Inseln als eigene Elemente (nur Island, Irland, Zypern, Malta, Vereinigtes Königreich als Länder), Städte außer Hauptstädten, Gradnetz. Grund: Baustein Europa, erste Version.
+- Sprachen: Deutsch.
+
+**Quellen und Lizenzen:**
+- Geodaten: Natural Earth (naturalearthdata.com), gemeinfrei, Nutzungsbedingungen geöffnet und gelesen (geprüft). Dateien (admin_0_countries, rivers_lake_centerlines, geography_regions_polys, lakes, geography_marine_polys) auf naciscdn.org erreichbar (nur Kopfzeilen geprüft; Inhalt noch ungeprüft).
+- Weiterlesen: Klexikon, klexikon.zum.de (Stichproben geöffnet, geprüft: Frankreich, Liechtenstein, Paris, Rhein, Donau, Alpen, Bodensee, Nordsee und mehr). Fehlen: Skandinavisches Gebirge, Ladogasee, Reykjavík, Tajo, Don. Keine Sätze kopiert, nur verlinkt.
+- Fakten: eigene Formulierung nach geöffneten Quellen; jeder Fakt wird in Code anhand einer geöffneten Seite geprüft. Noch ungeprüft.
+
+**Offene Fragen:** Auswahl der Elemente und der Teilräume; Kosovo und Türkei/Russland.
 
 ## Explore
 
@@ -63,21 +99,21 @@ questions. -->
 - [x] Load skill `lernapps-app`. Tell the creator in two sentences what a lernapps app is and where it will live: at
       their own address, free, public, and once listed as a copy on lernapps.net. The technical part (GitHub) comes at the end, and you do it.
 - [x] Interview: ask the topics "Goal" and "Learners" of "Answers".
-- [ ] No fixed content yet ("an app for my class", "a gap on the map") → load skill `lernapps-map-assignment` and
+- [x] No fixed content yet ("an app for my class", "a gap on the map") → load skill `lernapps-map-assignment` and
       write its assignment first; its yes answers the topics it covers.
 - [x] Load skill `lernapps-exercise-patterns` and read the patterns of the subject: how will learners practise what
       the goal names? The kind of practice points to the archetype, as the skill says.
-- [ ] Choose the archetype as skill `lernapps-app` says, from the kind of practice: read the README of each
+- [x] Choose the archetype as skill `lernapps-app` says, from the kind of practice: read the README of each
       archetype in question, tell the creator what the chosen one can and cannot do. Write it and its reason under
       "Key decisions". Set `archetype`.
-- [ ] Install the archetype's skills: `npx --no -- lernapps skills --archetype <archetype>`. Load skill
+- [x] Install the archetype's skills: `npx --no -- lernapps skills --archetype <archetype>`. Load skill
       `lernapps-<archetype>-design`.
-- [ ] Interview: ask the other topics of "Answers" in order. Skip a topic an earlier answer covers; note which.
+- [x] Interview: ask the other topics of "Answers" in order. Skip a topic an earlier answer covers; note which.
       A confirmed assignment covers Goal, Learners, Content, Amount and Languages; an explainer has no "Look and
       feel" (its look is the runtime's): note "covered by the assignment" or "fixed by the archetype", ask only the
       rest. No answer → ask once more; still none → write your assumption with "(guess)". Done when every topic has
       an answer, a note or a guess.
-- [ ] Load skill `lernapps-content-research`. Research as it says. Under "Notes": curriculum orientation (none
+- [x] Load skill `lernapps-content-research`. Research as it says. Under "Notes": curriculum orientation (none
       when the content comes from the map, an assignment or a strand: the map gives the order), competencies by
       chapter as "Ich kann …", verified sources. No competencies → not done. First the learning map as
       skill `lernapps-content-research` says: recommend a strand that fits (`<subject>/<strand>`), else `none`; with a
@@ -85,11 +121,11 @@ questions. -->
       unit app across strands (`subject: <subject>`), one strand per page. Write both under "Notes", and how they map onto
       chapters and pages (an explainer: as a rule one page per competency; competencies that build on each other, by
       the map's `requires`, share a chapter, in that order).
-- [ ] Under "Notes", one line per competency: how learners get there (derive, not only read off; e.g. a tree diagram
+- [x] Under "Notes", one line per competency: how learners get there (derive, not only read off; e.g. a tree diagram
       shows how a probability comes about), which misconception the feedback catches.
-- [ ] Under "Notes", the scope: what is in, what is out and why, the data range (e.g. "all main-group elements",
+- [x] Under "Notes", the scope: what is in, what is out and why, the data range (e.g. "all main-group elements",
       never a silent "1–20"), the languages.
-- [ ] Fetch https://lernapps.net/apps/schemas/entry.v1.schema.json and read each property's description. Ask what
+- [x] Fetch https://lernapps.net/apps/schemas/entry.v1.schema.json and read each property's description. Ask what
       helps teachers and parents find the app. Fill "Entry draft". Search words: one or two words each, as people
       type them.
 - [ ] **Checkpoint:** research. Show in plain words: the strand or why none, curriculum orientation (not with a
@@ -115,14 +151,25 @@ questions. -->
   German pages and runtime texts, so it mixes both. The creator wants English → offer German and English,
   both complete, and say why.
 - Look and feel: Wie ein Spiel, kartenorientiert. Mobil nur im Querformat (Abweichung von 360 px, kommt in `limits` des Eintrags). Mehrere Schwierigkeitsstufen entlang der Aufgabe: am einfachsten Land mit Umriss auf der Karte markiert → Frage (Hauptstadt, längster Fluss, markiertes Gebirge …), über Namen aus Auswahl wählen, bis zum freien Anklicken von Positionen auf einer Karte ohne Hilfe. Idee: ein einfaches GIS als Basis. Dunkelmodus: noch offen.
-- Terms: the creator's words for the main things in the app, used everywhere.
+- Terms: Land, Hauptstadt, Fluss, Gebirge, See, Meer, Stufe (Schwierigkeit), Runde (Spielrunde), Teilraum (Ja des Erstellers).
 
 ### Entry draft
 
 <!-- YAML valid against the entry schema, with its property names. Only known values, never invented. -->
 
 ```yaml
+title: Geo Europa
+subject: erdkunde
+grades: [5, 6]
+summary: >-
+  Kinder üben auf einer Europakarte wie in einem Spiel: Sie finden Länder, Hauptstädte, Flüsse, Gebirge, Seen und
+  Meere, erst mit Hilfen, zuletzt ganz ohne. Fällt ein Tipp daneben, sehen sie, wie weit er vom richtigen Ort entfernt ist.
+strand: erdkunde/orientierung
+competencies: [topographie-europa]
+keywords: [Europa, Hauptstädte, Länder, Karte, Topographie, Erdkunde, Geographie]
+limits: Auf dem Handy nur im Querformat nutzbar, weil die Karte Platz braucht; die Breite von 360 px im Hochformat wird nicht unterstützt.
 ```
+<!-- creator, url, source, commit, topics: later, in Commit -->
 
 ### Completed
 
