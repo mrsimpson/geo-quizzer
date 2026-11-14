@@ -97,13 +97,41 @@ const mapLabel = computed(() =>
 const feedback = computed(
   () => props.state.phase === "feedback" && task.value !== undefined && props.state.answer !== null,
 );
+/** The colours of several right answers: one each, so that the map and the list agree. */
+const PALETTE = [
+  "#2e9e5b",
+  "#8e5bd6",
+  "#1f9bb3",
+  "#d4579a",
+  "#9c7a1d",
+  "#5f6fd6",
+  "#0f766e",
+  "#7a4b2a",
+  "#84a52c",
+  "#8a2a6b",
+] as const;
+
+/** Where several answers are right (several neighbours), all of them, the one asked for first. */
+const manyRight = computed<string[]>(() => {
+  const current = task.value;
+  if (current?.kind !== "beziehung" || current.relation === undefined || subject.value === undefined) return [];
+  const all = [...rightAnswers(current.relation, subject.value.id)]
+    .filter((id) => id !== current.target)
+    .sort((a, b) => name(a).localeCompare(name(b), "de"));
+  return all.length === 0 ? [] : [current.target, ...all];
+});
+const colorOf = (id: string): string => PALETTE[Math.max(0, manyRight.value.indexOf(id)) % PALETTE.length] ?? "#2e9e5b";
+
 const marks = computed<Mark[]>(() => {
   if (target.value === undefined || subject.value === undefined) return [];
   if (!feedback.value || props.state.answer === null) {
     // where learners point, the map does not show what they look for
     return isPick.value ? [] : [{ id: subject.value.id, role: "asked" }];
   }
-  const result: Mark[] = [{ id: target.value.id, role: "right" }];
+  const result: Mark[] =
+    manyRight.value.length > 1
+      ? manyRight.value.map((id) => ({ id, role: "right" as const, color: colorOf(id) }))
+      : [{ id: target.value.id, role: "right" }];
   if (props.state.answer.chosen !== "" && !props.state.answer.right) {
     result.unshift({ id: props.state.answer.chosen, role: "chosen" });
   }
@@ -117,6 +145,11 @@ const line = computed(() => {
   if (answer.point === null || answer.nearest === null) return undefined;
   return { from: answer.point, to: answer.nearest, label: t("kmLabel", { km: answer.km }) };
 });
+
+/** How the pin is drawn: waiting for "Hier setzen", or right or wrong after it. */
+const pinRole = computed<"pending" | "right" | "wrong">(() =>
+  !feedback.value ? "pending" : props.state.answer?.right === true ? "right" : "wrong",
+);
 
 /** The pin on the map: the learner's, before and after "Hier setzen". */
 const pinShown = computed<Position | null>(() =>
@@ -189,16 +222,6 @@ const direction = computed(() => {
   return from === undefined ? "" : t(`dir${compass(from, towards)}`);
 });
 
-/** Where several answers are right (several neighbours), the others: a learner may know another one. */
-const alsoRight = computed(() => {
-  const current = task.value;
-  if (current?.kind !== "beziehung" || current.relation === undefined || subject.value === undefined) return "";
-  const all = [...rightAnswers(current.relation, subject.value.id)].filter((id) => id !== current.target);
-  if (all.length < 1) return "";
-  const list = all.slice(0, 8).map(name).join(", ");
-  return t("alsoRight", { list: all.length > 8 ? `${list} …` : list });
-});
-
 /**
  * What the feedback says about the answer: first and large the right answer, then, smaller, what the learner did.
  * Where several answers are right, the others follow the learner's own.
@@ -225,12 +248,14 @@ const detailParts = computed<{ primary: string; secondary: string }>(() => {
     }
     return { primary: t("wrongRight", { target: target_ }), secondary: t("typedOwn", { typed: answer.typed ?? "" }) };
   }
+  if (manyRight.value.length > 1) {
+    // the list of all right answers follows in the template
+    return answer.right
+      ? { primary: t("rightMany"), secondary: "" }
+      : { primary: t("wrongMany"), secondary: t("wrongOwn", { chosen: nameA(answer.chosen) }) };
+  }
   if (answer.right) return { primary: t("rightDetail", { target: target_ }), secondary: "" };
-  const others = alsoRight.value;
-  return {
-    primary: t("wrongRight", { target: target_ }),
-    secondary: `${t("wrongOwn", { chosen: nameA(answer.chosen) })}${others === "" ? "" : ` ${others}`}`,
-  };
+  return { primary: t("wrongRight", { target: target_ }), secondary: t("wrongOwn", { chosen: nameA(answer.chosen) }) };
 });
 const detailText = computed(() => `${detailParts.value.primary} ${detailParts.value.secondary}`.trim());
 
@@ -255,7 +280,9 @@ watch(
         announce(
           answer.right
             ? t("announceRight", { target: nameA(target.value?.id ?? "") })
-            : t("announceWrong", { target: nameA(target.value?.id ?? ""), chosen: nameA(answer.chosen) }),
+            : manyRight.value.length > 1
+              ? t("announceWrongMany", { chosen: nameA(answer.chosen) })
+              : t("announceWrong", { target: nameA(target.value?.id ?? ""), chosen: nameA(answer.chosen) }),
         );
       }
       await nextTick();
@@ -374,6 +401,8 @@ watch(
           :detail="detail"
           :pickable="isPick && state.phase === 'asking'"
           :pin="pinShown"
+          :pin-role="pinRole"
+          :show-names="feedback"
           @pick="pick"
         />
         <div class="panel">
@@ -420,6 +449,12 @@ watch(
               {{ state.answer.right ? t("right") : t("wrong") }}
             </p>
             <p class="answer-main">{{ detailParts.primary }}</p>
+            <ul v-if="manyRight.length > 1" class="right-list">
+              <li v-for="id in manyRight" :key="id">
+                <span class="swatch" :style="{ background: colorOf(id) }" aria-hidden="true"></span>{{ name(id)
+                }}<span v-if="id === state.answer.chosen" class="sr-only"> ({{ t("yourChoice") }})</span>
+              </li>
+            </ul>
             <p v-if="detailParts.secondary" class="answer-own">{{ detailParts.secondary }}</p>
             <p v-if="relationText">{{ relationText }}</p>
             <template v-if="fact">
@@ -457,13 +492,14 @@ watch(
   --geo-ink: #1d2b3a;
   --geo-asked: #f28c28;
   --geo-right: #3fae6a;
-  --geo-chosen: #4f86c6;
+  --geo-chosen: #b4534b;
   --geo-muted: #4a5663;
   --geo-river: #5f9fc7;
   --geo-button: #ffffff;
   --geo-focus: #1a56db;
   --geo-surface: #ffffff;
   --geo-bg: #f4f1ea;
+  --geo-surface-halo: rgba(255, 255, 255, 0.85);
   color: var(--geo-ink);
 }
 
@@ -476,13 +512,14 @@ watch(
     --geo-ink: #eef2f6;
     --geo-asked: #f59a3e;
     --geo-right: #4cc17c;
-    --geo-chosen: #78a8e8;
+    --geo-chosen: #d9857d;
     --geo-muted: #b8c2cc;
     --geo-river: #4a8ab5;
     --geo-button: #25313d;
     --geo-focus: #8ab4ff;
     --geo-surface: #1d2733;
     --geo-bg: #121a22;
+    --geo-surface-halo: rgba(18, 26, 34, 0.85);
   }
 }
 
@@ -494,13 +531,14 @@ watch(
   --geo-ink: #eef2f6;
   --geo-asked: #f59a3e;
   --geo-right: #4cc17c;
-  --geo-chosen: #78a8e8;
+  --geo-chosen: #d9857d;
   --geo-muted: #b8c2cc;
   --geo-river: #4a8ab5;
   --geo-button: #25313d;
   --geo-focus: #8ab4ff;
   --geo-surface: #1d2733;
   --geo-bg: #121a22;
+  --geo-surface-halo: rgba(18, 26, 34, 0.85);
 }
 
 .sr-only {
@@ -726,6 +764,26 @@ a:focus-visible,
 .feedback .answer-main {
   font-size: 1.25rem;
   font-weight: 800;
+}
+
+.right-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  margin: 0 0 0.5rem;
+  padding: 0;
+  list-style: none;
+  font-weight: 600;
+}
+
+.swatch {
+  display: inline-block;
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-right: 0.375rem;
+  border: 2px solid var(--geo-ink);
+  border-radius: 50%;
+  vertical-align: -0.125rem;
 }
 
 .feedback .answer-own {

@@ -542,12 +542,15 @@
   "el.meer-adria.alt": "Adriatisches Meer",
   "el.meer-atlantischer-ozean.alt": "Atlantik",
   "el.stadt-chisinau.alt": "Kischinau",
-  "alsoRight": "Richtig wären auch: {list}.",
   "topicDisabled": "Grau hinterlegte Themen haben in dieser Stufe keine Aufgaben.",
   "pinSet": "Punkt gesetzt. Drücke „Hier setzen“, wenn du sicher bist.",
   "wrongRight": "Richtig ist: {target} (grün).",
-  "wrongOwn": "Deine Wahl: {chosen} (blau).",
+  "wrongOwn": "Deine Wahl: {chosen} (rot).",
   "missRight": "Gesucht war: {target} (grün).",
   "missOwn": "Dein Punkt lag ungefähr {km} km daneben. Von deinem Punkt aus liegt es {direction}.",
-  "typedOwn": "Du hast „{typed}“ geschrieben."
+  "typedOwn": "Du hast „{typed}“ geschrieben.",
+  "rightMany": "Es waren mehrere Antworten richtig:",
+  "wrongMany": "Richtig wären:",
+  "yourChoice": "deine Wahl",
+  "announceWrongMany": "Nicht ganz. Mehrere Antworten wären richtig gewesen, sie stehen in der Liste. Deine Wahl: {chosen}."
 }

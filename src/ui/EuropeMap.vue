@@ -14,6 +14,8 @@ import { AREA_PATHS, CONTEXT_PATH, COUNTRY_LABELS, LINE_PATHS, centreOf, planeOf
 export interface Mark {
   id: string;
   role: "asked" | "right" | "chosen";
+  /** A colour of its own, where several answers are right. */
+  color?: string;
 }
 
 const props = defineProps<{
@@ -25,8 +27,11 @@ const props = defineProps<{
   detail: "borders" | "names" | "coast";
   /** Whether a click or tap puts the pin. */
   pickable: boolean;
-  /** Where the learner's pin is. */
+  /** Where the learner's pin is, and how it is drawn. */
   pin: Position | null;
+  pinRole?: "pending" | "right" | "wrong";
+  /** Whether the marked elements show their names (after an answer). */
+  showNames?: boolean;
   /** The text for screen readers: what is asked, without the answer. */
   label: string;
   /** Changes with every task: the map shows everything again. */
@@ -293,6 +298,7 @@ const labels = computed(() =>
         :key="`${mark.role}-${mark.id}`"
         :d="AREA_PATHS.get(mark.id)"
         :class="['mark', 'region', mark.role, elementById(mark.id).kind]"
+        :style="mark.color === undefined ? undefined : { fill: mark.color }"
         fill-rule="evenodd"
       />
       <path
@@ -300,10 +306,11 @@ const labels = computed(() =>
         :key="`${mark.role}-${mark.id}`"
         :d="LINE_PATHS.get(mark.id)"
         :class="['line-mark', mark.role]"
+        :style="mark.color === undefined ? undefined : { stroke: mark.color }"
       />
       <g v-if="pinAt !== undefined">
-        <circle :cx="pinAt.x" :cy="pinAt.y" :r="unit * 9" class="pin-ring" />
-        <circle :cx="pinAt.x" :cy="pinAt.y" :r="unit * 3" class="pin-dot" />
+        <circle :cx="pinAt.x" :cy="pinAt.y" :r="unit * 9" :class="['pin-ring', pinRole ?? 'pending']" />
+        <circle :cx="pinAt.x" :cy="pinAt.y" :r="unit * 3" :class="['pin-dot', pinRole ?? 'pending']" />
       </g>
       <g v-if="lineEnds !== undefined && line !== undefined">
         <line :x1="lineEnds.a.x" :y1="lineEnds.a.y" :x2="lineEnds.b.x" :y2="lineEnds.b.y" class="distance" />
@@ -314,6 +321,7 @@ const labels = computed(() =>
           :cy="centreOf(elementById(mark.id)).y"
           :r="unit * 10"
           :class="['mark', mark.role]"
+          :style="mark.color === undefined ? undefined : { fill: mark.color }"
         />
         <circle
           :cx="centreOf(elementById(mark.id)).x"
@@ -322,6 +330,17 @@ const labels = computed(() =>
           class="pin"
         />
       </g>
+      <text
+        v-for="mark in showNames ? props.marks.filter((m) => m.role !== 'asked') : []"
+        :key="`name-${mark.role}-${mark.id}`"
+        :x="centreOf(elementById(mark.id)).x"
+        :y="centreOf(elementById(mark.id)).y + unit * 4"
+        :font-size="unit * 12"
+        text-anchor="middle"
+        class="mark-name"
+      >
+        {{ t(`el.${mark.id}.name`) }}
+      </text>
       <g v-if="crosshair !== null && pickable" class="crosshair">
         <line :x1="crosshair.x - unit * 14" :y1="crosshair.y" :x2="crosshair.x + unit * 14" :y2="crosshair.y" />
         <line :x1="crosshair.x" :y1="crosshair.y - unit * 14" :x2="crosshair.x" :y2="crosshair.y + unit * 14" />
@@ -387,6 +406,33 @@ const labels = computed(() =>
   font-weight: 600;
   paint-order: stroke;
   stroke: var(--geo-land);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.pin-ring.pending {
+  stroke: var(--geo-ink);
+}
+
+.pin-dot.pending {
+  fill: var(--geo-ink);
+}
+
+.pin-ring.right,
+.pin-dot.right {
+  stroke: var(--geo-right);
+}
+
+.pin-dot.right {
+  fill: var(--geo-right);
+}
+
+.mark-name {
+  fill: var(--geo-ink);
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: var(--geo-surface-halo);
   stroke-width: 3px;
   stroke-linejoin: round;
   pointer-events: none;

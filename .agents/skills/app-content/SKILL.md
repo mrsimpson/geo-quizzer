@@ -92,11 +92,12 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
   Tolerance: ignore case, ä/ö/ü as ae/oe/ue, ß, accents, spaces and hyphens; distance at most 0 for names up to 3
   letters, 1 up to 5, 2 above, and only when exactly one name of the kind is that close. A right answer with another
   spelling says how the name is written. The names the core compares are the message file of the language (`src/core/names.ts`).
-- **Wrong answer, in every pattern:** the right element in green and the chosen one in blue, the fact, the relations
+- **Wrong answer, in every pattern:** the right element in green and the wrong choice in muted red, the fact, the relations
   ("liegt in …, an …") and the link (opens only after a click). The distance line, the kilometres and the direction
   appear only where learners point (Zeigen, Frei with placing a point), never in Erkennen, Beziehung or Tippen
   (`SHOWS_DISTANCE` in `src/core/tasks.ts`). The heading of the feedback speaks of what was marked, never of its colour
   ("Welches Land war markiert?").
+  Where several answers are right (Beziehung with several neighbours, rivers, ...), the heading says "Richtig wären:" (never "Richtig ist"), the map marks all of them, each in a colour of its own, and a list with the same colours names them; a wrong choice stays muted red.
   Wrong options are real neighbours or look-alikes; each is told why it is wrong where a relation says so.
 
 - Progress per task key (`<kind>:…`) and the stars per level and topic: see the end of Content structure; a round has ten
@@ -105,7 +106,7 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
 ## Figures
 
 - One figure: the map of Europe (SVG in the app page), equal-area projection, same extent in every task: the map first shows longitude 25° W to 50° E and latitude 34° N to 71.5° N (`START_FRAME` in `src/core/geo.ts`), so that Russia does not dominate; the data reach 68° E (`FRAME`, also in `tools/build-geodata.ts`) and the learner moves the map east to the Ural. Orange =
-  the element asked for (area, point or line); blue = the learner's answer; green = the right place; dashed line =
+  the element asked for (area, point or line); muted red = a wrong answer of the learner (the same red for a wrong choice, a wrong pin and a wrong name, everywhere); green = the right place; dashed line =
   distance. Capitals are circles with a ring, rivers lines, lakes and seas areas.
 - After an answer the map zooms to the right element and, if wrong, the chosen one. Where learners point, the distance (rounded to 10 km, middle to middle) is drawn as a dashed line and written in a box and in the feedback, with the direction from the chosen element to the right one ("im Westen").
 - Level 3 shows borders and country names; level 4 shows only the coastline; levels 1 and 2 show borders without
