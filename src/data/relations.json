@@ -412,7 +412,7 @@
   {
     "type": "gehoert-zu",
     "from": "land-griechenland",
-    "to": "raum-suedosteuropa"
+    "to": "raum-suedeuropa"
   },
   {
     "type": "gehoert-zu",
@@ -542,7 +542,7 @@
   {
     "type": "gehoert-zu-auch",
     "from": "land-griechenland",
-    "to": "raum-suedeuropa"
+    "to": "raum-suedosteuropa"
   },
   {
     "type": "gehoert-zu-auch",
@@ -628,11 +628,6 @@
     "type": "gehoert-zu-auch",
     "from": "land-moldau",
     "to": "raum-suedosteuropa"
-  },
-  {
-    "type": "fliesst-durch-auch",
-    "from": "fluss-rhein",
-    "to": "land-frankreich"
   },
   {
     "type": "liegt-in-auch",
