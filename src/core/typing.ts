@@ -1,6 +1,6 @@
 // Typing a name: what counts as the right name when a learner types it. Case, umlauts, ß, spaces and hyphens do not
 // count, and a small mistake does not either (one letter in a short name, two in a long one), but only when exactly
-// one name of the same kind is that near: the learner may not hit another name by chance.
+// one name of the same kind is that near: the learner may not hit another name by chance. A name typed exactly always counts.
 import { ELEMENTS, type Kind } from "./data.ts";
 import { alternativesOf, nameOf } from "./names.ts";
 
@@ -71,7 +71,11 @@ function candidates(kind: Kind, text: string, lang: string): Candidate[] {
 /** The element a typed text stands for, or undefined when no name or more than one name is near enough. */
 export function matchName(kind: Kind, text: string, lang = "de"): string | undefined {
   if (normalize(text).length === 0) return undefined;
-  const near = candidates(kind, text, lang).filter((c) => c.distance <= tolerance(c.length));
+  const all = candidates(kind, text, lang);
+  // a name typed exactly (or taken from a suggestion) always counts, even when another name is a letter away (Irland, Island)
+  const exact = all.filter((c) => c.distance === 0);
+  if (exact.length === 1) return exact[0]?.id;
+  const near = all.filter((c) => c.distance <= tolerance(c.length));
   return near.length === 1 ? near[0]?.id : undefined;
 }
 
