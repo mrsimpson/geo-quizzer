@@ -3,7 +3,7 @@
     "id": "fluss-rhein",
     "kind": "fluss",
     "level": 1,
-    "ne": "Rhine"
+    "ne": "Rhine|Rhein|Rhin"
   },
   {
     "id": "fluss-donau",

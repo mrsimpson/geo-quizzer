@@ -4,7 +4,7 @@
 // depends on the level: with borders (1 to 3), only the coast (4). The learner can zoom (buttons,
 // wheel) and move the map (drag). Where the map is pickable (3, 4), a click or tap puts the pin, the arrow keys move a
 // crosshair (Shift and the arrows move the map), and the parent asks for "Hier setzen".
-import { computed, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { translator } from "@lernapps/tooling/i18n";
 import { elementById } from "../core/data.ts";
 import { EXTENT, project, unproject, VIEW, type Position } from "../core/geo.ts";
@@ -44,6 +44,48 @@ const t = translator(de as Record<string, string>);
 const ZOOM_MAX = 12;
 const view = ref({ x: VIEW.x, y: VIEW.y, width: VIEW.width, height: VIEW.height });
 
+type Box = { x: number; y: number; width: number; height: number };
+/** Where the view is heading: the view follows it in small steps, so zooming glides instead of jumping. */
+let target: Box = { ...view.value };
+let frame = 0;
+let reducedMotion = false;
+
+onMounted(() => {
+  reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+});
+
+function step(): void {
+  frame = 0;
+  const v = view.value;
+  const k = 0.22;
+  const near = (a: number, b: number, scale: number): boolean => Math.abs(a - b) < scale * 0.0005;
+  if (near(v.x, target.x, v.width) && near(v.y, target.y, v.width) && near(v.width, target.width, v.width)) {
+    view.value = { ...target };
+    return;
+  }
+  view.value = {
+    x: v.x + (target.x - v.x) * k,
+    y: v.y + (target.y - v.y) * k,
+    width: v.width + (target.width - v.width) * k,
+    height: v.height + (target.height - v.height) * k,
+  };
+  frame = globalThis.requestAnimationFrame(step);
+}
+
+/** Sets the view at once (drag, keys, a new task) or lets it glide there (zoom). */
+function moveTo(next: Box, glide: boolean): void {
+  target = next;
+  if (!glide || reducedMotion) {
+    if (frame !== 0) globalThis.cancelAnimationFrame(frame);
+    frame = 0;
+    view.value = { ...next };
+  } else if (frame === 0) frame = globalThis.requestAnimationFrame(step);
+}
+
+onBeforeUnmount(() => {
+  if (frame !== 0) globalThis.cancelAnimationFrame(frame);
+});
+
 const viewBox = computed(() => `${view.value.x} ${view.value.y} ${view.value.width} ${view.value.height}`);
 /** One screen pixel in map units, roughly: circles keep their size when the map is zoomed. */
 const unit = computed(() => view.value.width / 700);
@@ -51,17 +93,17 @@ const unit = computed(() => view.value.width / 700);
 watch(
   () => props.resetKey,
   () => {
-    view.value = { x: VIEW.x, y: VIEW.y, width: VIEW.width, height: VIEW.height };
+    moveTo({ x: VIEW.x, y: VIEW.y, width: VIEW.width, height: VIEW.height }, false);
     if (props.marks.some((mark) => mark.role === "asked")) showMiddleOf(props.marks.map((mark) => mark.id));
   },
 );
 
-function clamp(next: { x: number; y: number; width: number; height: number }): void {
+function clamp(next: Box, glide = false): void {
   const width = Math.max(VIEW.width / ZOOM_MAX, Math.min(VIEW.width, next.width));
   const height = (width / VIEW.width) * VIEW.height;
   const x = Math.max(EXTENT.x, Math.min(EXTENT.x + EXTENT.width - width, next.x));
   const y = Math.max(EXTENT.y, Math.min(EXTENT.y + EXTENT.height - height, next.y));
-  view.value = { x, y, width, height };
+  moveTo({ x, y, width, height }, glide);
 }
 
 /** The part of the map plane the given elements cover. */
@@ -98,7 +140,7 @@ function fitTo(ids: readonly string[], extra: readonly Position[] = []): void {
   const width = Math.max((b.maxX - b.minX) * 1.8, ((b.maxY - b.minY) * 1.8) / ratio, VIEW.width / 6);
   const cx = (b.minX + b.maxX) / 2;
   const cy = (b.minY + b.maxY) / 2;
-  clamp({ x: cx - width / 2, y: cy - (width * ratio) / 2, width, height: width * ratio });
+  clamp({ x: cx - width / 2, y: cy - (width * ratio) / 2, width, height: width * ratio }, true);
 }
 
 /** Moves the map, without zooming, so that the middle of the given elements is in view (the Ural lies beyond the first view). */
@@ -106,7 +148,7 @@ function showMiddleOf(ids: readonly string[]): void {
   const b = boundsOf(ids);
   const cx = (b.minX + b.maxX) / 2;
   const cy = (b.minY + b.maxY) / 2;
-  const { x, y, width, height } = view.value;
+  const { x, y, width, height } = target;
   const margin = 0.1;
   if (
     cx > x + width * margin &&
@@ -116,7 +158,7 @@ function showMiddleOf(ids: readonly string[]): void {
   ) {
     return;
   }
-  clamp({ x: cx - width / 2, y: cy - height / 2, width, height });
+  clamp({ x: cx - width / 2, y: cy - height / 2, width, height }, true);
 }
 
 watch(
@@ -133,14 +175,14 @@ watch(
 );
 
 function zoom(factor: number, fx = 0.5, fy = 0.5): void {
-  const { x, y, width, height } = view.value;
+  const { x, y, width, height } = target;
   const w = width / factor;
   const h = height / factor;
-  clamp({ x: x + (width - w) * fx, y: y + (height - h) * fy, width: w, height: h });
+  clamp({ x: x + (width - w) * fx, y: y + (height - h) * fy, width: w, height: h }, true);
 }
 
 function reset(): void {
-  view.value = { x: VIEW.x, y: VIEW.y, width: VIEW.width, height: VIEW.height };
+  moveTo({ x: VIEW.x, y: VIEW.y, width: VIEW.width, height: VIEW.height }, true);
 }
 
 const svg = ref<SVGSVGElement | null>(null);
@@ -148,13 +190,16 @@ const svg = ref<SVGSVGElement | null>(null);
 function onWheel(event: WheelEvent): void {
   const box = svg.value?.getBoundingClientRect();
   if (box === undefined || box.width === 0) return;
-  zoom(event.deltaY < 0 ? 1.25 : 0.8, (event.clientX - box.left) / box.width, (event.clientY - box.top) / box.height);
+  // the zoom follows how far the wheel turned (a touchpad sends many small steps, a wheel few large ones)
+  const pixels = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaMode === 2 ? event.deltaY * 400 : event.deltaY;
+  const factor = Math.exp(-Math.max(-80, Math.min(80, pixels)) * 0.0022);
+  zoom(factor, (event.clientX - box.left) / box.width, (event.clientY - box.top) / box.height);
 }
 
 let drag: { x: number; y: number; view: typeof view.value; moved: boolean } | undefined;
 
 function onPointerDown(event: PointerEvent): void {
-  drag = { x: event.clientX, y: event.clientY, view: { ...view.value }, moved: false };
+  drag = { x: event.clientX, y: event.clientY, view: { ...target }, moved: false };
   (event.currentTarget as Element).setPointerCapture(event.pointerId);
 }
 
@@ -203,12 +248,12 @@ watch(
 );
 
 function onKeydown(event: KeyboardEvent): void {
-  const step = view.value.width / (props.pickable && !event.shiftKey ? 40 : 10);
+  const stepSize = target.width / (props.pickable && !event.shiftKey ? 40 : 10);
   const moves: Record<string, [number, number]> = {
-    ArrowLeft: [-step, 0],
-    ArrowRight: [step, 0],
-    ArrowUp: [0, -step],
-    ArrowDown: [0, step],
+    ArrowLeft: [-stepSize, 0],
+    ArrowRight: [stepSize, 0],
+    ArrowUp: [0, -stepSize],
+    ArrowDown: [0, stepSize],
   };
   const move = moves[event.key];
   if (move !== undefined) {
@@ -223,9 +268,9 @@ function onKeydown(event: KeyboardEvent): void {
         clamp({ x: to.x - width / 2, y: to.y - height / 2, width, height });
       }
       emit("pick", unproject(to));
-    } else clamp({ ...view.value, x: view.value.x + move[0], y: view.value.y + move[1] });
-  } else if (event.key === "+" || event.key === "=") zoom(1.4);
-  else if (event.key === "-") zoom(1 / 1.4);
+    } else clamp({ ...target, x: target.x + move[0], y: target.y + move[1] });
+  } else if (event.key === "+" || event.key === "=") zoom(1.25);
+  else if (event.key === "-") zoom(1 / 1.25);
 }
 
 const areaMarks = computed(() =>
@@ -269,7 +314,6 @@ const pinAt = computed(() => (props.pin === null ? undefined : planeOf(props.pin
       <path :d="CONTEXT_PATH" class="context" fill-rule="evenodd" />
       <path v-for="[id, d] in countryPaths" :key="id" :d="d" class="land" fill-rule="evenodd" />
       <path v-for="[id, d] in lakePaths" :key="id" :d="d" class="lake" fill-rule="evenodd" />
-      <path v-for="[id, d] in riverPaths" :key="id" :d="d" class="river" />
       <path
         v-for="mark in areaMarks"
         :key="`${mark.role}-${mark.id}`"
@@ -278,6 +322,7 @@ const pinAt = computed(() => (props.pin === null ? undefined : planeOf(props.pin
         :style="mark.color === undefined ? undefined : { fill: mark.color }"
         fill-rule="evenodd"
       />
+      <path v-for="[id, d] in riverPaths" :key="id" :d="d" class="river" />
       <g v-for="mark in smallMarks" :key="`ring-${mark.role}-${mark.id}`" class="locator">
         <circle
           :cx="centreOf(elementById(mark.id)).x"
@@ -340,8 +385,8 @@ const pinAt = computed(() => (props.pin === null ? undefined : planeOf(props.pin
     </svg>
     <p v-if="line !== undefined" class="distance-box">{{ t("distanceLabel", { label: line.label }) }}</p>
     <div class="zoom">
-      <button type="button" :aria-label="t('zoomIn')" @click="zoom(1.4)">+</button>
-      <button type="button" :aria-label="t('zoomOut')" @click="zoom(1 / 1.4)">−</button>
+      <button type="button" :aria-label="t('zoomIn')" @click="zoom(1.25)">+</button>
+      <button type="button" :aria-label="t('zoomOut')" @click="zoom(1 / 1.25)">−</button>
       <button type="button" class="zoom-reset" :aria-label="t('zoomReset')" @click="reset">
         {{ t("zoomResetShort") }}
       </button>
@@ -384,7 +429,6 @@ const pinAt = computed(() => (props.pin === null ? undefined : planeOf(props.pin
   stroke: var(--geo-land);
 }
 
-.coast .river,
 .coast .lake {
   display: none;
 }

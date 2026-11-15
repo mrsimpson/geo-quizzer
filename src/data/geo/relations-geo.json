@@ -1,8 +1,12 @@
 [
   { "type": "fliesst-durch", "from": "fluss-rhein", "to": "land-deutschland" },
+  { "type": "fliesst-durch", "from": "fluss-rhein", "to": "land-frankreich" },
   { "type": "fliesst-durch", "from": "fluss-rhein", "to": "land-niederlande" },
+  { "type": "fliesst-durch", "from": "fluss-rhein", "to": "land-oesterreich" },
+  { "type": "fliesst-durch", "from": "fluss-rhein", "to": "land-schweiz" },
   { "type": "fliesst-durch", "from": "fluss-donau", "to": "land-bulgarien" },
   { "type": "fliesst-durch", "from": "fluss-donau", "to": "land-deutschland" },
+  { "type": "fliesst-durch", "from": "fluss-donau", "to": "land-kroatien" },
   { "type": "fliesst-durch", "from": "fluss-donau", "to": "land-oesterreich" },
   { "type": "fliesst-durch", "from": "fluss-donau", "to": "land-rumaenien" },
   { "type": "fliesst-durch", "from": "fluss-donau", "to": "land-serbien" },

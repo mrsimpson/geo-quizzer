@@ -262,23 +262,113 @@ function clipLines(lines: Ring[]): Ring[] {
   return result;
 }
 
+/** Joins lines whose ends meet (within `gap` degrees), so that a river is drawn in one piece where its source has cuts. */
+function joinLines(lines: Ring[], gap: number): Ring[] {
+  const rest = lines.map((line) => [...line]);
+  const near = (a: Position, b: Position): boolean => Math.hypot(a[0] - b[0], a[1] - b[1]) <= gap;
+  let merged = true;
+  while (merged) {
+    merged = false;
+    outer: for (let i = 0; i < rest.length; i++) {
+      for (let j = 0; j < rest.length; j++) {
+        if (i === j) continue;
+        const a = rest[i] as Ring;
+        const b = rest[j] as Ring;
+        const aEnd = a[a.length - 1] as Position;
+        const bStart = b[0] as Position;
+        const bEnd = b[b.length - 1] as Position;
+        if (near(aEnd, bStart)) a.push(...b.slice(1));
+        else if (near(aEnd, bEnd)) a.push(...b.slice(0, -1).reverse());
+        else continue;
+        rest.splice(j, 1);
+        merged = true;
+        break outer;
+      }
+    }
+  }
+  return rest;
+}
+
 /** Features of a layer whose property `property` is one of the names (separated by | in the element's field ne). */
 function pick(features: Feature[], property: string, names: string): Feature[] {
   const wanted = names.split("|");
   return features.filter((f) => wanted.includes(String(f.properties[property])));
 }
 
+/** The last stretch to the sea, where Natural Earth ends the river early: [lon, lat], from the old end to the mouth. */
+const MOUTHS: Record<string, Position[]> = {
+  "fluss-elbe": [
+    [9.82, 53.54],
+    [9.55, 53.62],
+    [9.2, 53.8],
+    [8.85, 53.9],
+    [8.7, 53.95],
+  ],
+  "fluss-rhein": [
+    [4.99, 51.82],
+    [4.65, 51.85],
+    [4.4, 51.9],
+    [4.15, 51.98],
+    [4.05, 52],
+  ],
+  "fluss-oder": [
+    [14.58, 53.63],
+    [14.55, 53.78],
+    [14.28, 53.92],
+  ],
+  "fluss-loire": [
+    [-1.74, 47.22],
+    [-2.05, 47.27],
+    [-2.2, 47.28],
+  ],
+  "fluss-seine": [
+    [0.44, 49.47],
+    [0.2, 49.44],
+    [0.1, 49.43],
+  ],
+  "fluss-donau": [
+    [28.76, 45.23],
+    [29.2, 45.2],
+    [29.7, 45.2],
+  ],
+};
+
+/** Adds the stretch to the sea to the line that ends where it begins. */
+function extendToMouth(lines: Ring[], mouth: Position[] | undefined): Ring[] {
+  const first = mouth?.[0];
+  if (mouth === undefined || first === undefined) return lines;
+  const dist = (p: Position): number => Math.hypot(p[0] - first[0], p[1] - first[1]);
+  let best: { line: Ring; atEnd: boolean; d: number } | undefined;
+  for (const line of lines) {
+    const start = line[0] as Position;
+    const end = line[line.length - 1] as Position;
+    for (const [atEnd, d] of [
+      [true, dist(end)],
+      [false, dist(start)],
+    ] as const) {
+      if (best === undefined || d < best.d) best = { line, atEnd, d };
+    }
+  }
+  if (best === undefined || best.d > 0.3) throw new Error(`no river end near ${first.join(",")}`);
+  if (best.atEnd) best.line.push(...mouth);
+  else best.line.unshift(...[...mouth].reverse());
+  return lines;
+}
+
 /** Rivers: lines. */
 async function rivers(): Promise<Record<string, Line>> {
-  const features = await readLayer("ne_50m_rivers_lake_centerlines");
+  const features = await readLayer("ne_10m_rivers_lake_centerlines");
   const result: Record<string, Line> = {};
   for (const element of readElements("fluesse.json")) {
     const found = pick(features, "name", element.ne);
     if (found.length === 0) throw new Error(`no Natural Earth river "${element.ne}"`);
-    const lines = clipLines(found.flatMap((f) => (f.geometry === null ? [] : linesOf(f.geometry))));
+    const lines = joinLines(clipLines(found.flatMap((f) => (f.geometry === null ? [] : linesOf(f.geometry)))), 0.08);
+    extendToMouth(lines, MOUTHS[element.id]);
     result[element.id] = {
       type: "line",
-      lines: lines.map((line) => simplifyLine([...line], EPSILON).map(round)).filter((line) => line.length > 1),
+      lines: lines
+        .map((line) => simplifyLine([...line], EPSILON / 2).map((point) => round(point, 3)))
+        .filter((line) => line.length > 1),
     };
   }
   write("fluesse.json", result);
@@ -398,7 +488,7 @@ function geoRelations(
   const relations: Relation[] = [];
   for (const [id, river] of Object.entries(riverLines)) {
     const points = river.lines.flatMap((line) => denser(line, 0.05));
-    for (const country of countriesOf(points, countryAreas, 0.04, 0))
+    for (const country of countriesOf(points, countryAreas, 0.02, 0))
       relations.push({ type: "fliesst-durch", from: id, to: country });
   }
   for (const [id, range] of Object.entries(ranges)) {

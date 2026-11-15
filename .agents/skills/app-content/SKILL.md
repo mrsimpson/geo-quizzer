@@ -84,7 +84,7 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
   `src/core/pick.ts` (land 10 km, Hauptstadt 80, Fluss 50, Gebirge 10, See 40, Meer and Teilraum inside only). The
   feedback draws a dashed line from the pin to the nearest point of the right element, with the distance (rounded to
   10 km) and the direction.
-- **Frei, Ort setzen** (level 4): like Zeigen, but the map shows only the coast: no borders, names, dots, rivers or lakes.
+- **Frei, Ort setzen** (level 4): like Zeigen, but the map shows the coast and the rivers (blue lines, never names): no borders, names, dots or lakes.
   Task kind `setzen`, key `setzen:<id>`. Keyboard: the arrow keys move a crosshair (it puts the pin), Shift and the arrow
   keys move the map, Enter sets.
 - **Frei, Namen tippen** (level 4): element highlighted on the coastline map; learners type the name; suggestions and
@@ -109,7 +109,7 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
   the element asked for (area, point or line); muted red = a wrong answer of the learner (the same red for a wrong choice, a wrong pin and a wrong name, everywhere); green = the right place; dashed line =
   distance. Capitals are circles with a ring, rivers lines, lakes and seas areas.
 - After an answer the map zooms to the right element and, if wrong, the chosen one. Where learners point, the distance (rounded to 10 km, middle to middle) is drawn as a dashed line and written in a box and in the feedback, with the direction from the chosen element to the right one ("im Westen").
-- Levels 1 to 3 show borders and rivers, never names; level 4 shows only the coastline.
+- Levels 1 to 3 show borders and rivers, never names; level 4 shows the coastline and the rivers, without borders.
 - Alternative text: every task has a text that says what is asked without the picture ("Welches Land ist markiert? Es
   liegt im Westen Europas ..." only when it does not give the answer away; else "Eine Karte von Europa, ein Land ist
   markiert"). The tasks work with a keyboard: options with arrow keys and Enter, map by crosshair.
@@ -119,8 +119,7 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
 
 ## Sources
 
-- Geometry: Natural Earth (1:50 m, files admin_0_countries, rivers_lake_centerlines, geography_regions_polys, lakes,
-  geography_marine_polys). Simplified by the script; disputed borders follow Natural Earth.
+- Geometry: Natural Earth (1:50 m, files admin_0_countries, geography_regions_polys, lakes, geography_marine_polys; the rivers from the finer 1:10 m file rivers_lake_centerlines, joined where the source cuts them, and a short list `MOUTHS` in `tools/build-geodata.ts` for the last stretch to the sea where the source ends too early). Simplified by the script; disputed borders follow Natural Earth.
 - Facts and capitals: written from an opened source per element; sentences are never copied. Read-more links: Klexikon
   (klexikon.zum.de); an element without a Klexikon page gets no link and, because the fact comes from that page, no fact
   (first version: the Weichsel, Seine, Loire, Rhône, Po, Ebro, Dnepr, Apenninen, Skandinavisches Gebirge, Plattensee,
@@ -149,5 +148,6 @@ A new language: copy `src/messages/de.json`, translate every value, add the lang
 - A wrong option must never be the subject of the question or another right answer: in `makeTask` the right answers of a relation are excluded (found when "Ukraine" was offered as a neighbour of Ukraine).
 - The right answers of a relation task are of the kind the question asks for: a country is in `liegt-in` with ranges and lakes, and "Welches Gebirge liegt im Land Österreich?" has no lake among its right answers (the first version listed the Bodensee as a range).
 - The direction of a relation task: `f` has the `from` of the relation as subject, `r` the `to`. `hauptstadt-von` runs from the city to the country, so `f` asks "Von welchem Land ist {Stadt} die Hauptstadt?" and `r` "Was ist die Hauptstadt des Landes {Land}?" (the first version had them swapped).
-- Relations with the type `<type>-auch` (`gehoert-zu-auch`, `fliesst-durch-auch`, `liegt-in-auch`) say what is defensible too (Slowenien is also Südosteuropa, the Rhein borders Frankreich): they make no tasks, but such an element is never a wrong option.
+- A name typed exactly always counts as right, even when another name of the kind is one letter away (Irland and Island, Estland and Lettland): the tolerance for typos applies only when no name matches exactly (`matchName` in `src/core/typing.ts`; the first version rejected such names).
+- Relations with the type `<type>-auch` (`gehoert-zu-auch`, `fliesst-durch-auch`, `liegt-in-auch`) say what is defensible too (Slowenien is also Südosteuropa, Griechenland is Südeuropa and also Südosteuropa): they make no tasks, but such an element is never a wrong option.
 - Names in question texts carry no article; the question names the kind ("das Land", "der Fluss") instead ("von Niederlande" is wrong German).
