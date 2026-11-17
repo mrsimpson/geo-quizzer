@@ -1,8 +1,8 @@
 ---
 archetype: interactive
 phase: commit
-prePushFailures: 0
-failedChecks: { checks-pass: 3 }
+prePushFailures: 1
+failedChecks: { checks-pass: 4 }
 ---
 
 # Increment: Sterne der Runde und Gesamtsterne
