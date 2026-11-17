@@ -41,6 +41,16 @@ export function stars(progress: Progress, keys: readonly string[]): 0 | 1 | 2 | 
   return 0;
 }
 
+/** The stars of one round: the share of tasks right at first try, on the same thresholds as `stars`. */
+export function roundStars(right: number, total: number): 0 | 1 | 2 | 3 {
+  if (total <= 0) return 0;
+  const share = right / total;
+  if (share > 0.95) return 3;
+  if (share >= 2 / 3) return 2;
+  if (share >= 1 / 3) return 1;
+  return 0;
+}
+
 /** A progress from outside (the device's storage): only well-formed entries are kept. */
 export function parseProgress(value: unknown): Progress {
   if (typeof value !== "object" || value === null || Array.isArray(value)) return {};

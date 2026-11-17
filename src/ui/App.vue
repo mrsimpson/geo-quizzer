@@ -11,7 +11,7 @@ import { KINDS, RELATIONS, elementById } from "../core/data.ts";
 import { compass, type Position } from "../core/geo.ts";
 import { suggestions } from "../core/typing.ts";
 import { currentTask, type State } from "../core/index.ts";
-import { stars } from "../core/progress.ts";
+import { roundStars, stars } from "../core/progress.ts";
 import { rightAnswers, taskKeys } from "../core/tasks.ts";
 import de from "../messages/de.json";
 import EuropeMap, { type Mark } from "./EuropeMap.vue";
@@ -261,6 +261,13 @@ const levelTitle = computed(() => t(`level${props.state.level}`));
 const levelKeys = (level: number, kinds: readonly string[]) => taskKeys(level, kinds);
 const starsOf = (kinds: readonly string[]): number => stars(props.state.progress, levelKeys(props.state.level, kinds));
 const starText = (count: number): string => "★".repeat(count) + "☆".repeat(3 - count);
+const roundStarCount = computed(() => roundStars(props.state.right, props.state.tasks.length));
+const summaryScope = computed(() =>
+  [
+    levelTitle.value,
+    props.state.topics.map((kind) => t(`${props.state.level === 2 ? "kind2" : "kind"}.${kind}`)).join(", "),
+  ].join(" · "),
+);
 const noTasks = computed(() => levelKeys(props.state.level, props.state.topics).length === 0);
 
 const nextButton = ref<HTMLButtonElement | null>(null);
@@ -381,10 +388,17 @@ watch(
         <h2 ref="summaryHeading" tabindex="-1">{{ t("summaryTitle") }}</h2>
         <p>{{ t("summary", { right: state.right, total: state.tasks.length }) }}</p>
         <p class="summary-hint">{{ t("summaryHint") }}</p>
-        <p class="menu-stars">
+        <p class="summary-label">{{ t("roundStarsLabel") }}</p>
+        <p class="menu-stars round-stars">
+          <span aria-hidden="true">{{ starText(roundStarCount) }}</span>
+          <span class="sr-only">{{ t("stars", { count: roundStarCount }) }}</span>
+        </p>
+        <p class="summary-label">{{ t("totalStarsLabel", { scope: summaryScope }) }}</p>
+        <p class="menu-stars total-stars">
           <span aria-hidden="true">{{ starText(starsOf(state.topics)) }}</span>
           <span class="sr-only">{{ t("stars", { count: starsOf(state.topics) }) }}</span>
         </p>
+        <p class="summary-hint">{{ t("totalStarsHint") }}</p>
         <div class="actions">
           <button type="button" class="primary" @click="act('menu')">{{ t("menu") }}</button>
         </div>
@@ -947,7 +961,44 @@ a:focus-visible,
   }
 }
 
+.summary-label {
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+}
+
 @media (prefers-reduced-motion: no-preference) {
+  .round-stars {
+    animation: star-pop 0.6s ease-out both;
+  }
+
+  .total-stars {
+    animation: star-land 0.7s ease-in 0.9s both;
+  }
+
+  @keyframes star-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.4);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes star-land {
+    from {
+      opacity: 0;
+      transform: translateY(-3rem) scale(1.4);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   .option,
   .primary {
     transition: transform 0.1s;
