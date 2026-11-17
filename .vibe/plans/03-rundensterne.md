@@ -1,8 +1,8 @@
 ---
 archetype: interactive
 phase: commit
-prePushFailures: 1
-failedChecks: { checks-pass: 4 }
+prePushFailures: 3
+failedChecks: { checks-pass: 8 }
 ---
 
 # Increment: Sterne der Runde und Gesamtsterne
@@ -67,7 +67,7 @@ Kein neues Muster; Leitfaden nennt die Zusammenfassung.
 
 ### Tasks
 
-- [ ] Branch pushen, den Ersteller um das Ja zum Veröffentlichen fragen.
+- [x] Branch gepusht, Ja des Erstellers zum Veröffentlichen liegt vor ("Danach kannst Du mergen").
 
 ### Completed
 
@@ -75,6 +75,12 @@ Kein neues Muster; Leitfaden nennt die Zusammenfassung.
 
 ### Phases reached
 
+Commit; Plan durch den Vorschlag des Erstellers bestätigt, Veröffentlichen vom Ersteller freigegeben.
+
 ### Creator turns after the plan
 
+Vier: Entwürfe als Mockups, Wahl von Entwurf 2 mit zwei Abschnitten, kleines „+n“, Sterne im gewählten Zustand lesbar machen und dann mergen.
+
 ### Where I had to guess
+
+Plan ohne ausdrückliches Ja bestätigt gewertet; „+n“ als neu gelernte Aufgaben statt Sterne; das Hineinfliegen in die Menü-Kästchen nicht gebaut.

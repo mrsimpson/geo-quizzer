@@ -18,13 +18,15 @@ defineProps<{ fills: readonly number[] }>();
 
 .star {
   position: relative;
-  color: var(--geo-track, rgba(120, 130, 140, 0.35));
+  color: var(--star-empty, rgba(120, 130, 140, 0.35));
+  -webkit-text-stroke: 1px var(--star-line, transparent);
 }
 
 .star i {
   position: absolute;
   inset: 0;
-  color: var(--geo-asked);
+  color: var(--star-fill, var(--geo-asked));
+  -webkit-text-stroke: 1px var(--star-line, transparent);
   font-style: normal;
   clip-path: inset(var(--cut) 0 0 0);
 }

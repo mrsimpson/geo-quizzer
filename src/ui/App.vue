@@ -651,6 +651,13 @@ a:focus-visible,
   color: #1d1305;
 }
 
+/* On a chosen (orange) button: dark outline, empty stars show through, filled ones are dark. */
+.topic[aria-pressed="true"] {
+  --star-line: #1d2b3a;
+  --star-empty: transparent;
+  --star-fill: #1d2b3a;
+}
+
 .topic-stars {
   font-size: 0.875rem;
   letter-spacing: 0.1em;
