@@ -56,6 +56,9 @@ ranges, lakes, seas and sub-regions on a map. All content is data: a new element
 - A round has 10 tasks, mostly new and hard ones, some repetition. Learning grade per task: new, practised (once
   right), mastered (right at first try in two different rounds). Stars per level and kind: one star at a third of
   the tasks practised or mastered, two at two thirds, three above 95 % mastered.
+  After a round the summary shows the stars of that round (right at first try: one at a third, two at two thirds,
+  three above 95 %), then two sections without explaining text: the level, and each chosen topic, each with its three
+  stars filled as far as the progress reaches and a small "+n" for the tasks this round made practised.
 
 ## Terminology
 

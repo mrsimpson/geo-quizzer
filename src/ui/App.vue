@@ -11,10 +11,11 @@ import { KINDS, RELATIONS, elementById } from "../core/data.ts";
 import { compass, type Position } from "../core/geo.ts";
 import { suggestions } from "../core/typing.ts";
 import { currentTask, type State } from "../core/index.ts";
-import { stars } from "../core/progress.ts";
+import { learned, roundStars, starFills, stars } from "../core/progress.ts";
 import { rightAnswers, taskKeys } from "../core/tasks.ts";
 import de from "../messages/de.json";
 import EuropeMap, { type Mark } from "./EuropeMap.vue";
+import StarRow from "./StarRow.vue";
 
 const props = defineProps<{ state: State; lang: string }>();
 const emit = defineEmits<{ input: [input: Input] }>();
@@ -260,7 +261,13 @@ const detailText = computed(() => `${detailParts.value.primary} ${detailParts.va
 const levelTitle = computed(() => t(`level${props.state.level}`));
 const levelKeys = (level: number, kinds: readonly string[]) => taskKeys(level, kinds);
 const starsOf = (kinds: readonly string[]): number => stars(props.state.progress, levelKeys(props.state.level, kinds));
-const starText = (count: number): string => "★".repeat(count) + "☆".repeat(3 - count);
+const fillsOf = (kinds: readonly string[]) => starFills(props.state.progress, levelKeys(props.state.level, kinds));
+const fillsOfCount = (count: number) => [0, 1, 2].map((i) => (i < count ? 1 : 0));
+const gainOf = (level: number, kinds: readonly string[]): number => {
+  const keys = levelKeys(level, kinds);
+  return learned(props.state.progress, keys) - learned(props.state.before, keys);
+};
+const roundStarCount = computed(() => roundStars(props.state.right, props.state.tasks.length));
 const noTasks = computed(() => levelKeys(props.state.level, props.state.topics).length === 0);
 
 const nextButton = ref<HTMLButtonElement | null>(null);
@@ -310,7 +317,7 @@ watch(
       <p class="menu-intro">{{ t("menuIntro") }}</p>
       <h2 class="menu-title">{{ levelTitle }}</h2>
       <p class="menu-stars">
-        <span aria-hidden="true">{{ starText(starsOf(state.topics)) }}</span>
+        <StarRow :fills="fillsOf(state.topics)" />
         <span class="sr-only">{{ t("starsLabel") }}: {{ t("stars", { count: starsOf(state.topics) }) }}</span>
       </p>
       <p class="menu-hint">{{ t(`stageHint.${state.level}`) }}</p>
@@ -326,9 +333,7 @@ watch(
             @click="emit('input', { kind: 'action', name: 'level', value: n })"
           >
             <span>{{ t(`level${n}`) }}</span>
-            <span class="topic-stars" aria-hidden="true">{{
-              starText(stars(state.progress, levelKeys(n, KINDS)))
-            }}</span>
+            <StarRow class="topic-stars" :fills="starFills(state.progress, levelKeys(n, KINDS))" />
             <span class="sr-only">{{ t("stars", { count: stars(state.progress, levelKeys(n, KINDS)) }) }}</span>
           </button>
         </li>
@@ -347,7 +352,7 @@ watch(
               >{{ state.topics.includes(kind) ? "✓ " : ""
               }}{{ t(`${state.level === 2 ? "kind2" : "kind"}.${kind}`) }}</span
             >
-            <span class="topic-stars" aria-hidden="true">{{ starText(starsOf([kind])) }}</span>
+            <StarRow class="topic-stars" :fills="fillsOf([kind])" />
             <span class="sr-only">{{ t("stars", { count: starsOf([kind]) }) }}</span>
           </button>
         </li>
@@ -381,10 +386,27 @@ watch(
         <h2 ref="summaryHeading" tabindex="-1">{{ t("summaryTitle") }}</h2>
         <p>{{ t("summary", { right: state.right, total: state.tasks.length }) }}</p>
         <p class="summary-hint">{{ t("summaryHint") }}</p>
-        <p class="menu-stars">
-          <span aria-hidden="true">{{ starText(starsOf(state.topics)) }}</span>
-          <span class="sr-only">{{ t("stars", { count: starsOf(state.topics) }) }}</span>
+        <p class="summary-label">{{ t("roundStarsLabel") }}</p>
+        <p class="menu-stars round-stars">
+          <StarRow :fills="fillsOfCount(roundStarCount)" />
+          <span class="sr-only">{{ t("stars", { count: roundStarCount }) }}</span>
         </p>
+        <div class="totals">
+          <p class="total">
+            <span>{{ t(`levelShort${state.level}`) }}</span>
+            <StarRow class="total-stars" :fills="fillsOf(state.topics)" />
+            <small v-if="gainOf(state.level, state.topics) > 0" class="gain"
+              >+{{ gainOf(state.level, state.topics) }}</small
+            >
+            <span class="sr-only">{{ t("stars", { count: starsOf(state.topics) }) }}</span>
+          </p>
+          <p v-for="kind in state.topics" :key="kind" class="total">
+            <span>{{ t(`${state.level === 2 ? "kind2" : "kind"}.${kind}`) }}</span>
+            <StarRow class="total-stars" :fills="fillsOf([kind])" />
+            <small v-if="gainOf(state.level, [kind]) > 0" class="gain">+{{ gainOf(state.level, [kind]) }}</small>
+            <span class="sr-only">{{ t("stars", { count: starsOf([kind]) }) }}</span>
+          </p>
+        </div>
         <div class="actions">
           <button type="button" class="primary" @click="act('menu')">{{ t("menu") }}</button>
         </div>
@@ -627,6 +649,13 @@ a:focus-visible,
 .topic[aria-pressed="true"] {
   background: var(--geo-asked);
   color: #1d1305;
+}
+
+/* On a chosen (orange) button: dark outline, empty stars show through, filled ones are dark. */
+.topic[aria-pressed="true"] {
+  --star-line: #1d2b3a;
+  --star-empty: transparent;
+  --star-fill: #1d2b3a;
 }
 
 .topic-stars {
@@ -947,7 +976,76 @@ a:focus-visible,
   }
 }
 
+.totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  justify-content: center;
+  margin: 0.5rem 0 1rem;
+  font-size: 1rem;
+}
+
+.total {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0;
+}
+
+.total:first-child {
+  padding-right: 1.5rem;
+  border-right: 2px solid var(--geo-border);
+}
+
+.gain {
+  color: var(--geo-muted);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.total-stars {
+  color: var(--geo-asked);
+  font-size: 1.25rem;
+}
+
+.summary-label {
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+}
+
 @media (prefers-reduced-motion: no-preference) {
+  .round-stars {
+    animation: star-pop 0.6s ease-out both;
+  }
+
+  .total-stars {
+    animation: star-land 0.7s ease-in 0.5s both;
+  }
+
+  @keyframes star-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.4);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes star-land {
+    from {
+      opacity: 0;
+      transform: translateY(-3rem) scale(1.4);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   .option,
   .primary {
     transition: transform 0.1s;

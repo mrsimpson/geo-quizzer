@@ -41,6 +41,46 @@ export function stars(progress: Progress, keys: readonly string[]): 0 | 1 | 2 | 
   return 0;
 }
 
+/**
+ * How full each of the three stars is (0 to 1), from the same shares as `stars`: the first star fills up to a third
+ * practised, the second to two thirds, the third to 95 % mastered. A star is full exactly when `stars` counts it.
+ */
+export function starFills(progress: Progress, keys: readonly string[]): readonly [number, number, number] {
+  if (keys.length === 0) return [0, 0, 0];
+  let practised = 0;
+  let mastered = 0;
+  for (const key of keys) {
+    const g = grade(progress, key);
+    if (g === "mastered") mastered++;
+    if (g === "mastered" || g === "practised") practised++;
+  }
+  const clamp = (x: number): number => Math.max(0, Math.min(1, x));
+  const share = practised / keys.length;
+  const first = clamp(share * 3);
+  const second = clamp(share * 3 - 1);
+  const masteredShare = mastered / keys.length;
+  const third = second < 1 ? 0 : masteredShare > 0.95 ? 1 : Math.min(masteredShare / 0.95, 0.99);
+  return [first, second, third];
+}
+
+/** How many of the tasks are practised or mastered. */
+export function learned(progress: Progress, keys: readonly string[]): number {
+  return keys.filter((key) => {
+    const g = grade(progress, key);
+    return g === "practised" || g === "mastered";
+  }).length;
+}
+
+/** The stars of one round: the share of tasks right at first try, on the same thresholds as `stars`. */
+export function roundStars(right: number, total: number): 0 | 1 | 2 | 3 {
+  if (total <= 0) return 0;
+  const share = right / total;
+  if (share > 0.95) return 3;
+  if (share >= 2 / 3) return 2;
+  if (share >= 1 / 3) return 1;
+  return 0;
+}
+
 /** A progress from outside (the device's storage): only well-formed entries are kept. */
 export function parseProgress(value: unknown): Progress {
   if (typeof value !== "object" || value === null || Array.isArray(value)) return {};
