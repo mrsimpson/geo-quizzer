@@ -2,7 +2,7 @@
 archetype: interactive
 phase: commit
 prePushFailures: 0
-failedChecks: { checks-pass: 2 }
+failedChecks: { checks-pass: 3 }
 ---
 
 # Increment: Sterne der Runde und Gesamtsterne
@@ -18,6 +18,7 @@ Gesamtsterne für Stufe und Themen, auf die die Runde einzahlt.
 
 - Der Vorschlag des Erstellers (Rundensterne zeigen, klar auf die Gesamtsterne verweisen) gilt als Bestätigung.
 - Rundensterne mit denselben Schwellen wie die Gesamtsterne, aber nach dem Anteil beim ersten Versuch richtig.
+- Nach Rückmeldung: Entwurf 2 (Sterne mit Füllstand), ohne Erklärtext, zwei Abschnitte (Stufe | Themen), kleines „+n“ je Abschnitt (Aufgaben, die diese Runde neu gelernt wurden; `State.before`). Dieselben Füllsterne im Menü.
 - Das Hineinfliegen: die Gesamtsterne landen mit einer kurzen Animation unter den Rundensternen; ohne Animation, wenn
   Bewegung reduziert ist. Ein Flug in die Kästchen des Menüs (beim Schließen) bleibt offen (guess).
 

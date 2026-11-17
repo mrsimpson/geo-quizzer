@@ -38,6 +38,8 @@ export interface State {
   level: number;
   topics: string[];
   progress: Progress;
+  /** The progress when the round began: the summary shows what the round added. */
+  before: Progress;
   phase: Phase;
   tasks: Task[];
   index: number;
@@ -67,6 +69,7 @@ export function start(seed: number, route: string): State {
     level: levelOf(route),
     topics: [...DEFAULT_TOPICS],
     progress: {},
+    before: {},
     phase: "menu",
     tasks: [],
     index: 0,
@@ -181,7 +184,19 @@ function begin(state: State): State {
   if (state.phase !== "menu") return state;
   const [tasks, rng] = buildRound(state.progress, state.level, state.topics, state.rng);
   if (tasks.length === 0) return state;
-  return { ...state, rng, phase: "asking", tasks, index: 0, answer: null, pin: null, typed: "", right: 0, streak: 0 };
+  return {
+    ...state,
+    rng,
+    before: state.progress,
+    phase: "asking",
+    tasks,
+    index: 0,
+    answer: null,
+    pin: null,
+    typed: "",
+    right: 0,
+    streak: 0,
+  };
 }
 
 function toMenu(state: State): State {
