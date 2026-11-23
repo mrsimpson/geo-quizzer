@@ -11,8 +11,8 @@
   },
   "devDependencies": {
     "@doctc/arc42": "0.38.0",
-    "@lernapps/app-templates": "^0.14.0",
-    "@lernapps/tooling": "^0.18.5",
+    "@lernapps/app-templates": "0.14.0",
+    "@lernapps/tooling": "0.18.5",
     "@types/node": "22.20.5",
     "fflate": "0.8.3",
     "polygon-clipping": "0.15.7",
